@@ -1244,10 +1244,22 @@ const FaerunMap = ({ cities, onCitySelect, onMapClick }) => {
         });
         
         if (response.ok) {
-          window.location.reload();
+          console.log(`City ${city.name} deleted successfully`);
+          // Remove the city from the DOM immediately
+          const cityMarker = document.querySelector(`[data-city-id="${city.id}"]`);
+          if (cityMarker) {
+            cityMarker.style.display = 'none';
+          }
+          // Refresh data after a short delay
+          setTimeout(() => window.location.reload(), 1000);
+        } else {
+          const errorText = await response.text();
+          console.error('Failed to delete city:', response.status, errorText);
+          alert('Failed to delete city. Please try again.');
         }
       } catch (error) {
         console.error('Error deleting city:', error);
+        alert('Error deleting city. Please try again.');
       }
     }
   };
