@@ -247,6 +247,18 @@ frontend:
         agent: "user"
         comment: "User requested: 'local Government needs more positions and displayed in a hierarchy' and 'assign them from the available pool of Citizens'"
 
+  - task: "Enhanced Boundary Drawing System"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported critical issues: 1) Erasing territories doesn't get rid of existing boundaries only new ones 2) Drawing leaves big circles, but user wants border lines that can be grabbed and curved 3) Other kingdoms show only their cities in the maps, but it should show all kingdoms and borders 4) Should also be able to add additional maps later and/or zoom in/out of the map and move around it"
+
   - task: "Enhanced Notification Engine"
     implemented: true
     working: false
