@@ -168,7 +168,7 @@ backend:
 frontend:
   - task: "Kingdom Dashboard UI"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
@@ -177,22 +177,28 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Built kingdom overview dashboard showing total population, treasury, cities with navigation to city details"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Kingdom Dashboard working perfectly. Shows Cartborne Kingdom with correct statistics (18 population, 10300 treasury, 3 cities). All 7 stat cards display properly including Total Population, Treasury, Cities, Slaves, Livestock, Soldiers, and Crimes. Cities overview section shows 3 city cards (Emberfalls, Stormhaven, Beef) with detailed metrics. Navigation system with Kingdom Dashboard, Faerûn Map, and city buttons all functional."
 
   - task: "City Dashboard UI"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Built detailed city dashboard showing citizens registry, local events, and city-specific stats"
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE: City Dashboard has JavaScript runtime errors preventing proper loading. Error: 'Cannot read properties of undefined (reading 'toLowerCase')' appears when navigating to city views. City navigation buttons exist but clicking them doesn't load city dashboard properly. Registry tabs (Citizens, Slaves, Livestock, Garrison, Tribute, Crime) are not accessible due to these errors."
 
   - task: "Real-time Event Feed"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
@@ -201,10 +207,13 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Implemented WebSocket connection for live event updates, displays recent events in both kingdom and city views"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Real-time Event Feed working excellently. Found 15 events with 12 auto events (🤖) and 3 manual events (✍️). Auto Events toggle functional - successfully changed from ON to OFF. WebSocket connection shows 'Connected - Live updates enabled' status. Events display with proper timestamps, descriptions, and city locations. Fantasy event content includes names like 'Thane Goldleaf' and activities in Emberfalls/Stormhaven."
 
   - task: "Fantasy Medieval UI Theme"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/App.css"
     stuck_count: 0
     priority: "medium"
@@ -213,6 +222,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Created immersive medieval fantasy theme with parchment backgrounds, royal colors (gold, blue), fantasy fonts (Cinzel, Crimson Text), and responsive design"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Fantasy Medieval UI Theme working beautifully. Immersive design with royal blue/gold color scheme, parchment-style backgrounds, and proper fantasy theming. Kingdom title 'Cartborne Kingdom' with 'Campaign managed by King Darius the Wise' displays perfectly. Responsive design tested on desktop (1920x4000), tablet (768x1024), and mobile (390x844) - all layouts adapt properly. Navigation buttons, stat cards, and event feed all maintain consistent medieval fantasy styling."
 
 metadata:
   created_by: "main_agent"
