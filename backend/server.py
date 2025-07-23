@@ -809,10 +809,18 @@ async def get_kingdom():
     return {"error": "Kingdom not found"}
 
 @api_router.put("/kingdom")
-async def update_kingdom(name: str, ruler: str):
+async def update_kingdom(updates: dict):
+    update_data = {}
+    if 'name' in updates:
+        update_data['name'] = updates['name']
+    if 'ruler' in updates:
+        update_data['ruler'] = updates['ruler']
+    if 'government_type' in updates:
+        update_data['government_type'] = updates['government_type']
+    
     result = await db.kingdoms.update_one(
         {},
-        {"$set": {"name": name, "ruler": ruler}}
+        {"$set": update_data}
     )
     if result.modified_count:
         return {"message": "Kingdom updated successfully"}
