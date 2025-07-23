@@ -659,8 +659,8 @@ body {
 /* Government Hierarchy */
 .government-section {
   margin: 30px 0;
-  background: linear-gradient(135deg, white, var(--parchment));
-  border: 2px solid var(--primary-gold);
+  background: linear-gradient(135deg, #fdfcf9, var(--parchment));
+  border: 3px solid var(--primary-gold);
   border-radius: 15px;
   padding: 30px;
   box-shadow: 0 8px 25px var(--shadow);
@@ -668,81 +668,187 @@ body {
 
 .government-section h2 {
   font-family: 'Cinzel', serif;
-  font-size: 2rem;
+  font-size: 2.2rem;
   color: var(--royal-blue);
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   text-align: center;
   border-bottom: 3px solid var(--primary-gold);
-  padding-bottom: 10px;
+  padding-bottom: 15px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .government-hierarchy {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 30px;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.hierarchy-level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tier-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  color: var(--forest-green);
+  margin-bottom: 15px;
+  text-align: center;
+  padding: 8px 20px;
+  background: rgba(22, 101, 52, 0.1);
+  border: 2px solid var(--forest-green);
+  border-radius: 25px;
+  font-weight: 600;
+}
+
+.officials-tier {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+}
+
+/* Governor Level */
+.governor-level {
+  margin-bottom: 20px;
 }
 
 .governor-card {
   background: linear-gradient(135deg, var(--royal-blue), var(--deep-blue));
-  color: var(--primary-gold);
-  padding: 25px;
-  border-radius: 12px;
+  color: white;
+  padding: 30px 40px;
+  border-radius: 15px;
   text-align: center;
-  box-shadow: 0 8px 20px var(--shadow);
-  border: 3px solid var(--primary-gold);
-}
-
-.government-officials {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-}
-
-.government-official {
-  background: linear-gradient(135deg, var(--parchment), white);
-  border: 2px solid var(--dark-gold);
-  border-radius: 10px;
-  padding: 20px;
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-
-.government-official:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px var(--shadow);
-}
-
-.official-rank {
-  font-family: 'Cinzel', serif;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--forest-green);
-  margin-bottom: 5px;
-}
-
-.official-name {
-  color: var(--royal-blue);
-  font-weight: 600;
-  font-size: 1.2rem;
+  box-shadow: 0 10px 30px var(--shadow);
+  border: 4px solid var(--primary-gold);
+  min-width: 300px;
 }
 
 .governor-card .official-rank {
-  font-size: 1.4rem;
+  font-family: 'Cinzel', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
   color: var(--primary-gold);
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .governor-card .official-name {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
+  font-weight: bold;
   color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* High Council Cards */
+.high-council-card {
+  background: linear-gradient(135deg, var(--primary-gold), var(--dark-gold));
+  color: var(--royal-blue);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 6px 20px var(--shadow);
+  border: 3px solid var(--royal-blue);
+  min-width: 180px;
+  transition: transform 0.3s ease;
+}
+
+.high-council-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px var(--shadow);
+}
+
+.high-council-card .official-rank {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--royal-blue);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.high-council-card .official-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--deep-blue);
+}
+
+/* Department Head Cards */
+.department-card {
+  background: linear-gradient(135deg, white, var(--parchment));
+  border: 2px solid var(--forest-green);
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  min-width: 160px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.department-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px var(--shadow);
+  border-color: var(--primary-gold);
+}
+
+.department-card .official-rank {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--forest-green);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.department-card .official-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--royal-blue);
+}
+
+/* Minor Official Cards */
+.minor-card {
+  background: linear-gradient(135deg, var(--parchment), var(--dark-parchment));
+  border: 2px solid var(--dark-gold);
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  min-width: 140px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.minor-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.minor-card .official-rank {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--burgundy);
+  margin-bottom: 5px;
+  line-height: 1.2;
+}
+
+.minor-card .official-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--royal-blue);
 }
 
 .no-officials {
-  grid-column: 1 / -1;
   text-align: center;
   color: var(--royal-blue);
   font-style: italic;
-  padding: 20px;
+  padding: 40px;
+  font-size: 1.2rem;
+  background: rgba(30, 58, 138, 0.1);
+  border-radius: 10px;
+  border: 2px dashed var(--royal-blue);
 }
 
 /* City Header with Edit */
