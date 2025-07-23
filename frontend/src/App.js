@@ -384,6 +384,9 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
   const [currentBoundary, setCurrentBoundary] = useState([]);
   const [paintBrushSize, setPaintBrushSize] = useState(20);
   const [mapDimensions, setMapDimensions] = useState({ width: 0, height: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [allBoundaries, setAllBoundaries] = useState([]);
 
   useEffect(() => {
     // Get map dimensions for proper coordinate calculation
@@ -393,6 +396,27 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
       setMapDimensions({ width: rect.width, height: rect.height });
     }
   }, []);
+
+  // Fetch all boundaries from all kingdoms
+  useEffect(() => {
+    const fetchAllBoundaries = async () => {
+      try {
+        if (kingdoms && kingdoms.length > 0) {
+          let boundaries = [];
+          for (const kingdom of kingdoms) {
+            if (kingdom.boundaries && kingdom.boundaries.length > 0) {
+              boundaries = [...boundaries, ...kingdom.boundaries.map(b => ({...b, kingdomColor: kingdom.color, kingdomName: kingdom.name}))];
+            }
+          }
+          setAllBoundaries(boundaries);
+        }
+      } catch (error) {
+        console.error('Error fetching boundaries:', error);
+      }
+    };
+    
+    fetchAllBoundaries();
+  }, [kingdoms]);
 
   const handleMapClick = (e) => {
     if (isDragging) return;
