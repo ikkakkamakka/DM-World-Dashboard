@@ -397,6 +397,10 @@ body {
   transform-origin: center center;
 }
 
+.map-placeholder:hover {
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
 .map-image {
   width: 100%;
   height: 100%;
