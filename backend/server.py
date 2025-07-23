@@ -626,9 +626,9 @@ class MultiKingdomUpdate(BaseModel):
     color: Optional[str] = None
     is_active: Optional[bool] = None
 
-# Enhanced simulation engine
+# Enhanced simulation engine with real database impacts
 async def simulation_engine():
-    """Enhanced simulation engine that generates events for all active kingdoms"""
+    """Enhanced simulation engine that generates events with real database consequences for all active kingdoms"""
     await asyncio.sleep(5)  # Initial delay
     
     while True:
@@ -643,8 +643,12 @@ async def simulation_engine():
             for kingdom_data in kingdoms:
                 if not kingdom_data.get('cities'):
                     continue
-                    
-                # Random event generation for each kingdom
+                
+                # Life Events with Real Database Impact (new feature)
+                if random.random() < 0.15:  # 15% chance for life events that actually change the kingdom
+                    await generate_life_event_with_database_impact(kingdom_data)
+                
+                # Regular descriptive events (existing functionality)
                 if random.random() < 0.3:  # 30% chance per cycle per kingdom
                     city = random.choice(kingdom_data['cities'])
                     
@@ -788,6 +792,303 @@ async def simulation_engine():
         except Exception as e:
             logging.error(f"Simulation error: {e}")
             await asyncio.sleep(30)
+
+async def generate_life_event_with_database_impact(kingdom_data):
+    """Generate life events that actually modify the database and update dashboard counts"""
+    try:
+        city = random.choice(kingdom_data['cities'])
+        
+        # Types of life events that affect the database
+        life_event_types = [
+            'citizen_death',
+            'citizen_birth', 
+            'crime_resolution',
+            'economic_boost',
+            'disease_outbreak',
+            'natural_disaster'
+        ]
+        
+        event_type = random.choice(life_event_types)
+        
+        if event_type == 'citizen_death' and city.get('citizens') and len(city['citizens']) > 0:
+            await handle_citizen_death_event(kingdom_data, city)
+            
+        elif event_type == 'citizen_birth':
+            await handle_citizen_birth_event(kingdom_data, city)
+            
+        elif event_type == 'crime_resolution' and city.get('crime_records') and len(city['crime_records']) > 0:
+            await handle_crime_resolution_event(kingdom_data, city)
+            
+        elif event_type == 'economic_boost':
+            await handle_economic_boost_event(kingdom_data, city)
+            
+        elif event_type == 'disease_outbreak' and city.get('citizens') and len(city['citizens']) > 2:
+            await handle_disease_outbreak_event(kingdom_data, city)
+            
+        elif event_type == 'natural_disaster':
+            await handle_natural_disaster_event(kingdom_data, city)
+    
+    except Exception as e:
+        logging.error(f"Life event generation error: {e}")
+
+async def handle_citizen_death_event(kingdom_data, city):
+    """Handle citizen death - actually remove from database and update counts"""
+    if not city.get('citizens') or len(city['citizens']) == 0:
+        return
+        
+    # Choose a random citizen to die
+    citizen_to_remove = random.choice(city['citizens'])
+    
+    # Remove citizen from database
+    result = await db.multi_kingdoms.update_one(
+        {"id": kingdom_data['id'], "cities.id": city['id']},
+        {
+            "$pull": {"cities.$.citizens": {"id": citizen_to_remove['id']}},
+            "$inc": {"cities.$.population": -1, "total_population": -1}
+        }
+    )
+    
+    if result.modified_count:
+        # Create death event with actual impact
+        death_causes = [
+            "died peacefully in their sleep",
+            "succumbed to a sudden illness", 
+            "was killed in a farming accident",
+            "died defending the city from bandits",
+            "passed away from old age",
+            "was struck by lightning during a storm",
+            "fell from scaffolding during construction work"
+        ]
+        
+        cause = random.choice(death_causes)
+        event_desc = f"💀 {citizen_to_remove['name']}, beloved {citizen_to_remove['occupation']} of {city['name']}, has {cause}. Population decreased by 1."
+        
+        await create_and_broadcast_event(
+            event_desc, city['name'], kingdom_data['name'], "life-event", 
+            priority="high", kingdom_id=kingdom_data['id']
+        )
+        
+        # Broadcast updated kingdom data for real-time dashboard updates
+        await broadcast_kingdom_update(kingdom_data, "citizen_death")
+
+async def handle_citizen_birth_event(kingdom_data, city):
+    """Handle citizen birth - actually add to database and update counts"""
+    # Generate new citizen
+    new_citizen_data = generate_citizen(city['id'])
+    new_citizen = Citizen(**new_citizen_data)
+    
+    # Add citizen to database
+    result = await db.multi_kingdoms.update_one(
+        {"id": kingdom_data['id'], "cities.id": city['id']},
+        {
+            "$push": {"cities.$.citizens": new_citizen.dict()},
+            "$inc": {"cities.$.population": 1, "total_population": 1}
+        }
+    )
+    
+    if result.modified_count:
+        family_names = ["Brightwater", "Goldleaf", "Stormwind", "Ironforge", "Moonwhisper"]
+        family_name = random.choice(family_names)
+        
+        event_desc = f"👶 A child is born to the {family_name} family in {city['name']}! {new_citizen.name} will grow to become a {new_citizen.occupation}. Population increased by 1."
+        
+        await create_and_broadcast_event(
+            event_desc, city['name'], kingdom_data['name'], "life-event",
+            priority="normal", kingdom_id=kingdom_data['id']
+        )
+        
+        # Broadcast updated kingdom data for real-time dashboard updates
+        await broadcast_kingdom_update(kingdom_data, "citizen_birth")
+
+async def handle_crime_resolution_event(kingdom_data, city):
+    """Handle crime resolution - update crime status and possibly affect population"""
+    if not city.get('crime_records') or len(city['crime_records']) == 0:
+        return
+        
+    # Find unresolved crimes
+    unresolved_crimes = [crime for crime in city['crime_records'] if crime.get('status') != 'Resolved']
+    if not unresolved_crimes:
+        return
+        
+    crime_to_resolve = random.choice(unresolved_crimes)
+    
+    # Resolve the crime
+    result = await db.multi_kingdoms.update_one(
+        {"id": kingdom_data['id'], "cities.id": city['id'], "cities.crime_records.id": crime_to_resolve['id']},
+        {
+            "$set": {
+                "cities.$.crime_records.$[crime].status": "Resolved",
+                "cities.$.crime_records.$[crime].date_resolved": datetime.utcnow()
+            }
+        },
+        array_filters=[{"crime.id": crime_to_resolve['id']}]
+    )
+    
+    if result.modified_count:
+        # Severe crimes may result in execution (population decrease)
+        if crime_to_resolve.get('crime_type') in ['Murder', 'Treason', 'Necromancy']:
+            # Execute the criminal (reduce population)
+            population_change = await db.multi_kingdoms.update_one(
+                {"id": kingdom_data['id'], "cities.id": city['id']},
+                {"$inc": {"cities.$.population": -1, "total_population": -1}}
+            )
+            
+            if population_change.modified_count:
+                event_desc = f"⚖️ {crime_to_resolve['criminal_name']} has been executed for {crime_to_resolve['crime_type']} in {city['name']}. Justice served, population decreased by 1."
+                
+                await broadcast_kingdom_update(kingdom_data, "execution")
+            else:
+                event_desc = f"⚖️ The case of {crime_to_resolve['criminal_name']} for {crime_to_resolve['crime_type']} has been resolved in {city['name']}."
+        else:
+            event_desc = f"⚖️ The case of {crime_to_resolve['criminal_name']} for {crime_to_resolve['crime_type']} has been resolved in {city['name']}."
+        
+        await create_and_broadcast_event(
+            event_desc, city['name'], kingdom_data['name'], "life-event",
+            priority="normal", kingdom_id=kingdom_data['id']
+        )
+
+async def handle_economic_boost_event(kingdom_data, city):
+    """Handle economic events that boost city treasury"""
+    boost_amount = random.randint(50, 300)
+    
+    result = await db.multi_kingdoms.update_one(
+        {"id": kingdom_data['id'], "cities.id": city['id']},
+        {"$inc": {"cities.$.treasury": boost_amount}}
+    )
+    
+    if result.modified_count:
+        boost_reasons = [
+            "successful trade negotiations",
+            "discovery of valuable minerals",
+            "excellent harvest season",
+            "tax collection efficiency improvements",
+            "merchant guild donations",
+            "tourism revenue increase"
+        ]
+        
+        reason = random.choice(boost_reasons)
+        event_desc = f"💰 {city['name']} receives {boost_amount} GP from {reason}. City treasury grows!"
+        
+        await create_and_broadcast_event(
+            event_desc, city['name'], kingdom_data['name'], "life-event",
+            priority="normal", kingdom_id=kingdom_data['id']
+        )
+        
+        await broadcast_kingdom_update(kingdom_data, "economic_boost")
+
+async def handle_disease_outbreak_event(kingdom_data, city):
+    """Handle disease outbreak - may affect population"""
+    if not city.get('citizens') or len(city['citizens']) < 3:
+        return
+        
+    # Disease severity determines impact
+    severity = random.choice(['mild', 'moderate', 'severe'])
+    
+    if severity == 'severe':
+        # Severe outbreak - remove 1-2 citizens
+        deaths = min(random.randint(1, 2), len(city['citizens']))
+        
+        for _ in range(deaths):
+            if city['citizens']:
+                victim = random.choice(city['citizens'])
+                
+                # Remove citizen from database
+                await db.multi_kingdoms.update_one(
+                    {"id": kingdom_data['id'], "cities.id": city['id']},
+                    {
+                        "$pull": {"cities.$.citizens": {"id": victim['id']}},
+                        "$inc": {"cities.$.population": -1, "total_population": -1}
+                    }
+                )
+        
+        event_desc = f"🦠 A severe plague outbreak in {city['name']} claims {deaths} lives. The city mourns its losses. Population decreased by {deaths}."
+        priority = "high"
+        
+        await broadcast_kingdom_update(kingdom_data, "disease_outbreak")
+        
+    elif severity == 'moderate':
+        # Moderate outbreak - no deaths but affects health
+        event_desc = f"🤒 A moderate disease outbreak affects several citizens in {city['name']}. Healers work tirelessly to treat the afflicted."
+        priority = "normal"
+        
+    else:
+        # Mild outbreak - minor impact
+        event_desc = f"🤧 A mild illness spreads through {city['name']}, but most citizens recover quickly with proper care."
+        priority = "low"
+    
+    await create_and_broadcast_event(
+        event_desc, city['name'], kingdom_data['name'], "life-event",
+        priority=priority, kingdom_id=kingdom_data['id']
+    )
+
+async def handle_natural_disaster_event(kingdom_data, city):
+    """Handle natural disasters that may affect treasury and population"""
+    disasters = [
+        {'name': 'earthquake', 'treasury_loss': (100, 500), 'population_risk': 0.3},
+        {'name': 'flood', 'treasury_loss': (50, 300), 'population_risk': 0.2},
+        {'name': 'wildfire', 'treasury_loss': (75, 400), 'population_risk': 0.4},
+        {'name': 'severe storm', 'treasury_loss': (25, 200), 'population_risk': 0.1}
+    ]
+    
+    disaster = random.choice(disasters)
+    treasury_loss = random.randint(disaster['treasury_loss'][0], disaster['treasury_loss'][1])
+    
+    # Update treasury (ensure it doesn't go below 0)
+    result = await db.multi_kingdoms.update_one(
+        {"id": kingdom_data['id'], "cities.id": city['id']},
+        {"$inc": {"cities.$.treasury": -treasury_loss}}
+    )
+    
+    # Ensure treasury doesn't go negative
+    await db.multi_kingdoms.update_one(
+        {"id": kingdom_data['id'], "cities.id": city['id'], "cities.treasury": {"$lt": 0}},
+        {"$set": {"cities.$.treasury": 0}}
+    )
+    
+    event_parts = [f"🌪️ A {disaster['name']} strikes {city['name']}, causing {treasury_loss} GP in damages."]
+    
+    # Check for population impact
+    if random.random() < disaster['population_risk'] and city.get('citizens') and len(city['citizens']) > 0:
+        casualty = random.choice(city['citizens'])
+        
+        # Remove casualty from database
+        casualty_result = await db.multi_kingdoms.update_one(
+            {"id": kingdom_data['id'], "cities.id": city['id']},
+            {
+                "$pull": {"cities.$.citizens": {"id": casualty['id']}},
+                "$inc": {"cities.$.population": -1, "total_population": -1}
+            }
+        )
+        
+        if casualty_result.modified_count:
+            event_parts.append(f" Tragically, {casualty['name']} was lost in the disaster. Population decreased by 1.")
+            await broadcast_kingdom_update(kingdom_data, "natural_disaster")
+    
+    event_desc = "".join(event_parts)
+    
+    await create_and_broadcast_event(
+        event_desc, city['name'], kingdom_data['name'], "life-event",
+        priority="high", kingdom_id=kingdom_data['id']
+    )
+
+async def broadcast_kingdom_update(kingdom_data, event_type):
+    """Broadcast updated kingdom data for real-time dashboard updates"""
+    try:
+        # Fetch updated kingdom data from database
+        updated_kingdom = await db.multi_kingdoms.find_one({"id": kingdom_data['id']})
+        
+        if updated_kingdom:
+            # Broadcast the updated kingdom data to all connected clients
+            await manager.broadcast({
+                "type": "kingdom_update",
+                "kingdom_id": kingdom_data['id'],
+                "kingdom_data": updated_kingdom,
+                "event_type": event_type,
+                "timestamp": datetime.utcnow().isoformat()
+            })
+            
+    except Exception as e:
+        logging.error(f"Error broadcasting kingdom update: {e}")
 
 async def create_and_broadcast_event(description, city_name, kingdom_name, event_type, priority="normal", kingdom_id=None):
     """Helper function to create and broadcast kingdom-specific events"""
