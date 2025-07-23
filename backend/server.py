@@ -778,6 +778,7 @@ async def initialize_kingdom():
         kingdom = Kingdom(
             name="Faerûn Campaign",
             ruler="Dungeon Master",
+            government_type="Campaign",
             total_population=sum(city.population for city in cities),
             royal_treasury=5000,
             cities=cities
