@@ -1480,7 +1480,7 @@ body {
   animation: slideInFromTop 0.5s ease-out;
 }
 
-/* Harptos Calendar Styles */
+/* Enhanced Harptos Calendar Styles */
 .harptos-calendar {
   padding: 2rem;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -1497,6 +1497,8 @@ body {
   margin-bottom: 2rem;
   border-bottom: 2px solid #8b7355;
   padding-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .calendar-header h2 {
@@ -1506,7 +1508,14 @@ body {
   font-size: 2rem;
 }
 
-.calendar-mode-selector {
+.calendar-controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.calendar-mode-selector,
+.view-mode-selector {
   display: flex;
   gap: 0.5rem;
 }
@@ -1520,6 +1529,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: inherit;
+  font-size: 0.9rem;
 }
 
 .mode-btn:hover {
@@ -1607,7 +1617,7 @@ body {
 
 .date-inputs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
   margin-bottom: 1rem;
 }
@@ -1625,7 +1635,8 @@ body {
 }
 
 .input-group input,
-.input-group select {
+.input-group select,
+.input-group textarea {
   padding: 0.5rem;
   background: #2a2a4a;
   color: #e8dcc6;
@@ -1635,7 +1646,8 @@ body {
 }
 
 .input-group input:focus,
-.input-group select:focus {
+.input-group select:focus,
+.input-group textarea:focus {
   outline: none;
   border-color: #d4af37;
   box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
@@ -1727,6 +1739,7 @@ body {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .day-cell:hover {
@@ -1739,6 +1752,271 @@ body {
   color: #1a1a2e;
   border-color: #d4af37;
   box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+
+.day-cell.has-events {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: #ffd700;
+}
+
+.event-indicator {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  color: #ffd700;
+  font-size: 1.2rem;
+}
+
+/* Events Management */
+.events-management,
+.voting-management {
+  margin-bottom: 2rem;
+}
+
+.events-header,
+.voting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.events-header h3,
+.voting-header h3 {
+  color: #d4af37;
+  font-family: 'Cinzel', serif;
+  margin: 0;
+}
+
+.custom-event-item {
+  background: rgba(58, 58, 92, 0.4);
+  border: 1px solid #8b7355;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.event-main h4 {
+  color: #d4af37;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+}
+
+.event-date {
+  color: #c4a373;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.event-description {
+  color: #e8dcc6;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.event-type-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #3a3a5c;
+  color: #e8dcc6;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.event-type-badge.meeting {
+  background: #4a90e2;
+}
+
+.event-type-badge.festival {
+  background: #ff6b6b;
+}
+
+.event-type-badge.military {
+  background: #dc3545;
+}
+
+.event-type-badge.trade {
+  background: #28a745;
+}
+
+.event-type-badge.diplomatic {
+  background: #6f42c1;
+}
+
+/* Voting System */
+.voting-session-item {
+  background: rgba(58, 58, 92, 0.4);
+  border: 1px solid #8b7355;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.voting-session-item.status-completed {
+  border-color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.voting-session-item.status-active {
+  border-color: #ffc107;
+  background: rgba(255, 193, 7, 0.1);
+}
+
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.session-header h4 {
+  color: #d4af37;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.status-badge.active {
+  background: #ffc107;
+  color: #1a1a2e;
+}
+
+.status-badge.completed {
+  background: #28a745;
+  color: white;
+}
+
+.session-description {
+  color: #e8dcc6;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.session-dates {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  color: #c4a373;
+  font-size: 0.9rem;
+}
+
+.voting-options {
+  margin-bottom: 1rem;
+}
+
+.voting-options h5 {
+  color: #d4af37;
+  margin-bottom: 0.5rem;
+}
+
+.voting-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid #8b7355;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.option-text {
+  color: #e8dcc6;
+}
+
+.vote-count {
+  color: #d4af37;
+  font-weight: bold;
+}
+
+.session-actions {
+  margin-top: 1rem;
+}
+
+.voting-results {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #8b7355;
+}
+
+.voting-results h5 {
+  color: #d4af37;
+  margin-bottom: 0.5rem;
+}
+
+.results-summary {
+  display: flex;
+  gap: 2rem;
+  color: #c4a373;
+  font-weight: bold;
+}
+
+/* Form Styles */
+.option-input {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.option-input input {
+  flex: 1;
+}
+
+.btn-remove {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove:hover {
+  background: #c82333;
+}
+
+.date-range {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.date-range .date-inputs {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.date-range .date-inputs label {
+  min-width: 50px;
+  font-weight: bold;
+  color: #c4a373;
+}
+
+.date-range .date-inputs input,
+.date-range .date-inputs select {
+  max-width: 80px;
+}
+
+.no-events-message,
+.no-voting-message {
+  text-align: center;
+  padding: 2rem;
+  color: #a0a0a0;
+  font-style: italic;
 }
 
 .special-days-info {
@@ -1780,7 +2058,7 @@ body {
   line-height: 1.4;
 }
 
-/* Responsive Design for Calendar */
+/* Responsive Design for Enhanced Calendar */
 @media (max-width: 768px) {
   .harptos-calendar {
     padding: 1rem;
@@ -1789,8 +2067,11 @@ body {
   
   .calendar-header {
     flex-direction: column;
-    gap: 1rem;
     text-align: center;
+  }
+  
+  .calendar-controls {
+    justify-content: center;
   }
   
   .days-grid {
@@ -1803,6 +2084,20 @@ body {
   
   .special-days-list {
     grid-template-columns: 1fr;
+  }
+  
+  .session-dates {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .results-summary {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .date-range .date-inputs {
+    flex-wrap: wrap;
   }
 }
 @media (max-width: 768px) {
