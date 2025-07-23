@@ -95,9 +95,58 @@ const KingdomDashboard = ({ kingdom, events, autoEventsEnabled, onToggleAutoEven
   return (
     <div className="kingdom-dashboard">
       <div className="kingdom-header">
-        <h1 className="kingdom-title">{kingdom.name}</h1>
-        <p className="kingdom-ruler">Campaign managed by {kingdom.ruler}</p>
+        <div className="kingdom-header-content">
+          <h1 className="kingdom-title">{kingdom.name}</h1>
+          <p className="kingdom-ruler">Campaign managed by {kingdom.ruler}</p>
+          <p className="kingdom-government">Government Type: {kingdom.government_type || 'Monarchy'}</p>
+          <button 
+            className="edit-kingdom-btn"
+            onClick={() => setShowKingdomEditForm(true)}
+            title="Edit kingdom details"
+          >
+            ✏️ Edit Kingdom
+          </button>
+        </div>
       </div>
+
+      {/* Kingdom Edit Modal */}
+      <Modal isOpen={showKingdomEditForm} onClose={() => setShowKingdomEditForm(false)} title="Edit Kingdom Details">
+        <form onSubmit={handleKingdomEditSubmit}>
+          <div className="form-group">
+            <label>Kingdom Name:</label>
+            <input
+              type="text"
+              value={kingdomEditData.name}
+              onChange={(e) => setKingdomEditData({...kingdomEditData, name: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Ruler/Campaign Manager:</label>
+            <input
+              type="text"
+              value={kingdomEditData.ruler}
+              onChange={(e) => setKingdomEditData({...kingdomEditData, ruler: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Government Type:</label>
+            <select
+              value={kingdomEditData.government_type}
+              onChange={(e) => setKingdomEditData({...kingdomEditData, government_type: e.target.value})}
+            >
+              {governmentTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">Update Kingdom</button>
+            <button type="button" onClick={() => setShowKingdomEditForm(false)} className="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </Modal>
 
       <div className="stats-grid">
         <div className="stat-card">
