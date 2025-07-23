@@ -519,13 +519,37 @@ const SlavesRegistry = ({ city }) => {
     }
   };
 
+  const handleAutoGenerate = async () => {
+    try {
+      const response = await fetch(`${API}/auto-generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          registry_type: 'slaves',
+          city_id: city.id,
+          count: Math.floor(Math.random() * 3) + 1 // 1-3 slaves
+        })
+      });
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error auto-generating slaves:', error);
+    }
+  };
+
   return (
     <div className="registry-section">
       <div className="registry-header">
         <h3>Slave Registry</h3>
-        <button className="btn-primary" onClick={() => setShowAddForm(true)}>
-          Add Slave
-        </button>
+        <div className="registry-actions">
+          <button className="btn-secondary" onClick={handleAutoGenerate}>
+            Auto Generate
+          </button>
+          <button className="btn-primary" onClick={() => setShowAddForm(true)}>
+            Add Slave
+          </button>
+        </div>
       </div>
 
       <Modal isOpen={showAddForm} onClose={() => setShowAddForm(false)} title="Add New Slave">
