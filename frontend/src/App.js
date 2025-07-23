@@ -1435,7 +1435,15 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
 
       {/* Government Hierarchy Section */}
       <div className="government-section">
-        <h2>Local Government Hierarchy</h2>
+        <div className="government-header">
+          <h2>Local Government Hierarchy</h2>
+          <button 
+            className="btn-primary manage-govt-btn" 
+            onClick={() => setShowGovtManagement(true)}
+          >
+            Manage Positions
+          </button>
+        </div>
         <div className="government-hierarchy">
           {/* Governor at the top */}
           <div className="hierarchy-level governor-level">
@@ -1455,6 +1463,13 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
                 <div key={official.id} className="government-official high-council-card">
                   <div className="official-rank">{official.position}</div>
                   <div className="official-name">{official.name}</div>
+                  <button 
+                    className="remove-official-btn"
+                    onClick={() => handleRemoveOfficial(official.id)}
+                    title="Remove from position"
+                  >
+                    ✖
+                  </button>
                 </div>
               ))}
             </div>
@@ -1470,6 +1485,13 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
                 <div key={official.id} className="government-official department-card">
                   <div className="official-rank">{official.position}</div>
                   <div className="official-name">{official.name}</div>
+                  <button 
+                    className="remove-official-btn"
+                    onClick={() => handleRemoveOfficial(official.id)}
+                    title="Remove from position"
+                  >
+                    ✖
+                  </button>
                 </div>
               ))}
             </div>
@@ -1486,6 +1508,13 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
                 <div key={official.id} className="government-official minor-card">
                   <div className="official-rank">{official.position}</div>
                   <div className="official-name">{official.name}</div>
+                  <button 
+                    className="remove-official-btn"
+                    onClick={() => handleRemoveOfficial(official.id)}
+                    title="Remove from position"
+                  >
+                    ✖
+                  </button>
                 </div>
               ))}
             </div>
@@ -1497,6 +1526,11 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
           )}
         </div>
       </div>
+
+      {/* Government Management Modal */}
+      <Modal isOpen={showGovtManagement} onClose={() => setShowGovtManagement(false)} title="Manage Government Positions">
+        <GovernmentManagement city={city} onClose={() => setShowGovtManagement(false)} />
+      </Modal>
 
       <div className="stats-grid">
         <div className="stat-card">
