@@ -595,7 +595,7 @@ const SlavesRegistry = ({ city }) => {
               <p><strong>Occupation:</strong> {slave.occupation}</p>
               <p><strong>Owner:</strong> {slave.owner}</p>
               <p><strong>Purchase Price:</strong> {slave.purchase_price} GP</p>
-              <p><strong>Status:</strong> <span className={`status-${slave.status.toLowerCase()}`}>{slave.status}</span></p>
+              <p><strong>Status:</strong> <span className={`status-${slave.status?.toLowerCase() || 'enslaved'}`}>{slave.status}</span></p>
               {slave.notes && <p><strong>Notes:</strong> {slave.notes}</p>}
             </div>
           </div>
