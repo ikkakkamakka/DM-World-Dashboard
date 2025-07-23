@@ -1387,6 +1387,85 @@ const CrimeRegistry = ({ city }) => {
   );
 };
 
+// Government Management Component
+const GovernmentManagement = ({ city, onClose }) => {
+  const [availablePositions] = useState([
+    'Captain of the Guard', 'Master of Coin', 'High Scribe', 'Court Wizard', 'Head Cleric',
+    'Trade Minister', 'City Magistrate', 'Harbor Master', 'Master Builder', 'Tax Collector', 'Market Warden'
+  ]);
+  const [selectedCitizen, setSelectedCitizen] = useState('');
+  const [selectedPosition, setSelectedPosition] = useState('');
+
+  const handleAppointment = async () => {
+    if (!selectedCitizen || !selectedPosition) {
+      alert('Please select both a citizen and a position');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API}/cities/${city.id}/government/appoint`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          citizen_id: selectedCitizen,
+          position: selectedPosition
+        })
+      });
+      
+      if (response.ok) {
+        onClose();
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error appointing citizen:', error);
+    }
+  };
+
+  // Get citizens who don't already have government positions
+  const availableCitizens = city.citizens?.filter(citizen => !citizen.government_position) || [];
+
+  return (
+    <div className="government-management">
+      <div className="form-group">
+        <label>Select Citizen:</label>
+        <select 
+          value={selectedCitizen} 
+          onChange={(e) => setSelectedCitizen(e.target.value)}
+        >
+          <option value="">-- Choose Citizen --</option>
+          {availableCitizens.map(citizen => (
+            <option key={citizen.id} value={citizen.id}>
+              {citizen.name} ({citizen.occupation})
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      <div className="form-group">
+        <label>Select Position:</label>
+        <select 
+          value={selectedPosition} 
+          onChange={(e) => setSelectedPosition(e.target.value)}
+        >
+          <option value="">-- Choose Position --</option>
+          {availablePositions.map(position => (
+            <option key={position} value={position}>{position}</option>
+          ))}
+        </select>
+      </div>
+      
+      <div className="form-actions">
+        <button onClick={handleAppointment} className="btn-primary">
+          Appoint to Position
+        </button>
+        <button onClick={onClose} className="btn-secondary">
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+};
+
 // City Dashboard Component with editing and government hierarchy
 const CityDashboard = ({ city, activeTab, setActiveTab }) => {
   const [showEditForm, setShowEditForm] = useState(false);
