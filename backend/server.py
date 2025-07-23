@@ -724,7 +724,53 @@ async def create_and_broadcast_event(description, city_name, kingdom_name, event
         "event": event.dict()
     })
 
-# Initialize kingdom data with enhanced government officials
+# Initialize multi-kingdom data and migrate existing data
+async def initialize_multi_kingdoms():
+    """Migrate existing kingdom data to multi-kingdom format"""
+    existing_multi_kingdoms = await db.multi_kingdoms.find().to_list(100)
+    
+    if not existing_multi_kingdoms:
+        # Check if legacy kingdom exists
+        legacy_kingdom = await db.kingdoms.find_one()
+        
+        if legacy_kingdom:
+            # Convert legacy kingdom to multi-kingdom format
+            migrated_kingdom = MultiKingdom(
+                name=legacy_kingdom.get('name', 'Legacy Kingdom'),
+                ruler=legacy_kingdom.get('ruler', 'Unknown Ruler'),
+                government_type=legacy_kingdom.get('government_type', 'Monarchy'),
+                color='#1e3a8a',
+                total_population=legacy_kingdom.get('total_population', 0),
+                royal_treasury=legacy_kingdom.get('royal_treasury', 5000),
+                cities=legacy_kingdom.get('cities', []),
+                boundaries=[],
+                is_active=True
+            )
+            
+            await db.multi_kingdoms.insert_one(migrated_kingdom.dict())
+            logging.info("Legacy kingdom migrated to multi-kingdom format")
+        
+        else:
+            # Create default kingdom if none exists
+            await initialize_kingdom()
+            
+            # Now migrate the newly created kingdom
+            legacy_kingdom = await db.kingdoms.find_one()
+            if legacy_kingdom:
+                migrated_kingdom = MultiKingdom(
+                    name=legacy_kingdom.get('name', 'Faerûn Campaign'),
+                    ruler=legacy_kingdom.get('ruler', 'Dungeon Master'),
+                    government_type=legacy_kingdom.get('government_type', 'Campaign'),
+                    color='#1e3a8a',
+                    total_population=legacy_kingdom.get('total_population', 0),
+                    royal_treasury=legacy_kingdom.get('royal_treasury', 5000),
+                    cities=legacy_kingdom.get('cities', []),
+                    boundaries=[],
+                    is_active=True
+                )
+                
+                await db.multi_kingdoms.insert_one(migrated_kingdom.dict())
+                logging.info("Default kingdom created and migrated to multi-kingdom format")
 async def initialize_kingdom():
     """Create sample kingdom data if none exists"""
     existing_kingdom = await db.kingdoms.find_one()
