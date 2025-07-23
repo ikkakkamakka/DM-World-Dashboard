@@ -214,20 +214,50 @@ frontend:
         agent: "testing"
         comment: "✅ TESTED: Real-time Event Feed working excellently. Found 15 events with 12 auto events (🤖) and 3 manual events (✍️). Auto Events toggle functional - successfully changed from ON to OFF. WebSocket connection shows 'Connected - Live updates enabled' status. Events display with proper timestamps, descriptions, and city locations. Fantasy event content includes names like 'Thane Goldleaf' and activities in Emberfalls/Stormhaven."
 
-  - task: "Fantasy Medieval UI Theme"
+  - task: "Auto-Generate Functionality for All Registries"
     implemented: true
-    working: true
-    file: "/app/frontend/src/App.css"
+    working: false
+    file: "/app/backend/server.py"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Created immersive medieval fantasy theme with parchment backgrounds, royal colors (gold, blue), fantasy fonts (Cinzel, Crimson Text), and responsive design"
-      - working: true
-        agent: "testing"
-        comment: "✅ TESTED: Fantasy Medieval UI Theme working beautifully. Immersive design with royal blue/gold color scheme, parchment-style backgrounds, and proper fantasy theming. Kingdom title 'Cartborne Kingdom' with 'Campaign managed by King Darius the Wise' displays perfectly. Responsive design tested on desktop (1920x4000), tablet (768x1024), and mobile (390x844) - all layouts adapt properly. Navigation buttons, stat cards, and event feed all maintain consistent medieval fantasy styling."
+        comment: "Auto-generate endpoints exist for citizens, slaves, livestock, garrison, tribute, and crimes with proper backend logic"
+      - working: false
+        agent: "user"
+        comment: "User reported: 'Autogenerate doesn't work in preview for any of the registries' - frontend auto-generate buttons not reflecting changes in the UI"
+
+  - task: "Government Position Management"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created GovernmentManagement component for appointing citizens to government positions with proper API integration"
+      - working: false
+        agent: "user"
+        comment: "User requested: 'local Government needs more positions and displayed in a hierarchy' and 'assign them from the available pool of Citizens'"
+
+  - task: "Enhanced Notification Engine"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "WebSocket-based notification system exists with event broadcasting"
+      - working: false
+        agent: "user"
+        comment: "User reported: 'the Notification engine needs to be improved'"
 
 metadata:
   created_by: "main_agent"
