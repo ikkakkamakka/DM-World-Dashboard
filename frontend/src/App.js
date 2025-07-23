@@ -838,7 +838,7 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
       </div>
 
       <div className="map-instructions">
-        {getBoundaryModeInstructions()}
+        Double-click to add a new city • Drag cities to move them • Right-click cities to delete • Use boundary tools to manage territories
       </div>
       
       <div className="map-controls">
@@ -868,6 +868,7 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
       <div 
         className="map-placeholder" 
         onClick={handleMapClick}
+        onDoubleClick={handleMapDoubleClick}
         onMouseMove={(e) => {
           handleMouseMove(e);
           handlePanMove(e);
@@ -878,13 +879,15 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
         }}
         onMouseDown={handlePanStart}
         onWheel={handleWheel}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         style={{ 
           cursor: boundaryMode === 'draw' ? 'crosshair' : 
                   boundaryMode === 'paint' ? 'copy' :
                   boundaryMode === 'erase' ? 'not-allowed' :
                   isPanning ? 'grabbing' :
                   (isDragging ? 'grabbing' : (boundaryMode === 'off' ? 'grab' : 'default')),
-          transform: `scale(${zoom}) translate(${pan.x / zoom}px, ${pan.y / zoom}px)`,
+          transform: `scale(${zoom})`,
           transformOrigin: 'center center'
         }}
       >
