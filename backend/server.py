@@ -1096,7 +1096,154 @@ async def clear_all_kingdom_boundaries(kingdom_id: str):
         {"$set": {"boundaries": []}}
     )
     
-    return {"message": f"Cleared {result.deleted_count} boundaries for kingdom {kingdom_id}"}
+# Calendar Events Management
+@api_router.get("/calendar-events/{kingdom_id}")
+async def get_calendar_events(kingdom_id: str):
+    """Get all calendar events for a kingdom"""
+    events = await db.calendar_events.find({"kingdom_id": kingdom_id}).to_list(100)
+    for event in events:
+        event.pop('_id', None)
+    return events
+
+@api_router.post("/calendar-events")
+async def create_calendar_event(event: CalendarEventCreate, kingdom_id: str):
+    """Create a new calendar event"""
+    new_event = CalendarEvent(**event.dict(), kingdom_id=kingdom_id)
+    
+    result = await db.calendar_events.insert_one(new_event.dict())
+    if result.inserted_id:
+        # Create a kingdom event for this calendar event
+        event_desc = f"📅 New calendar event: {new_event.title} scheduled for {new_event.event_date['day']} {HARPTOS_MONTHS[new_event.event_date['month']]['name']}, {new_event.event_date['year']} DR"
+        await create_and_broadcast_event(event_desc, "Kingdom", "Calendar", "calendar-event")
+        return new_event
+    raise HTTPException(status_code=500, detail="Failed to create calendar event")
+
+@api_router.delete("/calendar-events/{event_id}")
+async def delete_calendar_event(event_id: str):
+    """Delete a calendar event"""
+    result = await db.calendar_events.delete_one({"id": event_id})
+    if result.deleted_count:
+        return {"message": "Calendar event deleted successfully"}
+    raise HTTPException(status_code=404, detail="Calendar event not found")
+
+# Voting System Management
+@api_router.get("/voting-sessions/{kingdom_id}")
+async def get_voting_sessions(kingdom_id: str):
+    """Get all voting sessions for a kingdom"""
+    sessions = await db.voting_sessions.find({"kingdom_id": kingdom_id}).to_list(100)
+    for session in sessions:
+        session.pop('_id', None)
+    return sessions
+
+@api_router.post("/voting-sessions")
+async def create_voting_session(session: VotingSessionCreate, kingdom_id: str):
+    """Create a new voting session"""
+    new_session = VotingSession(**session.dict(), kingdom_id=kingdom_id)
+    
+    result = await db.voting_sessions.insert_one(new_session.dict())
+    if result.inserted_id:
+        # Create a kingdom event for this voting session
+        location = "Kingdom-wide"
+        if new_session.city_id:
+            # Find city name
+            kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
+            if kingdom and kingdom.get('cities'):
+                city = next((c for c in kingdom['cities'] if c['id'] == new_session.city_id), None)
+                location = city['name'] if city else "Unknown City"
+        
+        event_desc = f"🗳️ Voting session started: {new_session.title} ({location})"
+        await create_and_broadcast_event(event_desc, location, "Voting", "voting-session")
+        return new_session
+    raise HTTPException(status_code=500, detail="Failed to create voting session")
+
+@api_router.post("/voting-sessions/{session_id}/vote")
+async def cast_vote(session_id: str, vote: CastVote):
+    """Cast a vote in a voting session"""
+    # Verify citizen exists and can vote
+    kingdoms = await db.multi_kingdoms.find().to_list(None)
+    citizen_found = False
+    
+    for kingdom in kingdoms:
+        if kingdom.get('cities'):
+            for city in kingdom['cities']:
+                if city.get('citizens'):
+                    for citizen in city['citizens']:
+                        if citizen['id'] == vote.citizen_id:
+                            citizen_found = True
+                            break
+    
+    if not citizen_found:
+        raise HTTPException(status_code=404, detail="Citizen not found")
+    
+    # Update the voting session
+    result = await db.voting_sessions.update_one(
+        {"id": session_id, "status": "active"},
+        {"$set": {f"votes.{vote.citizen_id}": vote.option}}
+    )
+    
+    if result.modified_count:
+        return {"message": "Vote cast successfully"}
+    else:
+        # Check if session exists but is not active
+        session = await db.voting_sessions.find_one({"id": session_id})
+        if not session:
+            raise HTTPException(status_code=404, detail="Voting session not found")
+        elif session.get('status') != 'active':
+            raise HTTPException(status_code=400, detail="Voting session is not active")
+        else:
+            raise HTTPException(status_code=500, detail="Failed to cast vote")
+
+@api_router.post("/voting-sessions/{session_id}/close")
+async def close_voting_session(session_id: str):
+    """Close a voting session and calculate results"""
+    session = await db.voting_sessions.find_one({"id": session_id})
+    if not session:
+        raise HTTPException(status_code=404, detail="Voting session not found")
+    
+    # Calculate results
+    votes = session.get('votes', {})
+    results = {}
+    
+    for option in session['options']:
+        results[option] = 0
+    
+    for voted_option in votes.values():
+        if voted_option in results:
+            results[voted_option] += 1
+    
+    # Update session with results
+    await db.voting_sessions.update_one(
+        {"id": session_id},
+        {
+            "$set": {
+                "status": "completed",
+                "results": results
+            }
+        }
+    )
+    
+    # Create event for voting results
+    winning_option = max(results.items(), key=lambda x: x[1])
+    event_desc = f"🏆 Voting completed: '{session['title']}' - Winner: {winning_option[0]} ({winning_option[1]} votes)"
+    await create_and_broadcast_event(event_desc, "Kingdom", "Voting Results", "voting-results")
+    
+    return {"message": "Voting session closed", "results": results}
+
+@api_router.get("/voting-sessions/{session_id}/results")
+async def get_voting_results(session_id: str):
+    """Get results of a voting session"""
+    session = await db.voting_sessions.find_one({"id": session_id})
+    if not session:
+        raise HTTPException(status_code=404, detail="Voting session not found")
+    
+    return {
+        "session_id": session_id,
+        "title": session['title'],
+        "status": session['status'],
+        "votes": session.get('votes', {}),
+        "results": session.get('results', {}),
+        "total_votes": len(session.get('votes', {}))
+    }
 
 # City assignment to kingdoms
 @api_router.put("/cities/{city_id}/assign-kingdom/{kingdom_id}")
