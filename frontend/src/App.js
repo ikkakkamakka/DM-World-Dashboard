@@ -1418,6 +1418,21 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
     }
   };
 
+  const handleRemoveOfficial = async (officialId) => {
+    if (window.confirm('Are you sure you want to remove this official from their position?')) {
+      try {
+        const response = await fetch(`${API}/cities/${city.id}/government/${officialId}`, {
+          method: 'DELETE'
+        });
+        if (response.ok) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error('Error removing official:', error);
+      }
+    }
+  };
+
   return (
     <div className="city-dashboard">
       <div className="city-header">
