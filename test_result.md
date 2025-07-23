@@ -268,20 +268,35 @@ frontend:
         agent: "testing"
         comment: "✅ BACKEND BOUNDARY MANAGEMENT FULLY FUNCTIONAL: Comprehensive backend testing confirms all boundary management APIs work perfectly. User's reported issue 'Clear Border buttons do nothing' is NOT a backend problem. All 4 key endpoints tested: GET /api/multi-kingdoms (✅), GET /api/kingdom-boundaries/{kingdom_id} (✅), DELETE /api/kingdom-boundaries/clear/{kingdom_id} (✅ - successfully cleared 2 boundaries), POST /api/kingdom-boundaries (✅). Database consistency verified between both collections. Edge cases tested: empty clears, invalid IDs, malformed data, large datasets, concurrent operations - all handled correctly. The issue is in frontend implementation not calling APIs properly or not updating UI after successful backend responses."
 
-  - task: "Enhanced Notification Engine"
-    implemented: true
+  - task: "Multi-Kingdom Autogenerate Functionality"
+    implemented: false
     working: false
-    file: "/app/frontend/src/App.js"
+    file: "/app/backend/server.py"
     stuck_count: 0
-    priority: "medium"
+    priority: "high"
     needs_retesting: true
     status_history:
-      - working: "NA"
-        agent: "main"
-        comment: "WebSocket-based notification system exists with event broadcasting"
       - working: false
         agent: "user"
-        comment: "User reported: 'the Notification engine needs to be improved'"
+        comment: "User reported: 'Autogenerate for new kingdoms does not work. I need you iterate through the code and make sure it is updated to the new multikingdom db which includes events and the maps.'"
+      - working: false
+        agent: "main"
+        comment: "CRITICAL ISSUE IDENTIFIED: /auto-generate API endpoint (lines 1551-1661) still uses legacy db.kingdoms collection instead of db.multi_kingdoms. All database operations incorrectly target db.kingdoms.update_one() instead of db.multi_kingdoms.update_one(). Events are not tagged with kingdom_id. This causes autogenerate to fail for new kingdoms created in the multi-kingdom system."
+
+  - task: "Real-time Dashboard Updates from Events"
+    implemented: false
+    working: false
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User wants: 'notifications generated to edit the Dashboard. so if 1 citizen dies it removes them from the count and shows it on the Notification Event screen'"
+      - working: false
+        agent: "main"
+        comment: "ANALYSIS: Simulation engine generates citizen_death events (lines 171-174, 227-234) but only creates notification text without actually removing citizens from database or updating population counts. Death events are purely cosmetic. No real-time dashboard updates occur when events happen. Missing: actual database operations for births/deaths, crime impacts, WebSocket updates with new counts."
 
 metadata:
   created_by: "main_agent"
