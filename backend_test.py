@@ -560,7 +560,658 @@ class BackendTester:
             self.errors.append(f"Simulation engine test error: {str(e)}")
             return False
 
-    async def run_all_tests(self):
+    async def test_enhanced_boundary_management(self):
+        """Test the enhanced boundary management system with new features"""
+        print("\n🗺️ Testing Enhanced Boundary Management System...")
+        
+        # Test multi-kingdoms API first
+        multi_kingdoms_success = await self.test_multi_kingdoms_api()
+        self.test_results['multi_kingdoms_api'] = multi_kingdoms_success
+        
+        if not multi_kingdoms_success:
+            print("   ❌ Multi-kingdoms API failed, skipping boundary tests")
+            return False
+        
+        # Get kingdom IDs for testing
+        kingdom_ids = await self.get_test_kingdom_ids()
+        if len(kingdom_ids) < 2:
+            print("   ⚠️ Creating additional test kingdom for isolation testing...")
+            kingdom_ids = await self.ensure_multiple_kingdoms()
+        
+        # Test boundary creation
+        boundary_create_success = await self.test_kingdom_boundaries_create(kingdom_ids[0])
+        self.test_results['kingdom_boundaries_create'] = boundary_create_success
+        
+        # Test boundary retrieval
+        boundary_get_success = await self.test_kingdom_boundaries_get(kingdom_ids[0])
+        self.test_results['kingdom_boundaries_get'] = boundary_get_success
+        
+        # Test boundary update
+        boundary_update_success = await self.test_kingdom_boundaries_update(kingdom_ids[0])
+        self.test_results['kingdom_boundaries_update'] = boundary_update_success
+        
+        # Test boundary deletion
+        boundary_delete_success = await self.test_kingdom_boundaries_delete(kingdom_ids[0])
+        self.test_results['kingdom_boundaries_delete'] = boundary_delete_success
+        
+        # Test clear all boundaries (NEW FEATURE)
+        boundary_clear_success = await self.test_kingdom_boundaries_clear_all(kingdom_ids[0])
+        self.test_results['kingdom_boundaries_clear_all'] = boundary_clear_success
+        
+        # Test multi-kingdom boundary isolation
+        isolation_success = await self.test_multi_kingdom_boundary_isolation(kingdom_ids)
+        self.test_results['multi_kingdom_boundary_isolation'] = isolation_success
+        
+        # Test database consistency
+        consistency_success = await self.test_database_consistency(kingdom_ids[0])
+        self.test_results['database_consistency_check'] = consistency_success
+        
+        # Summary
+        boundary_tests = [
+            boundary_create_success, boundary_get_success, boundary_update_success,
+            boundary_delete_success, boundary_clear_success, isolation_success, consistency_success
+        ]
+        
+        passed_boundary_tests = sum(boundary_tests)
+        total_boundary_tests = len(boundary_tests)
+        
+        print(f"\n   📊 Boundary Management Summary: {passed_boundary_tests}/{total_boundary_tests} tests passed")
+        
+        return passed_boundary_tests == total_boundary_tests
+
+    async def test_multi_kingdoms_api(self):
+        """Test multi-kingdoms API endpoints"""
+        print("\n   🏰 Testing Multi-Kingdoms API...")
+        try:
+            # Test GET /api/multi-kingdoms
+            async with self.session.get(f"{API_BASE}/multi-kingdoms") as response:
+                if response.status == 200:
+                    kingdoms = await response.json()
+                    
+                    if not isinstance(kingdoms, list):
+                        self.errors.append("Multi-kingdoms API should return a list")
+                        return False
+                    
+                    if len(kingdoms) == 0:
+                        self.errors.append("No kingdoms found in multi-kingdoms API")
+                        return False
+                    
+                    # Check kingdom structure
+                    kingdom = kingdoms[0]
+                    required_fields = ['id', 'name', 'ruler', 'color', 'cities', 'boundaries']
+                    missing_fields = [field for field in required_fields if field not in kingdom]
+                    
+                    if missing_fields:
+                        self.errors.append(f"Multi-kingdom missing fields: {missing_fields}")
+                        return False
+                    
+                    print(f"      ✅ Found {len(kingdoms)} kingdoms")
+                    print(f"      Sample kingdom: {kingdom['name']} (Ruler: {kingdom['ruler']})")
+                    
+                    return True
+                else:
+                    self.errors.append(f"Multi-kingdoms API returned status {response.status}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Multi-kingdoms API error: {str(e)}")
+            return False
+
+    async def get_test_kingdom_ids(self):
+        """Get kingdom IDs for testing"""
+        try:
+            async with self.session.get(f"{API_BASE}/multi-kingdoms") as response:
+                if response.status == 200:
+                    kingdoms = await response.json()
+                    return [kingdom['id'] for kingdom in kingdoms]
+                return []
+        except:
+            return []
+
+    async def ensure_multiple_kingdoms(self):
+        """Ensure we have multiple kingdoms for isolation testing"""
+        try:
+            # Create a test kingdom
+            test_kingdom_data = {
+                "name": "Test Kingdom for Boundaries",
+                "ruler": "Test Ruler",
+                "government_type": "Test Monarchy",
+                "color": "#ff0000"
+            }
+            
+            async with self.session.post(f"{API_BASE}/multi-kingdoms", json=test_kingdom_data) as response:
+                if response.status == 200:
+                    new_kingdom = await response.json()
+                    print(f"      ✅ Created test kingdom: {new_kingdom['name']}")
+                    
+                    # Return updated kingdom list
+                    return await self.get_test_kingdom_ids()
+                else:
+                    print(f"      ❌ Failed to create test kingdom: {response.status}")
+                    return await self.get_test_kingdom_ids()
+                    
+        except Exception as e:
+            print(f"      ❌ Error creating test kingdom: {e}")
+            return await self.get_test_kingdom_ids()
+
+    async def test_kingdom_boundaries_create(self, kingdom_id):
+        """Test creating kingdom boundaries"""
+        print("\n   📍 Testing Boundary Creation...")
+        try:
+            # Create test boundary data
+            boundary_data = {
+                "kingdom_id": kingdom_id,
+                "boundary_points": [
+                    {"x": 100, "y": 100},
+                    {"x": 200, "y": 100},
+                    {"x": 200, "y": 200},
+                    {"x": 100, "y": 200}
+                ],
+                "color": "#1e3a8a"
+            }
+            
+            async with self.session.post(f"{API_BASE}/kingdom-boundaries", json=boundary_data) as response:
+                if response.status == 200:
+                    boundary = await response.json()
+                    
+                    # Verify boundary structure
+                    required_fields = ['id', 'kingdom_id', 'boundary_points', 'color']
+                    missing_fields = [field for field in required_fields if field not in boundary]
+                    
+                    if missing_fields:
+                        self.errors.append(f"Created boundary missing fields: {missing_fields}")
+                        return False
+                    
+                    if boundary['kingdom_id'] != kingdom_id:
+                        self.errors.append(f"Boundary kingdom_id mismatch: expected {kingdom_id}, got {boundary['kingdom_id']}")
+                        return False
+                    
+                    if len(boundary['boundary_points']) != 4:
+                        self.errors.append(f"Boundary points count mismatch: expected 4, got {len(boundary['boundary_points'])}")
+                        return False
+                    
+                    print(f"      ✅ Created boundary with {len(boundary['boundary_points'])} points")
+                    print(f"      Boundary ID: {boundary['id']}")
+                    
+                    # Store boundary ID for later tests
+                    self.test_boundary_id = boundary['id']
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Boundary creation failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Boundary creation error: {str(e)}")
+            return False
+
+    async def test_kingdom_boundaries_get(self, kingdom_id):
+        """Test retrieving kingdom boundaries"""
+        print("\n   📋 Testing Boundary Retrieval...")
+        try:
+            async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom_id}") as response:
+                if response.status == 200:
+                    boundaries = await response.json()
+                    
+                    if not isinstance(boundaries, list):
+                        self.errors.append("Kingdom boundaries should return a list")
+                        return False
+                    
+                    if len(boundaries) == 0:
+                        self.errors.append("No boundaries found for kingdom")
+                        return False
+                    
+                    # Check boundary structure
+                    boundary = boundaries[0]
+                    required_fields = ['id', 'kingdom_id', 'boundary_points', 'color']
+                    missing_fields = [field for field in required_fields if field not in boundary]
+                    
+                    if missing_fields:
+                        self.errors.append(f"Retrieved boundary missing fields: {missing_fields}")
+                        return False
+                    
+                    print(f"      ✅ Retrieved {len(boundaries)} boundaries for kingdom")
+                    print(f"      First boundary has {len(boundary['boundary_points'])} points")
+                    
+                    return True
+                    
+                else:
+                    self.errors.append(f"Boundary retrieval failed: HTTP {response.status}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Boundary retrieval error: {str(e)}")
+            return False
+
+    async def test_kingdom_boundaries_update(self, kingdom_id):
+        """Test updating kingdom boundaries"""
+        print("\n   ✏️ Testing Boundary Update...")
+        try:
+            if not hasattr(self, 'test_boundary_id'):
+                self.errors.append("No boundary ID available for update test")
+                return False
+            
+            # Update boundary with new points
+            update_data = {
+                "boundary_points": [
+                    {"x": 150, "y": 150},
+                    {"x": 250, "y": 150},
+                    {"x": 250, "y": 250},
+                    {"x": 150, "y": 250},
+                    {"x": 150, "y": 200}  # Additional point
+                ]
+            }
+            
+            async with self.session.put(f"{API_BASE}/kingdom-boundaries/{self.test_boundary_id}", json=update_data) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if "message" not in result:
+                        self.errors.append("Boundary update response missing message")
+                        return False
+                    
+                    # Verify the update was applied
+                    async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom_id}") as get_response:
+                        if get_response.status == 200:
+                            boundaries = await get_response.json()
+                            updated_boundary = next((b for b in boundaries if b['id'] == self.test_boundary_id), None)
+                            
+                            if not updated_boundary:
+                                self.errors.append("Updated boundary not found in kingdom boundaries")
+                                return False
+                            
+                            if len(updated_boundary['boundary_points']) != 5:
+                                self.errors.append(f"Boundary update failed: expected 5 points, got {len(updated_boundary['boundary_points'])}")
+                                return False
+                            
+                            print(f"      ✅ Updated boundary to {len(updated_boundary['boundary_points'])} points")
+                            return True
+                        else:
+                            self.errors.append("Failed to verify boundary update")
+                            return False
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Boundary update failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Boundary update error: {str(e)}")
+            return False
+
+    async def test_kingdom_boundaries_delete(self, kingdom_id):
+        """Test deleting individual kingdom boundaries"""
+        print("\n   🗑️ Testing Individual Boundary Deletion...")
+        try:
+            if not hasattr(self, 'test_boundary_id'):
+                self.errors.append("No boundary ID available for delete test")
+                return False
+            
+            # Get initial boundary count
+            async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom_id}") as response:
+                if response.status == 200:
+                    initial_boundaries = await response.json()
+                    initial_count = len(initial_boundaries)
+                else:
+                    self.errors.append("Failed to get initial boundary count")
+                    return False
+            
+            # Delete the boundary
+            async with self.session.delete(f"{API_BASE}/kingdom-boundaries/{self.test_boundary_id}") as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if "message" not in result:
+                        self.errors.append("Boundary deletion response missing message")
+                        return False
+                    
+                    # Verify the boundary was deleted
+                    async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom_id}") as get_response:
+                        if get_response.status == 200:
+                            remaining_boundaries = await get_response.json()
+                            remaining_count = len(remaining_boundaries)
+                            
+                            if remaining_count != initial_count - 1:
+                                self.errors.append(f"Boundary deletion failed: expected {initial_count - 1} boundaries, got {remaining_count}")
+                                return False
+                            
+                            # Verify specific boundary is gone
+                            deleted_boundary = next((b for b in remaining_boundaries if b['id'] == self.test_boundary_id), None)
+                            if deleted_boundary:
+                                self.errors.append("Deleted boundary still exists in kingdom boundaries")
+                                return False
+                            
+                            print(f"      ✅ Deleted boundary successfully: {initial_count} → {remaining_count} boundaries")
+                            return True
+                        else:
+                            self.errors.append("Failed to verify boundary deletion")
+                            return False
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Boundary deletion failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Boundary deletion error: {str(e)}")
+            return False
+
+    async def test_kingdom_boundaries_clear_all(self, kingdom_id):
+        """Test the new Clear All Boundaries endpoint"""
+        print("\n   🧹 Testing Clear All Boundaries (NEW FEATURE)...")
+        try:
+            # First create some boundaries to clear
+            boundaries_to_create = [
+                {
+                    "kingdom_id": kingdom_id,
+                    "boundary_points": [{"x": 50, "y": 50}, {"x": 100, "y": 50}, {"x": 100, "y": 100}, {"x": 50, "y": 100}],
+                    "color": "#ff0000"
+                },
+                {
+                    "kingdom_id": kingdom_id,
+                    "boundary_points": [{"x": 200, "y": 200}, {"x": 300, "y": 200}, {"x": 300, "y": 300}, {"x": 200, "y": 300}],
+                    "color": "#00ff00"
+                }
+            ]
+            
+            created_boundary_ids = []
+            for boundary_data in boundaries_to_create:
+                async with self.session.post(f"{API_BASE}/kingdom-boundaries", json=boundary_data) as response:
+                    if response.status == 200:
+                        boundary = await response.json()
+                        created_boundary_ids.append(boundary['id'])
+                    else:
+                        print(f"      ⚠️ Failed to create test boundary for clear all test")
+            
+            if len(created_boundary_ids) == 0:
+                print("      ⚠️ No boundaries created for clear all test, but continuing...")
+            
+            # Get initial boundary count
+            async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom_id}") as response:
+                if response.status == 200:
+                    initial_boundaries = await response.json()
+                    initial_count = len(initial_boundaries)
+                    print(f"      Initial boundary count: {initial_count}")
+                else:
+                    self.errors.append("Failed to get initial boundary count for clear all test")
+                    return False
+            
+            # Test the Clear All Boundaries endpoint
+            async with self.session.delete(f"{API_BASE}/kingdom-boundaries/clear/{kingdom_id}") as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if "message" not in result:
+                        self.errors.append("Clear all boundaries response missing message")
+                        return False
+                    
+                    # Verify all boundaries were cleared
+                    async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom_id}") as get_response:
+                        if get_response.status == 200:
+                            remaining_boundaries = await get_response.json()
+                            remaining_count = len(remaining_boundaries)
+                            
+                            if remaining_count != 0:
+                                self.errors.append(f"Clear all boundaries failed: expected 0 boundaries, got {remaining_count}")
+                                return False
+                            
+                            print(f"      ✅ Cleared all boundaries successfully: {initial_count} → {remaining_count} boundaries")
+                            
+                            # Also verify in multi-kingdoms document
+                            async with self.session.get(f"{API_BASE}/multi-kingdom/{kingdom_id}") as kingdom_response:
+                                if kingdom_response.status == 200:
+                                    kingdom_data = await kingdom_response.json()
+                                    kingdom_boundaries = kingdom_data.get('boundaries', [])
+                                    
+                                    if len(kingdom_boundaries) != 0:
+                                        self.errors.append(f"Clear all boundaries failed in multi-kingdoms document: expected 0, got {len(kingdom_boundaries)}")
+                                        return False
+                                    
+                                    print(f"      ✅ Multi-kingdoms document also cleared: {len(kingdom_boundaries)} boundaries")
+                                    return True
+                                else:
+                                    self.errors.append("Failed to verify clear all in multi-kingdoms document")
+                                    return False
+                        else:
+                            self.errors.append("Failed to verify clear all boundaries")
+                            return False
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Clear all boundaries failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Clear all boundaries error: {str(e)}")
+            return False
+
+    async def test_multi_kingdom_boundary_isolation(self, kingdom_ids):
+        """Test that each kingdom's boundaries are independent"""
+        print("\n   🏛️ Testing Multi-Kingdom Boundary Isolation...")
+        try:
+            if len(kingdom_ids) < 2:
+                self.errors.append("Need at least 2 kingdoms for isolation testing")
+                return False
+            
+            kingdom1_id = kingdom_ids[0]
+            kingdom2_id = kingdom_ids[1]
+            
+            # Create boundaries for kingdom 1
+            kingdom1_boundary = {
+                "kingdom_id": kingdom1_id,
+                "boundary_points": [{"x": 10, "y": 10}, {"x": 50, "y": 10}, {"x": 50, "y": 50}, {"x": 10, "y": 50}],
+                "color": "#ff0000"
+            }
+            
+            # Create boundaries for kingdom 2
+            kingdom2_boundary = {
+                "kingdom_id": kingdom2_id,
+                "boundary_points": [{"x": 100, "y": 100}, {"x": 150, "y": 100}, {"x": 150, "y": 150}, {"x": 100, "y": 150}],
+                "color": "#00ff00"
+            }
+            
+            # Create boundaries for both kingdoms
+            async with self.session.post(f"{API_BASE}/kingdom-boundaries", json=kingdom1_boundary) as response:
+                if response.status != 200:
+                    self.errors.append("Failed to create boundary for kingdom 1 in isolation test")
+                    return False
+                kingdom1_boundary_data = await response.json()
+            
+            async with self.session.post(f"{API_BASE}/kingdom-boundaries", json=kingdom2_boundary) as response:
+                if response.status != 200:
+                    self.errors.append("Failed to create boundary for kingdom 2 in isolation test")
+                    return False
+                kingdom2_boundary_data = await response.json()
+            
+            # Verify each kingdom only sees its own boundaries
+            async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom1_id}") as response:
+                if response.status == 200:
+                    kingdom1_boundaries = await response.json()
+                    kingdom1_count = len(kingdom1_boundaries)
+                    
+                    # Check that kingdom1 boundaries don't contain kingdom2's boundary
+                    kingdom2_boundary_in_kingdom1 = any(b['id'] == kingdom2_boundary_data['id'] for b in kingdom1_boundaries)
+                    if kingdom2_boundary_in_kingdom1:
+                        self.errors.append("Kingdom 1 boundaries contain Kingdom 2's boundary - isolation failed")
+                        return False
+                else:
+                    self.errors.append("Failed to get Kingdom 1 boundaries for isolation test")
+                    return False
+            
+            async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom2_id}") as response:
+                if response.status == 200:
+                    kingdom2_boundaries = await response.json()
+                    kingdom2_count = len(kingdom2_boundaries)
+                    
+                    # Check that kingdom2 boundaries don't contain kingdom1's boundary
+                    kingdom1_boundary_in_kingdom2 = any(b['id'] == kingdom1_boundary_data['id'] for b in kingdom2_boundaries)
+                    if kingdom1_boundary_in_kingdom2:
+                        self.errors.append("Kingdom 2 boundaries contain Kingdom 1's boundary - isolation failed")
+                        return False
+                else:
+                    self.errors.append("Failed to get Kingdom 2 boundaries for isolation test")
+                    return False
+            
+            print(f"      ✅ Kingdom isolation verified: Kingdom 1 has {kingdom1_count} boundaries, Kingdom 2 has {kingdom2_count} boundaries")
+            
+            # Test that clearing one kingdom's boundaries doesn't affect the other
+            async with self.session.delete(f"{API_BASE}/kingdom-boundaries/clear/{kingdom1_id}") as response:
+                if response.status != 200:
+                    self.errors.append("Failed to clear Kingdom 1 boundaries in isolation test")
+                    return False
+            
+            # Verify Kingdom 1 boundaries are cleared but Kingdom 2 boundaries remain
+            async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom1_id}") as response:
+                if response.status == 200:
+                    kingdom1_boundaries_after = await response.json()
+                    if len(kingdom1_boundaries_after) != 0:
+                        self.errors.append("Kingdom 1 boundaries not cleared in isolation test")
+                        return False
+                else:
+                    self.errors.append("Failed to verify Kingdom 1 boundaries cleared")
+                    return False
+            
+            async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom2_id}") as response:
+                if response.status == 200:
+                    kingdom2_boundaries_after = await response.json()
+                    if len(kingdom2_boundaries_after) != kingdom2_count:
+                        self.errors.append("Kingdom 2 boundaries affected by Kingdom 1 clear operation - isolation failed")
+                        return False
+                else:
+                    self.errors.append("Failed to verify Kingdom 2 boundaries unaffected")
+                    return False
+            
+            print(f"      ✅ Clear isolation verified: Kingdom 1 cleared, Kingdom 2 unaffected")
+            return True
+            
+        except Exception as e:
+            self.errors.append(f"Multi-kingdom boundary isolation error: {str(e)}")
+            return False
+
+    async def test_database_consistency(self, kingdom_id):
+        """Test that boundaries exist in both kingdom_boundaries collection and multi_kingdoms documents"""
+        print("\n   🔍 Testing Database Consistency...")
+        try:
+            # Create a test boundary
+            test_boundary = {
+                "kingdom_id": kingdom_id,
+                "boundary_points": [{"x": 300, "y": 300}, {"x": 400, "y": 300}, {"x": 400, "y": 400}, {"x": 300, "y": 400}],
+                "color": "#0000ff"
+            }
+            
+            async with self.session.post(f"{API_BASE}/kingdom-boundaries", json=test_boundary) as response:
+                if response.status != 200:
+                    self.errors.append("Failed to create boundary for consistency test")
+                    return False
+                created_boundary = await response.json()
+                boundary_id = created_boundary['id']
+            
+            # Check boundary exists in kingdom_boundaries collection
+            async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom_id}") as response:
+                if response.status == 200:
+                    boundaries_collection = await response.json()
+                    boundary_in_collection = any(b['id'] == boundary_id for b in boundaries_collection)
+                    
+                    if not boundary_in_collection:
+                        self.errors.append("Boundary not found in kingdom_boundaries collection")
+                        return False
+                else:
+                    self.errors.append("Failed to get boundaries from collection")
+                    return False
+            
+            # Check boundary exists in multi_kingdoms document
+            async with self.session.get(f"{API_BASE}/multi-kingdom/{kingdom_id}") as response:
+                if response.status == 200:
+                    kingdom_document = await response.json()
+                    embedded_boundaries = kingdom_document.get('boundaries', [])
+                    boundary_in_document = any(b['id'] == boundary_id for b in embedded_boundaries)
+                    
+                    if not boundary_in_document:
+                        self.errors.append("Boundary not found in multi_kingdoms document")
+                        return False
+                else:
+                    self.errors.append("Failed to get kingdom document")
+                    return False
+            
+            print(f"      ✅ Database consistency verified: boundary exists in both locations")
+            
+            # Test consistency after update
+            update_data = {
+                "boundary_points": [{"x": 350, "y": 350}, {"x": 450, "y": 350}, {"x": 450, "y": 450}, {"x": 350, "y": 450}]
+            }
+            
+            async with self.session.put(f"{API_BASE}/kingdom-boundaries/{boundary_id}", json=update_data) as response:
+                if response.status != 200:
+                    self.errors.append("Failed to update boundary for consistency test")
+                    return False
+            
+            # Verify update consistency in both locations
+            async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom_id}") as response:
+                if response.status == 200:
+                    boundaries_collection = await response.json()
+                    updated_boundary_collection = next((b for b in boundaries_collection if b['id'] == boundary_id), None)
+                    
+                    if not updated_boundary_collection or len(updated_boundary_collection['boundary_points']) != 4:
+                        self.errors.append("Boundary update not reflected in collection")
+                        return False
+                else:
+                    self.errors.append("Failed to verify update in collection")
+                    return False
+            
+            async with self.session.get(f"{API_BASE}/multi-kingdom/{kingdom_id}") as response:
+                if response.status == 200:
+                    kingdom_document = await response.json()
+                    embedded_boundaries = kingdom_document.get('boundaries', [])
+                    updated_boundary_document = next((b for b in embedded_boundaries if b['id'] == boundary_id), None)
+                    
+                    if not updated_boundary_document or len(updated_boundary_document['boundary_points']) != 4:
+                        self.errors.append("Boundary update not reflected in document")
+                        return False
+                else:
+                    self.errors.append("Failed to verify update in document")
+                    return False
+            
+            print(f"      ✅ Update consistency verified: both locations updated")
+            
+            # Test consistency after deletion
+            async with self.session.delete(f"{API_BASE}/kingdom-boundaries/{boundary_id}") as response:
+                if response.status != 200:
+                    self.errors.append("Failed to delete boundary for consistency test")
+                    return False
+            
+            # Verify deletion consistency in both locations
+            async with self.session.get(f"{API_BASE}/kingdom-boundaries/{kingdom_id}") as response:
+                if response.status == 200:
+                    boundaries_collection = await response.json()
+                    deleted_boundary_collection = any(b['id'] == boundary_id for b in boundaries_collection)
+                    
+                    if deleted_boundary_collection:
+                        self.errors.append("Deleted boundary still exists in collection")
+                        return False
+                else:
+                    self.errors.append("Failed to verify deletion in collection")
+                    return False
+            
+            async with self.session.get(f"{API_BASE}/multi-kingdom/{kingdom_id}") as response:
+                if response.status == 200:
+                    kingdom_document = await response.json()
+                    embedded_boundaries = kingdom_document.get('boundaries', [])
+                    deleted_boundary_document = any(b['id'] == boundary_id for b in embedded_boundaries)
+                    
+                    if deleted_boundary_document:
+                        self.errors.append("Deleted boundary still exists in document")
+                        return False
+                else:
+                    self.errors.append("Failed to verify deletion in document")
+                    return False
+            
+            print(f"      ✅ Deletion consistency verified: boundary removed from both locations")
+            return True
+            
+        except Exception as e:
+            self.errors.append(f"Database consistency test error: {str(e)}")
+            return False
         """Run all backend tests"""
         print("🚀 Starting Fantasy Kingdom Backend Tests")
         print("=" * 60)
