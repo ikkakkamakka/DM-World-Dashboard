@@ -1063,7 +1063,7 @@ const TributeRegistry = ({ city }) => {
               <p><strong>Amount:</strong> {tribute.amount} {tribute.type}</p>
               <p><strong>Purpose:</strong> {tribute.purpose}</p>
               <p><strong>Due:</strong> {new Date(tribute.due_date).toLocaleDateString()}</p>
-              <p><strong>Status:</strong> <span className={`status-${tribute.status?.toLowerCase()}`}>{tribute.status}</span></p>
+              <p><strong>Status:</strong> <span className={`status-${tribute.status?.toLowerCase() || 'pending'}`}>{tribute.status}</span></p>
               {tribute.notes && <p><strong>Notes:</strong> {tribute.notes}</p>}
             </div>
           </div>
