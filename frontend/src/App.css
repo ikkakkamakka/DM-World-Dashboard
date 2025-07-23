@@ -413,16 +413,11 @@ body {
   cursor: grab;
   transition: all 0.2s ease;
   z-index: 10;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  padding: 5px;
-  background: rgba(255, 255, 255, 0.9);
 }
 
 .city-marker:hover {
   transform: translate(-50%, -50%) scale(1.1);
   z-index: 20;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .city-marker.dragging {
@@ -432,33 +427,21 @@ body {
 }
 
 .city-icon {
-  font-size: 24px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  font-size: 28px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
   margin-bottom: 4px;
 }
 
-.city-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
 .city-name {
-  color: white;
+  background: rgba(0,0,0,0.8);
+  color: var(--primary-gold);
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
+  margin-bottom: 2px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-.kingdom-label {
-  font-size: 10px;
-  font-weight: 500;
-  font-style: italic;
-  opacity: 0.8;
 }
 
 .city-delete-btn {
