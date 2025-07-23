@@ -811,16 +811,51 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
         {getBoundaryModeInstructions()}
       </div>
       
+      <div className="map-controls">
+        <button 
+          className="btn-secondary" 
+          onClick={() => setZoom(Math.min(3, zoom + 0.2))}
+          disabled={zoom >= 3}
+        >
+          🔍+ Zoom In
+        </button>
+        <span className="zoom-indicator">{Math.round(zoom * 100)}%</span>
+        <button 
+          className="btn-secondary" 
+          onClick={() => setZoom(Math.max(0.5, zoom - 0.2))}
+          disabled={zoom <= 0.5}
+        >
+          🔍- Zoom Out
+        </button>
+        <button 
+          className="btn-secondary" 
+          onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
+        >
+          🎯 Reset View
+        </button>
+      </div>
+      
       <div 
         className="map-placeholder" 
         onClick={handleMapClick}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
+        onMouseMove={(e) => {
+          handleMouseMove(e);
+          handlePanMove(e);
+        }}
+        onMouseUp={(e) => {
+          handleMouseUp(e);
+          handlePanEnd();
+        }}
+        onMouseDown={handlePanStart}
+        onWheel={handleWheel}
         style={{ 
           cursor: boundaryMode === 'draw' ? 'crosshair' : 
                   boundaryMode === 'paint' ? 'copy' :
                   boundaryMode === 'erase' ? 'not-allowed' :
-                  (isDragging ? 'grabbing' : 'default')
+                  isPanning ? 'grabbing' :
+                  (isDragging ? 'grabbing' : (boundaryMode === 'off' ? 'grab' : 'default')),
+          transform: `scale(${zoom}) translate(${pan.x / zoom}px, ${pan.y / zoom}px)`,
+          transformOrigin: 'center center'
         }}
       >
         <img 
@@ -830,15 +865,15 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
           draggable={false}
         />
         
-        {/* Render Existing Kingdom Boundaries with Fill */}
+        {/* Render ALL Kingdom Boundaries from all kingdoms */}
         <svg className="boundary-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {activeKingdom?.boundaries?.map(boundary => (
-            <g key={boundary.id}>
+          {allBoundaries.map((boundary, index) => (
+            <g key={`${boundary.id || index}`}>
               {/* Filled area */}
               <polygon
                 points={boundary.boundary_points.map(p => `${p.x},${p.y}`).join(' ')}
-                fill={`${boundary.color}40`}
-                stroke={boundary.color}
+                fill={`${boundary.kingdomColor || boundary.color}40`}
+                stroke={boundary.kingdomColor || boundary.color}
                 strokeWidth="0.3"
                 opacity="0.8"
               />
@@ -846,11 +881,25 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
               <polygon
                 points={boundary.boundary_points.map(p => `${p.x},${p.y}`).join(' ')}
                 fill="none"
-                stroke={boundary.color}
+                stroke={boundary.kingdomColor || boundary.color}
                 strokeWidth="0.5"
                 opacity="1"
                 strokeDasharray="1,0.5"
               />
+              {/* Kingdom label */}
+              {boundary.boundary_points.length > 0 && (
+                <text
+                  x={boundary.boundary_points.reduce((sum, p) => sum + p.x, 0) / boundary.boundary_points.length}
+                  y={boundary.boundary_points.reduce((sum, p) => sum + p.y, 0) / boundary.boundary_points.length}
+                  fill={boundary.kingdomColor || boundary.color}
+                  fontSize="2"
+                  textAnchor="middle"
+                  fontWeight="bold"
+                  opacity="0.8"
+                >
+                  {boundary.kingdomName}
+                </text>
+              )}
             </g>
           ))}
         </svg>
