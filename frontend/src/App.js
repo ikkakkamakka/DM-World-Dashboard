@@ -346,6 +346,13 @@ const Navigation = ({ currentView, onViewChange, kingdom, onBackToSelector }) =>
       >
         Faerûn Map
       </button>
+      <button 
+        className={`nav-button ${currentView === 'calendar' ? 'active' : ''}`}
+        onClick={() => onViewChange('calendar')}
+        title="Harptos Calendar System"
+      >
+        📅 Calendar
+      </button>
       {kingdom?.cities?.map(city => (
         <button
           key={city.id}
