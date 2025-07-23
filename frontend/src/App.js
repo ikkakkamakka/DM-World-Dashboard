@@ -1435,23 +1435,66 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
 
       {/* Government Hierarchy Section */}
       <div className="government-section">
-        <h2>Local Government</h2>
+        <h2>Local Government Hierarchy</h2>
         <div className="government-hierarchy">
-          <div className="government-official governor-card">
-            <div className="official-rank">Governor</div>
-            <div className="official-name">{city.governor}</div>
+          {/* Governor at the top */}
+          <div className="hierarchy-level governor-level">
+            <div className="government-official governor-card">
+              <div className="official-rank">Governor</div>
+              <div className="official-name">{city.governor}</div>
+            </div>
           </div>
-          <div className="government-officials">
-            {city.government_officials?.map(official => (
-              <div key={official.id} className="government-official">
-                <div className="official-rank">{official.position}</div>
-                <div className="official-name">{official.name}</div>
-              </div>
-            ))}
-            {(!city.government_officials || city.government_officials.length === 0) && (
-              <div className="no-officials">No officials appointed</div>
-            )}
+          
+          {/* High Council - Second Tier */}
+          <div className="hierarchy-level high-council">
+            <h4 className="tier-title">High Council</h4>
+            <div className="officials-tier">
+              {city.government_officials?.filter(official => 
+                ['Captain of the Guard', 'Master of Coin', 'High Scribe', 'Court Wizard', 'Head Cleric'].includes(official.position)
+              ).map(official => (
+                <div key={official.id} className="government-official high-council-card">
+                  <div className="official-rank">{official.position}</div>
+                  <div className="official-name">{official.name}</div>
+                </div>
+              ))}
+            </div>
           </div>
+          
+          {/* Department Heads - Third Tier */}
+          <div className="hierarchy-level department-heads">
+            <h4 className="tier-title">Department Heads</h4>
+            <div className="officials-tier">
+              {city.government_officials?.filter(official => 
+                ['Trade Minister', 'City Magistrate', 'Harbor Master', 'Master Builder', 'Tax Collector', 'Market Warden'].includes(official.position)
+              ).map(official => (
+                <div key={official.id} className="government-official department-card">
+                  <div className="official-rank">{official.position}</div>
+                  <div className="official-name">{official.name}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Minor Officials - Fourth Tier */}
+          <div className="hierarchy-level minor-officials">
+            <h4 className="tier-title">Administrative Staff</h4>
+            <div className="officials-tier">
+              {city.government_officials?.filter(official => 
+                !['Captain of the Guard', 'Master of Coin', 'High Scribe', 'Court Wizard', 'Head Cleric',
+                  'Trade Minister', 'City Magistrate', 'Harbor Master', 'Master Builder', 'Tax Collector', 'Market Warden'].includes(official.position)
+              ).map(official => (
+                <div key={official.id} className="government-official minor-card">
+                  <div className="official-rank">{official.position}</div>
+                  <div className="official-name">{official.name}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Show message if no officials */}
+          {(!city.government_officials || city.government_officials.length === 0) && (
+            <div className="no-officials">No government officials appointed</div>
+          )}
         </div>
       </div>
 
