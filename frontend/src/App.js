@@ -142,15 +142,39 @@ const getSeasonalEvents = (harptos) => {
   return events;
 };
 
-// Harptos Calendar Component
+// Enhanced Harptos Calendar Component with Events and Voting
 const HarptosCalendar = ({ kingdom, isVisible }) => {
   const [currentHarptos, setCurrentHarptos] = useState(convertRealTimeToHarptos());
   const [seasonalEvents, setSeasonalEvents] = useState([]);
   const [calendarMode, setCalendarMode] = useState('current'); // 'current' or 'manual'
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar', 'events', 'voting'
   const [manualDate, setManualDate] = useState({ year: 1492, month: 0, day: 1 });
+  const [customEvents, setCustomEvents] = useState([]);
+  const [votingSessions, setVotingSessions] = useState([]);
+  
+  // Event creation state
+  const [showEventForm, setShowEventForm] = useState(false);
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    description: '',
+    event_date: { year: 1492, month: 0, day: 1 },
+    event_type: 'custom',
+    is_recurring: false
+  });
+
+  // Voting creation state
+  const [showVotingForm, setShowVotingForm] = useState(false);
+  const [newVoting, setNewVoting] = useState({
+    title: '',
+    description: '',
+    options: ['', ''],
+    start_date: { year: 1492, month: 0, day: 1 },
+    end_date: { year: 1492, month: 0, day: 7 },
+    city_id: null
+  });
 
   useEffect(() => {
-    if (isVisible) {
+    if (isVisible && kingdom) {
       const updateCalendar = () => {
         const harptos = convertRealTimeToHarptos();
         setCurrentHarptos(harptos);
@@ -158,24 +182,186 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
       };
       
       updateCalendar();
+      fetchCustomEvents();
+      fetchVotingSessions();
+      
       const interval = setInterval(updateCalendar, 60000); // Update every minute
       
       return () => clearInterval(interval);
     }
-  }, [isVisible]);
+  }, [isVisible, kingdom]);
 
-  const formatHarptosDate = (harptos) => {
-    if (harptos.specialDay) {
-      return `${harptos.specialDay.name}, ${harptos.drYear} DR`;
+  const fetchCustomEvents = async () => {
+    if (!kingdom) return;
+    try {
+      const response = await fetch(`${API}/calendar-events/${kingdom.id}`);
+      if (response.ok) {
+        const events = await response.json();
+        setCustomEvents(events);
+      }
+    } catch (error) {
+      console.error('Error fetching calendar events:', error);
     }
-    return `${harptos.day} ${harptos.monthName}, ${harptos.drYear} DR`;
   };
 
-  const handleManualDateChange = (field, value) => {
-    setManualDate(prev => ({
+  const fetchVotingSessions = async () => {
+    if (!kingdom) return;
+    try {
+      const response = await fetch(`${API}/voting-sessions/${kingdom.id}`);
+      if (response.ok) {
+        const sessions = await response.json();
+        setVotingSessions(sessions);
+      }
+    } catch (error) {
+      console.error('Error fetching voting sessions:', error);
+    }
+  };
+
+  const handleCreateEvent = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API}/calendar-events?kingdom_id=${kingdom.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newEvent)
+      });
+
+      if (response.ok) {
+        setShowEventForm(false);
+        setNewEvent({
+          title: '',
+          description: '',
+          event_date: { year: 1492, month: 0, day: 1 },
+          event_type: 'custom',
+          is_recurring: false
+        });
+        fetchCustomEvents();
+        alert('Calendar event created successfully!');
+      } else {
+        throw new Error('Failed to create event');
+      }
+    } catch (error) {
+      console.error('Error creating event:', error);
+      alert('Failed to create event. Please try again.');
+    }
+  };
+
+  const handleCreateVoting = async (e) => {
+    e.preventDefault();
+    try {
+      // Filter out empty options
+      const validOptions = newVoting.options.filter(option => option.trim() !== '');
+      if (validOptions.length < 2) {
+        alert('Please provide at least 2 voting options');
+        return;
+      }
+
+      const response = await fetch(`${API}/voting-sessions?kingdom_id=${kingdom.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...newVoting,
+          options: validOptions
+        })
+      });
+
+      if (response.ok) {
+        setShowVotingForm(false);
+        setNewVoting({
+          title: '',
+          description: '',
+          options: ['', ''],
+          start_date: { year: 1492, month: 0, day: 1 },
+          end_date: { year: 1492, month: 0, day: 7 },
+          city_id: null
+        });
+        fetchVotingSessions();
+        alert('Voting session created successfully!');
+      } else {
+        throw new Error('Failed to create voting session');
+      }
+    } catch (error) {
+      console.error('Error creating voting session:', error);
+      alert('Failed to create voting session. Please try again.');
+    }
+  };
+
+  const handleCastVote = async (sessionId, citizenId, option) => {
+    try {
+      const response = await fetch(`${API}/voting-sessions/${sessionId}/vote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          citizen_id: citizenId,
+          option: option
+        })
+      });
+
+      if (response.ok) {
+        fetchVotingSessions();
+        alert('Vote cast successfully!');
+      } else {
+        const error = await response.text();
+        throw new Error(error);
+      }
+    } catch (error) {
+      console.error('Error casting vote:', error);
+      alert(`Failed to cast vote: ${error.message}`);
+    }
+  };
+
+  const handleCloseVoting = async (sessionId) => {
+    try {
+      const response = await fetch(`${API}/voting-sessions/${sessionId}/close`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+        fetchVotingSessions();
+        alert('Voting session closed and results calculated!');
+      } else {
+        throw new Error('Failed to close voting session');
+      }
+    } catch (error) {
+      console.error('Error closing voting session:', error);
+      alert('Failed to close voting session. Please try again.');
+    }
+  };
+
+  const addVotingOption = () => {
+    setNewVoting(prev => ({
       ...prev,
-      [field]: parseInt(value)
+      options: [...prev.options, '']
     }));
+  };
+
+  const updateVotingOption = (index, value) => {
+    setNewVoting(prev => ({
+      ...prev,
+      options: prev.options.map((option, i) => i === index ? value : option)
+    }));
+  };
+
+  const removeVotingOption = (index) => {
+    if (newVoting.options.length > 2) {
+      setNewVoting(prev => ({
+        ...prev,
+        options: prev.options.filter((_, i) => i !== index)
+      }));
+    }
+  };
+
+  const formatHarptosDate = (dateObj) => {
+    return `${dateObj.day} ${HARPTOS_MONTHS[dateObj.month]?.name || 'Unknown'}, ${dateObj.year} DR`;
+  };
+
+  const getEventForDate = (year, month, day) => {
+    return customEvents.filter(event => 
+      event.event_date.year === year && 
+      event.event_date.month === month && 
+      event.event_date.day === day
+    );
   };
 
   if (!isVisible) return null;
@@ -184,111 +370,431 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
     <div className="harptos-calendar">
       <div className="calendar-header">
         <h2>🗓️ Harptos Calendar</h2>
-        <div className="calendar-mode-selector">
-          <button 
-            className={`mode-btn ${calendarMode === 'current' ? 'active' : ''}`}
-            onClick={() => setCalendarMode('current')}
-          >
-            Current Time
-          </button>
-          <button 
-            className={`mode-btn ${calendarMode === 'manual' ? 'active' : ''}`}
-            onClick={() => setCalendarMode('manual')}
-          >
-            Campaign Date
-          </button>
+        <div className="calendar-controls">
+          <div className="calendar-mode-selector">
+            <button 
+              className={`mode-btn ${calendarMode === 'current' ? 'active' : ''}`}
+              onClick={() => setCalendarMode('current')}
+            >
+              Current Time
+            </button>
+            <button 
+              className={`mode-btn ${calendarMode === 'manual' ? 'active' : ''}`}
+              onClick={() => setCalendarMode('manual')}
+            >
+              Campaign Date
+            </button>
+          </div>
+          
+          <div className="view-mode-selector">
+            <button 
+              className={`mode-btn ${viewMode === 'calendar' ? 'active' : ''}`}
+              onClick={() => setViewMode('calendar')}
+            >
+              📅 Calendar
+            </button>
+            <button 
+              className={`mode-btn ${viewMode === 'events' ? 'active' : ''}`}
+              onClick={() => setViewMode('events')}
+            >
+              🎭 Events
+            </button>
+            <button 
+              className={`mode-btn ${viewMode === 'voting' ? 'active' : ''}`}
+              onClick={() => setViewMode('voting')}
+            >
+              🗳️ Voting
+            </button>
+          </div>
         </div>
       </div>
 
-      {calendarMode === 'current' ? (
-        <div className="current-date-display">
-          <div className="main-date">
-            <h3>{formatHarptosDate(currentHarptos)}</h3>
-            <p className="month-alias">{currentHarptos.monthAlias}</p>
-            {currentHarptos.specialDay && (
-              <div className="special-day-notice">
-                <span className="special-day-icon">✨</span>
-                <span>{currentHarptos.specialDay.description}</span>
+      {/* Calendar View */}
+      {viewMode === 'calendar' && (
+        <>
+          {calendarMode === 'current' ? (
+            <div className="current-date-display">
+              <div className="main-date">
+                <h3>{formatHarptosDate(currentHarptos)}</h3>
+                <p className="month-alias">{currentHarptos.monthAlias}</p>
+                {currentHarptos.specialDay && (
+                  <div className="special-day-notice">
+                    <span className="special-day-icon">✨</span>
+                    <span>{currentHarptos.specialDay.description}</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="real-time-reference">
+                <small>Real Time: {currentHarptos.realTime.toLocaleString()}</small>
+                <small>Conversion: 1492 DR = 2020 AD</small>
+                {currentHarptos.isShieldmeetYear && (
+                  <small className="shieldmeet-notice">🛡️ This is a Shieldmeet year!</small>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="manual-date-selector">
+              <h3>Set Campaign Date</h3>
+              <div className="date-inputs">
+                <div className="input-group">
+                  <label>Year (DR):</label>
+                  <input 
+                    type="number" 
+                    value={manualDate.year}
+                    onChange={(e) => setManualDate(prev => ({...prev, year: parseInt(e.target.value)}))}
+                    min="1"
+                  />
+                </div>
+                <div className="input-group">
+                  <label>Month:</label>
+                  <select 
+                    value={manualDate.month}
+                    onChange={(e) => setManualDate(prev => ({...prev, month: parseInt(e.target.value)}))}
+                  >
+                    {HARPTOS_MONTHS.map((month, index) => (
+                      <option key={index} value={index}>
+                        {month.name} ({month.alias})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>Day:</label>
+                  <input 
+                    type="number" 
+                    value={manualDate.day}
+                    onChange={(e) => setManualDate(prev => ({...prev, day: parseInt(e.target.value)}))}
+                    min="1"
+                    max="30"
+                  />
+                </div>
+              </div>
+              <div className="manual-date-display">
+                <p>Campaign Date: {formatHarptosDate(manualDate)}</p>
+              </div>
+            </div>
+          )}
+
+          <div className="seasonal-events">
+            <h4>Seasonal Information</h4>
+            <div className="events-list">
+              {seasonalEvents.map((event, index) => (
+                <div key={index} className={`event-item ${event.type}`}>
+                  <span className="event-title">{event.title}</span>
+                  <span className="event-description">{event.description}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="calendar-grid">
+            <h4>Month of {HARPTOS_MONTHS[currentHarptos.month]?.name || 'Unknown'}</h4>
+            <div className="days-grid">
+              {Array.from({ length: 30 }, (_, i) => {
+                const dayEvents = getEventForDate(currentHarptos.drYear, currentHarptos.month, i + 1);
+                return (
+                  <div 
+                    key={i} 
+                    className={`day-cell ${i + 1 === currentHarptos.day ? 'current-day' : ''} ${dayEvents.length > 0 ? 'has-events' : ''}`}
+                    title={dayEvents.length > 0 ? dayEvents.map(e => e.title).join(', ') : ''}
+                  >
+                    {i + 1}
+                    {dayEvents.length > 0 && <span className="event-indicator">•</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Events View */}
+      {viewMode === 'events' && (
+        <div className="events-management">
+          <div className="events-header">
+            <h3>Calendar Events</h3>
+            <button 
+              className="btn-primary"
+              onClick={() => setShowEventForm(true)}
+            >
+              ➕ Add Event
+            </button>
+          </div>
+
+          <div className="events-list">
+            {customEvents.map(event => (
+              <div key={event.id} className="custom-event-item">
+                <div className="event-main">
+                  <h4>{event.title}</h4>
+                  <p className="event-date">{formatHarptosDate(event.event_date)}</p>
+                  <p className="event-description">{event.description}</p>
+                  <span className={`event-type-badge ${event.event_type}`}>
+                    {event.event_type}
+                  </span>
+                </div>
+              </div>
+            ))}
+            
+            {customEvents.length === 0 && (
+              <div className="no-events-message">
+                <p>No custom events scheduled. Create your first event!</p>
               </div>
             )}
           </div>
-          
-          <div className="real-time-reference">
-            <small>Real Time: {currentHarptos.realTime.toLocaleString()}</small>
-            <small>Conversion: 1492 DR = 2020 AD</small>
-            {currentHarptos.isShieldmeetYear && (
-              <small className="shieldmeet-notice">🛡️ This is a Shieldmeet year!</small>
+        </div>
+      )}
+
+      {/* Voting View */}
+      {viewMode === 'voting' && (
+        <div className="voting-management">
+          <div className="voting-header">
+            <h3>Voting Sessions</h3>
+            <button 
+              className="btn-primary"
+              onClick={() => setShowVotingForm(true)}
+            >
+              🗳️ Create Vote
+            </button>
+          </div>
+
+          <div className="voting-sessions-list">
+            {votingSessions.map(session => (
+              <div key={session.id} className={`voting-session-item status-${session.status}`}>
+                <div className="session-header">
+                  <h4>{session.title}</h4>
+                  <span className={`status-badge ${session.status}`}>
+                    {session.status.toUpperCase()}
+                  </span>
+                </div>
+                
+                <p className="session-description">{session.description}</p>
+                
+                <div className="session-dates">
+                  <span>Start: {formatHarptosDate(session.start_date)}</span>
+                  <span>End: {formatHarptosDate(session.end_date)}</span>
+                </div>
+
+                <div className="voting-options">
+                  <h5>Options:</h5>
+                  {session.options.map((option, index) => (
+                    <div key={index} className="voting-option">
+                      <span className="option-text">{option}</span>
+                      {session.status === 'completed' && session.results && (
+                        <span className="vote-count">
+                          {session.results[option] || 0} votes
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {session.status === 'active' && (
+                  <div className="session-actions">
+                    <button 
+                      className="btn-secondary"
+                      onClick={() => handleCloseVoting(session.id)}
+                    >
+                      Close Voting
+                    </button>
+                  </div>
+                )}
+
+                {session.status === 'completed' && session.results && (
+                  <div className="voting-results">
+                    <h5>Results:</h5>
+                    <div className="results-summary">
+                      <span>Total Votes: {Object.values(session.results).reduce((a, b) => a + b, 0)}</span>
+                      <span>Winner: {Object.entries(session.results).reduce((a, b) => a[1] > b[1] ? a : b)[0]}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+            
+            {votingSessions.length === 0 && (
+              <div className="no-voting-message">
+                <p>No voting sessions created. Start your first vote!</p>
+              </div>
             )}
           </div>
         </div>
-      ) : (
-        <div className="manual-date-selector">
-          <h3>Set Campaign Date</h3>
-          <div className="date-inputs">
-            <div className="input-group">
-              <label>Year (DR):</label>
-              <input 
-                type="number" 
-                value={manualDate.year}
-                onChange={(e) => handleManualDateChange('year', e.target.value)}
+      )}
+
+      {/* Event Creation Modal */}
+      <Modal isOpen={showEventForm} onClose={() => setShowEventForm(false)} title="Create Calendar Event">
+        <form onSubmit={handleCreateEvent}>
+          <div className="form-group">
+            <label>Event Title:</label>
+            <input
+              type="text"
+              value={newEvent.title}
+              onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Description:</label>
+            <textarea
+              value={newEvent.description}
+              onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
+              rows="3"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Event Date:</label>
+            <div className="date-inputs">
+              <input
+                type="number"
+                placeholder="Year"
+                value={newEvent.event_date.year}
+                onChange={(e) => setNewEvent({
+                  ...newEvent, 
+                  event_date: {...newEvent.event_date, year: parseInt(e.target.value)}
+                })}
                 min="1"
               />
-            </div>
-            <div className="input-group">
-              <label>Month:</label>
-              <select 
-                value={manualDate.month}
-                onChange={(e) => handleManualDateChange('month', e.target.value)}
+              <select
+                value={newEvent.event_date.month}
+                onChange={(e) => setNewEvent({
+                  ...newEvent, 
+                  event_date: {...newEvent.event_date, month: parseInt(e.target.value)}
+                })}
               >
                 {HARPTOS_MONTHS.map((month, index) => (
-                  <option key={index} value={index}>
-                    {month.name} ({month.alias})
-                  </option>
+                  <option key={index} value={index}>{month.name}</option>
                 ))}
               </select>
-            </div>
-            <div className="input-group">
-              <label>Day:</label>
-              <input 
-                type="number" 
-                value={manualDate.day}
-                onChange={(e) => handleManualDateChange('day', e.target.value)}
+              <input
+                type="number"
+                placeholder="Day"
+                value={newEvent.event_date.day}
+                onChange={(e) => setNewEvent({
+                  ...newEvent, 
+                  event_date: {...newEvent.event_date, day: parseInt(e.target.value)}
+                })}
                 min="1"
                 max="30"
               />
             </div>
           </div>
-          <div className="manual-date-display">
-            <p>Campaign Date: {manualDate.day} {HARPTOS_MONTHS[manualDate.month].name}, {manualDate.year} DR</p>
-          </div>
-        </div>
-      )}
-
-      <div className="seasonal-events">
-        <h4>Seasonal Information</h4>
-        <div className="events-list">
-          {seasonalEvents.map((event, index) => (
-            <div key={index} className={`event-item ${event.type}`}>
-              <span className="event-title">{event.title}</span>
-              <span className="event-description">{event.description}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="calendar-grid">
-        <h4>Month of {HARPTOS_MONTHS[currentHarptos.month]?.name || 'Unknown'}</h4>
-        <div className="days-grid">
-          {Array.from({ length: 30 }, (_, i) => (
-            <div 
-              key={i} 
-              className={`day-cell ${i + 1 === currentHarptos.day ? 'current-day' : ''}`}
+          <div className="form-group">
+            <label>Event Type:</label>
+            <select
+              value={newEvent.event_type}
+              onChange={(e) => setNewEvent({...newEvent, event_type: e.target.value})}
             >
-              {i + 1}
+              <option value="custom">Custom</option>
+              <option value="meeting">Council Meeting</option>
+              <option value="festival">Festival</option>
+              <option value="military">Military Event</option>
+              <option value="trade">Trade Event</option>
+              <option value="diplomatic">Diplomatic Event</option>
+            </select>
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">Create Event</button>
+            <button type="button" onClick={() => setShowEventForm(false)} className="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Voting Creation Modal */}
+      <Modal isOpen={showVotingForm} onClose={() => setShowVotingForm(false)} title="Create Voting Session">
+        <form onSubmit={handleCreateVoting}>
+          <div className="form-group">
+            <label>Vote Title:</label>
+            <input
+              type="text"
+              value={newVoting.title}
+              onChange={(e) => setNewVoting({...newVoting, title: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Description:</label>
+            <textarea
+              value={newVoting.description}
+              onChange={(e) => setNewVoting({...newVoting, description: e.target.value})}
+              rows="3"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Scope:</label>
+            <select
+              value={newVoting.city_id || ''}
+              onChange={(e) => setNewVoting({...newVoting, city_id: e.target.value || null})}
+            >
+              <option value="">Kingdom-wide</option>
+              {kingdom?.cities?.map(city => (
+                <option key={city.id} value={city.id}>{city.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Voting Options:</label>
+            {newVoting.options.map((option, index) => (
+              <div key={index} className="option-input">
+                <input
+                  type="text"
+                  value={option}
+                  onChange={(e) => updateVotingOption(index, e.target.value)}
+                  placeholder={`Option ${index + 1}`}
+                />
+                {newVoting.options.length > 2 && (
+                  <button 
+                    type="button" 
+                    onClick={() => removeVotingOption(index)}
+                    className="btn-remove"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            ))}
+            <button type="button" onClick={addVotingOption} className="btn-secondary">
+              ➕ Add Option
+            </button>
+          </div>
+          <div className="form-group">
+            <label>Voting Period:</label>
+            <div className="date-range">
+              <div className="date-inputs">
+                <label>Start:</label>
+                <input type="number" placeholder="Year" value={newVoting.start_date.year} 
+                  onChange={(e) => setNewVoting({...newVoting, start_date: {...newVoting.start_date, year: parseInt(e.target.value)}})} />
+                <select value={newVoting.start_date.month} 
+                  onChange={(e) => setNewVoting({...newVoting, start_date: {...newVoting.start_date, month: parseInt(e.target.value)}})}>
+                  {HARPTOS_MONTHS.map((month, index) => (
+                    <option key={index} value={index}>{month.name}</option>
+                  ))}
+                </select>
+                <input type="number" placeholder="Day" value={newVoting.start_date.day} min="1" max="30"
+                  onChange={(e) => setNewVoting({...newVoting, start_date: {...newVoting.start_date, day: parseInt(e.target.value)}})} />
+              </div>
+              <div className="date-inputs">
+                <label>End:</label>
+                <input type="number" placeholder="Year" value={newVoting.end_date.year}
+                  onChange={(e) => setNewVoting({...newVoting, end_date: {...newVoting.end_date, year: parseInt(e.target.value)}})} />
+                <select value={newVoting.end_date.month}
+                  onChange={(e) => setNewVoting({...newVoting, end_date: {...newVoting.end_date, month: parseInt(e.target.value)}})}>
+                  {HARPTOS_MONTHS.map((month, index) => (
+                    <option key={index} value={index}>{month.name}</option>
+                  ))}
+                </select>
+                <input type="number" placeholder="Day" value={newVoting.end_date.day} min="1" max="30"
+                  onChange={(e) => setNewVoting({...newVoting, end_date: {...newVoting.end_date, day: parseInt(e.target.value)}})} />
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">Create Vote</button>
+            <button type="button" onClick={() => setShowVotingForm(false)} className="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </Modal>
 
       <div className="special-days-info">
         <h4>Upcoming Special Days</h4>
