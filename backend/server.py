@@ -724,7 +724,7 @@ async def simulation_engine():
             logging.error(f"Simulation error: {e}")
             await asyncio.sleep(30)
 
-async def create_and_broadcast_event(description, city_name, kingdom_name, event_type, priority="normal"):
+async def create_and_broadcast_event(description, city_name, kingdom_name, event_type, priority="normal", kingdom_id=None):
     """Helper function to create and broadcast events"""
     event = Event(
         description=description,
@@ -737,7 +737,8 @@ async def create_and_broadcast_event(description, city_name, kingdom_name, event
     await db.events.insert_one(event.dict())
     await manager.broadcast({
         "type": "new_event",
-        "event": event.dict()
+        "event": event.dict(),
+        "kingdom_id": kingdom_id
     })
 
 # Initialize multi-kingdom data and migrate existing data
