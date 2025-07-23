@@ -1830,8 +1830,28 @@ async def delete_crime(crime_id: str):
 
 # Events Management
 @api_router.get("/events")
-async def get_recent_events(limit: int = 20):
-    events = await db.events.find().sort("timestamp", -1).limit(limit).to_list(limit)
+async def get_events():
+    """Get all events (backward compatibility)"""
+    events = await db.events.find().sort("timestamp", -1).limit(50).to_list(50)
+    for event in events:
+        event.pop('_id', None)
+    return events
+
+@api_router.get("/events/{kingdom_id}")
+async def get_kingdom_events(kingdom_id: str):
+    """Get events for a specific kingdom"""
+    # Get events that match this kingdom (by kingdom_id or kingdom_name)
+    kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Kingdom not found")
+    
+    events = await db.events.find({
+        "$or": [
+            {"kingdom_id": kingdom_id},
+            {"kingdom_name": kingdom["name"]}
+        ]
+    }).sort("timestamp", -1).limit(50).to_list(50)
+    
     for event in events:
         event.pop('_id', None)
     return events
