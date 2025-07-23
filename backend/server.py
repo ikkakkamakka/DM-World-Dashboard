@@ -1022,6 +1022,20 @@ async def update_kingdom_boundary(boundary_id: str, boundary_update: dict):
     
     return {"message": "Boundary updated successfully"}
 
+@api_router.delete("/kingdom-boundaries/clear/{kingdom_id}")
+async def clear_all_kingdom_boundaries(kingdom_id: str):
+    """Clear all boundaries for a specific kingdom"""
+    # Delete all boundaries for this kingdom from boundaries collection
+    result = await db.kingdom_boundaries.delete_many({"kingdom_id": kingdom_id})
+    
+    # Remove all boundaries from the kingdom document
+    await db.multi_kingdoms.update_one(
+        {"id": kingdom_id},
+        {"$set": {"boundaries": []}}
+    )
+    
+    return {"message": f"Cleared {result.deleted_count} boundaries for kingdom {kingdom_id}"}
+
 # City assignment to kingdoms
 @api_router.put("/cities/{city_id}/assign-kingdom/{kingdom_id}")
 async def assign_city_to_kingdom(city_id: str, kingdom_id: str):
