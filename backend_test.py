@@ -1218,7 +1218,457 @@ class BackendTester:
         except Exception as e:
             self.errors.append(f"Database consistency test error: {str(e)}")
             return False
-        """Run all backend tests"""
+
+    async def test_city_management_multi_kingdom(self):
+        """Test city management functionality with multi-kingdom support"""
+        print("\n🏘️ Testing City Management with Multi-Kingdom Support...")
+        
+        # Test city creation in active kingdom
+        city_creation_success = await self.test_city_creation_multi_kingdom()
+        self.test_results['city_creation_multi_kingdom'] = city_creation_success
+        
+        # Test city updates across kingdoms
+        city_update_success = await self.test_city_update_multi_kingdom()
+        self.test_results['city_update_multi_kingdom'] = city_update_success
+        
+        # Test city deletion from correct kingdom
+        city_deletion_success = await self.test_city_deletion_multi_kingdom()
+        self.test_results['city_deletion_multi_kingdom'] = city_deletion_success
+        
+        # Test city retrieval across all kingdoms
+        city_retrieval_success = await self.test_city_retrieval_cross_kingdom()
+        self.test_results['city_retrieval_cross_kingdom'] = city_retrieval_success
+        
+        # Test multi-kingdom city isolation
+        city_isolation_success = await self.test_city_multi_kingdom_isolation()
+        self.test_results['city_multi_kingdom_isolation'] = city_isolation_success
+        
+        # Summary
+        city_tests = [
+            city_creation_success, city_update_success, city_deletion_success,
+            city_retrieval_success, city_isolation_success
+        ]
+        
+        passed_city_tests = sum(city_tests)
+        total_city_tests = len(city_tests)
+        
+        print(f"\n   📊 City Management Summary: {passed_city_tests}/{total_city_tests} tests passed")
+        
+        return passed_city_tests == total_city_tests
+
+    async def test_city_creation_multi_kingdom(self):
+        """Test city creation in active kingdom"""
+        print("\n   🏗️ Testing City Creation in Active Kingdom...")
+        try:
+            # Get active kingdom
+            async with self.session.get(f"{API_BASE}/active-kingdom") as response:
+                if response.status != 200:
+                    self.errors.append("Failed to get active kingdom for city creation test")
+                    return False
+                
+                active_kingdom = await response.json()
+                active_kingdom_id = active_kingdom['id']
+                initial_city_count = len(active_kingdom.get('cities', []))
+            
+            # Create test city data
+            test_city_data = {
+                "name": "Test City for Multi-Kingdom",
+                "governor": "Test Governor",
+                "x_coordinate": 123.45,
+                "y_coordinate": 67.89
+            }
+            
+            # Create city
+            async with self.session.post(f"{API_BASE}/cities", json=test_city_data) as response:
+                if response.status == 200:
+                    created_city = await response.json()
+                    
+                    # Verify city structure
+                    required_fields = ['id', 'name', 'governor', 'x_coordinate', 'y_coordinate']
+                    missing_fields = [field for field in required_fields if field not in created_city]
+                    
+                    if missing_fields:
+                        self.errors.append(f"Created city missing fields: {missing_fields}")
+                        return False
+                    
+                    # Verify city was added to active kingdom
+                    async with self.session.get(f"{API_BASE}/active-kingdom") as verify_response:
+                        if verify_response.status == 200:
+                            updated_kingdom = await verify_response.json()
+                            new_city_count = len(updated_kingdom.get('cities', []))
+                            
+                            if new_city_count != initial_city_count + 1:
+                                self.errors.append(f"City not added to active kingdom: expected {initial_city_count + 1} cities, got {new_city_count}")
+                                return False
+                            
+                            # Find the created city in the kingdom
+                            created_city_in_kingdom = None
+                            for city in updated_kingdom['cities']:
+                                if city['id'] == created_city['id']:
+                                    created_city_in_kingdom = city
+                                    break
+                            
+                            if not created_city_in_kingdom:
+                                self.errors.append("Created city not found in active kingdom")
+                                return False
+                            
+                            print(f"      ✅ City '{created_city['name']}' created successfully in active kingdom")
+                            print(f"      City ID: {created_city['id']}")
+                            print(f"      Coordinates: ({created_city['x_coordinate']}, {created_city['y_coordinate']})")
+                            
+                            # Store city ID for later tests
+                            self.test_city_id = created_city['id']
+                            return True
+                        else:
+                            self.errors.append("Failed to verify city creation in active kingdom")
+                            return False
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"City creation failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"City creation test error: {str(e)}")
+            return False
+
+    async def test_city_update_multi_kingdom(self):
+        """Test city updates across kingdoms"""
+        print("\n   ✏️ Testing City Updates Across Kingdoms...")
+        try:
+            if not hasattr(self, 'test_city_id'):
+                self.errors.append("No test city ID available for update test")
+                return False
+            
+            # Update city coordinates and name
+            update_data = {
+                "name": "Updated Test City",
+                "x_coordinate": 200.50,
+                "y_coordinate": 150.75,
+                "treasury": 2500
+            }
+            
+            async with self.session.put(f"{API_BASE}/city/{self.test_city_id}", json=update_data) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if "message" not in result:
+                        self.errors.append("City update response missing message")
+                        return False
+                    
+                    # Verify the update was applied by retrieving the city
+                    async with self.session.get(f"{API_BASE}/city/{self.test_city_id}") as get_response:
+                        if get_response.status == 200:
+                            updated_city = await get_response.json()
+                            
+                            # Check if updates were applied
+                            if updated_city['name'] != update_data['name']:
+                                self.errors.append(f"City name not updated: expected '{update_data['name']}', got '{updated_city['name']}'")
+                                return False
+                            
+                            if updated_city['x_coordinate'] != update_data['x_coordinate']:
+                                self.errors.append(f"City x_coordinate not updated: expected {update_data['x_coordinate']}, got {updated_city['x_coordinate']}")
+                                return False
+                            
+                            if updated_city['y_coordinate'] != update_data['y_coordinate']:
+                                self.errors.append(f"City y_coordinate not updated: expected {update_data['y_coordinate']}, got {updated_city['y_coordinate']}")
+                                return False
+                            
+                            if updated_city['treasury'] != update_data['treasury']:
+                                self.errors.append(f"City treasury not updated: expected {update_data['treasury']}, got {updated_city['treasury']}")
+                                return False
+                            
+                            print(f"      ✅ City updated successfully")
+                            print(f"      New name: {updated_city['name']}")
+                            print(f"      New coordinates: ({updated_city['x_coordinate']}, {updated_city['y_coordinate']})")
+                            print(f"      New treasury: {updated_city['treasury']}")
+                            
+                            return True
+                        else:
+                            self.errors.append("Failed to retrieve updated city")
+                            return False
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"City update failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"City update test error: {str(e)}")
+            return False
+
+    async def test_city_deletion_multi_kingdom(self):
+        """Test city deletion from correct kingdom"""
+        print("\n   🗑️ Testing City Deletion from Correct Kingdom...")
+        try:
+            if not hasattr(self, 'test_city_id'):
+                self.errors.append("No test city ID available for deletion test")
+                return False
+            
+            # Get initial city count in active kingdom
+            async with self.session.get(f"{API_BASE}/active-kingdom") as response:
+                if response.status == 200:
+                    initial_kingdom = await response.json()
+                    initial_city_count = len(initial_kingdom.get('cities', []))
+                else:
+                    self.errors.append("Failed to get initial city count for deletion test")
+                    return False
+            
+            # Delete the city
+            async with self.session.delete(f"{API_BASE}/city/{self.test_city_id}") as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if "message" not in result:
+                        self.errors.append("City deletion response missing message")
+                        return False
+                    
+                    # Verify the city was deleted from the kingdom
+                    async with self.session.get(f"{API_BASE}/active-kingdom") as verify_response:
+                        if verify_response.status == 200:
+                            updated_kingdom = await verify_response.json()
+                            new_city_count = len(updated_kingdom.get('cities', []))
+                            
+                            if new_city_count != initial_city_count - 1:
+                                self.errors.append(f"City not deleted from kingdom: expected {initial_city_count - 1} cities, got {new_city_count}")
+                                return False
+                            
+                            # Verify specific city is gone
+                            deleted_city = None
+                            for city in updated_kingdom['cities']:
+                                if city['id'] == self.test_city_id:
+                                    deleted_city = city
+                                    break
+                            
+                            if deleted_city:
+                                self.errors.append("Deleted city still exists in kingdom")
+                                return False
+                            
+                            print(f"      ✅ City deleted successfully from kingdom: {initial_city_count} → {new_city_count} cities")
+                            
+                            # Verify city is no longer retrievable
+                            async with self.session.get(f"{API_BASE}/city/{self.test_city_id}") as get_response:
+                                if get_response.status == 404:
+                                    print(f"      ✅ City no longer retrievable (404 as expected)")
+                                    return True
+                                else:
+                                    self.errors.append("Deleted city still retrievable")
+                                    return False
+                        else:
+                            self.errors.append("Failed to verify city deletion from kingdom")
+                            return False
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"City deletion failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"City deletion test error: {str(e)}")
+            return False
+
+    async def test_city_retrieval_cross_kingdom(self):
+        """Test city retrieval across all kingdoms"""
+        print("\n   🔍 Testing City Retrieval Across All Kingdoms...")
+        try:
+            # Get all kingdoms
+            async with self.session.get(f"{API_BASE}/multi-kingdoms") as response:
+                if response.status != 200:
+                    self.errors.append("Failed to get kingdoms for cross-kingdom retrieval test")
+                    return False
+                
+                kingdoms = await response.json()
+                if len(kingdoms) == 0:
+                    self.errors.append("No kingdoms found for cross-kingdom retrieval test")
+                    return False
+            
+            # Collect all city IDs from all kingdoms
+            all_city_ids = []
+            for kingdom in kingdoms:
+                for city in kingdom.get('cities', []):
+                    all_city_ids.append((city['id'], city['name'], kingdom['name']))
+            
+            if len(all_city_ids) == 0:
+                self.errors.append("No cities found across all kingdoms")
+                return False
+            
+            print(f"      Found {len(all_city_ids)} cities across {len(kingdoms)} kingdoms")
+            
+            # Test retrieving each city
+            successful_retrievals = 0
+            for city_id, city_name, kingdom_name in all_city_ids:
+                async with self.session.get(f"{API_BASE}/city/{city_id}") as city_response:
+                    if city_response.status == 200:
+                        city_data = await city_response.json()
+                        
+                        # Verify city structure
+                        required_fields = ['id', 'name', 'governor', 'population', 'treasury']
+                        missing_fields = [field for field in required_fields if field not in city_data]
+                        
+                        if missing_fields:
+                            self.errors.append(f"City {city_name} missing fields: {missing_fields}")
+                            continue
+                        
+                        if city_data['id'] != city_id:
+                            self.errors.append(f"City ID mismatch for {city_name}: expected {city_id}, got {city_data['id']}")
+                            continue
+                        
+                        successful_retrievals += 1
+                    else:
+                        self.errors.append(f"Failed to retrieve city {city_name} (ID: {city_id}) from kingdom {kingdom_name}")
+            
+            if successful_retrievals == len(all_city_ids):
+                print(f"      ✅ Successfully retrieved all {successful_retrievals} cities across kingdoms")
+                return True
+            else:
+                self.errors.append(f"Only retrieved {successful_retrievals}/{len(all_city_ids)} cities")
+                return False
+                
+        except Exception as e:
+            self.errors.append(f"Cross-kingdom city retrieval test error: {str(e)}")
+            return False
+
+    async def test_city_multi_kingdom_isolation(self):
+        """Test that cities are managed independently per kingdom"""
+        print("\n   🏛️ Testing City Multi-Kingdom Isolation...")
+        try:
+            # Get all kingdoms
+            async with self.session.get(f"{API_BASE}/multi-kingdoms") as response:
+                if response.status != 200:
+                    self.errors.append("Failed to get kingdoms for isolation test")
+                    return False
+                
+                kingdoms = await response.json()
+                if len(kingdoms) < 2:
+                    # Create a second kingdom for testing
+                    test_kingdom_data = {
+                        "name": "Isolation Test Kingdom",
+                        "ruler": "Isolation Test Ruler",
+                        "government_type": "Test Monarchy",
+                        "color": "#ff6600"
+                    }
+                    
+                    async with self.session.post(f"{API_BASE}/multi-kingdoms", json=test_kingdom_data) as create_response:
+                        if create_response.status == 200:
+                            new_kingdom = await create_response.json()
+                            kingdoms.append(new_kingdom)
+                            print(f"      Created test kingdom: {new_kingdom['name']}")
+                        else:
+                            self.errors.append("Failed to create second kingdom for isolation test")
+                            return False
+            
+            if len(kingdoms) < 2:
+                self.errors.append("Need at least 2 kingdoms for isolation testing")
+                return False
+            
+            kingdom1 = kingdoms[0]
+            kingdom2 = kingdoms[1]
+            
+            # Set kingdom1 as active and create a city
+            async with self.session.post(f"{API_BASE}/multi-kingdom/{kingdom1['id']}/set-active") as response:
+                if response.status != 200:
+                    self.errors.append("Failed to set kingdom1 as active")
+                    return False
+            
+            kingdom1_city_data = {
+                "name": "Kingdom1 Isolation City",
+                "governor": "Kingdom1 Governor",
+                "x_coordinate": 100.0,
+                "y_coordinate": 100.0
+            }
+            
+            async with self.session.post(f"{API_BASE}/cities", json=kingdom1_city_data) as response:
+                if response.status != 200:
+                    self.errors.append("Failed to create city in kingdom1")
+                    return False
+                kingdom1_city = await response.json()
+            
+            # Set kingdom2 as active and create a city
+            async with self.session.post(f"{API_BASE}/multi-kingdom/{kingdom2['id']}/set-active") as response:
+                if response.status != 200:
+                    self.errors.append("Failed to set kingdom2 as active")
+                    return False
+            
+            kingdom2_city_data = {
+                "name": "Kingdom2 Isolation City",
+                "governor": "Kingdom2 Governor",
+                "x_coordinate": 200.0,
+                "y_coordinate": 200.0
+            }
+            
+            async with self.session.post(f"{API_BASE}/cities", json=kingdom2_city_data) as response:
+                if response.status != 200:
+                    self.errors.append("Failed to create city in kingdom2")
+                    return False
+                kingdom2_city = await response.json()
+            
+            # Verify each kingdom only contains its own city
+            async with self.session.get(f"{API_BASE}/multi-kingdom/{kingdom1['id']}") as response:
+                if response.status == 200:
+                    updated_kingdom1 = await response.json()
+                    kingdom1_cities = updated_kingdom1.get('cities', [])
+                    
+                    # Check that kingdom1 contains its city
+                    kingdom1_has_own_city = any(city['id'] == kingdom1_city['id'] for city in kingdom1_cities)
+                    if not kingdom1_has_own_city:
+                        self.errors.append("Kingdom1 doesn't contain its own city")
+                        return False
+                    
+                    # Check that kingdom1 doesn't contain kingdom2's city
+                    kingdom1_has_kingdom2_city = any(city['id'] == kingdom2_city['id'] for city in kingdom1_cities)
+                    if kingdom1_has_kingdom2_city:
+                        self.errors.append("Kingdom1 contains Kingdom2's city - isolation failed")
+                        return False
+                else:
+                    self.errors.append("Failed to get Kingdom1 data for isolation test")
+                    return False
+            
+            async with self.session.get(f"{API_BASE}/multi-kingdom/{kingdom2['id']}") as response:
+                if response.status == 200:
+                    updated_kingdom2 = await response.json()
+                    kingdom2_cities = updated_kingdom2.get('cities', [])
+                    
+                    # Check that kingdom2 contains its city
+                    kingdom2_has_own_city = any(city['id'] == kingdom2_city['id'] for city in kingdom2_cities)
+                    if not kingdom2_has_own_city:
+                        self.errors.append("Kingdom2 doesn't contain its own city")
+                        return False
+                    
+                    # Check that kingdom2 doesn't contain kingdom1's city
+                    kingdom2_has_kingdom1_city = any(city['id'] == kingdom1_city['id'] for city in kingdom2_cities)
+                    if kingdom2_has_kingdom1_city:
+                        self.errors.append("Kingdom2 contains Kingdom1's city - isolation failed")
+                        return False
+                else:
+                    self.errors.append("Failed to get Kingdom2 data for isolation test")
+                    return False
+            
+            print(f"      ✅ City isolation verified: each kingdom contains only its own cities")
+            
+            # Test that deleting a city from one kingdom doesn't affect the other
+            async with self.session.delete(f"{API_BASE}/city/{kingdom1_city['id']}") as response:
+                if response.status != 200:
+                    self.errors.append("Failed to delete Kingdom1 city in isolation test")
+                    return False
+            
+            # Verify Kingdom1 city is deleted but Kingdom2 city remains
+            async with self.session.get(f"{API_BASE}/city/{kingdom1_city['id']}") as response:
+                if response.status != 404:
+                    self.errors.append("Kingdom1 city not properly deleted")
+                    return False
+            
+            async with self.session.get(f"{API_BASE}/city/{kingdom2_city['id']}") as response:
+                if response.status != 200:
+                    self.errors.append("Kingdom2 city affected by Kingdom1 city deletion - isolation failed")
+                    return False
+            
+            print(f"      ✅ Deletion isolation verified: Kingdom1 city deleted, Kingdom2 city unaffected")
+            return True
+            
+        except Exception as e:
+            self.errors.append(f"City multi-kingdom isolation test error: {str(e)}")
+            return False
+
+    async def run_all_tests(self):
         print("🚀 Starting Fantasy Kingdom Backend Tests")
         print("=" * 60)
         
