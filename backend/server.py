@@ -132,6 +132,22 @@ CRIME_TYPES_DETAILED = {
     "Guild Violations": {"severity": "minor", "fine": (10, 50), "punishment": ["Guild suspension", "Fine to guild", "Public apology"]}
 }
 
+# Harptos Calendar months for D&D fantasy setting
+HARPTOS_MONTHS = {
+    1: {"name": "Hammer", "days": 30},
+    2: {"name": "Alturiak", "days": 30},
+    3: {"name": "Ches", "days": 30},
+    4: {"name": "Tarsakh", "days": 30},
+    5: {"name": "Mirtul", "days": 30},
+    6: {"name": "Kythorn", "days": 30},
+    7: {"name": "Flamerule", "days": 30},
+    8: {"name": "Eleasis", "days": 30},
+    9: {"name": "Eleint", "days": 30},
+    10: {"name": "Marpenoth", "days": 30},
+    11: {"name": "Uktar", "days": 30},
+    12: {"name": "Nightal", "days": 30}
+}
+
 def generate_fantasy_name():
     return f"{random.choice(FANTASY_FIRST_NAMES)} {random.choice(FANTASY_LAST_NAMES)}"
 
