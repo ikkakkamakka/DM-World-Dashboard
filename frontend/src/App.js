@@ -807,6 +807,22 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
           >
             🧽 Erase Territory
           </button>
+          
+          <button 
+            className="tool-btn auto-generate"
+            onClick={generateAutomaticBorders}
+            title="Automatically generate borders around cities"
+          >
+            🤖 Auto Generate Borders
+          </button>
+          
+          <button 
+            className="tool-btn clear-all"
+            onClick={clearAllBoundaries}
+            title="Clear all boundaries for this kingdom"
+          >
+            🗑️ Clear All Boundaries
+          </button>
         </div>
 
         {(boundaryMode === 'paint' || boundaryMode === 'erase') && (
