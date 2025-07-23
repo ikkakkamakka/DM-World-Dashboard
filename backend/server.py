@@ -872,7 +872,53 @@ async def initialize_kingdom():
         await db.kingdoms.insert_one(kingdom.dict())
         logging.info("Sample kingdom data initialized")
 
-# Create the main app
+# Calendar Events and Voting System
+class CalendarEvent(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    kingdom_id: str
+    title: str
+    description: str
+    event_date: dict  # {year: int, month: int, day: int}
+    event_type: str = "custom"  # custom, voting, holiday, meeting, etc.
+    created_by: str = "DM"
+    is_recurring: bool = False
+    recurrence_pattern: Optional[str] = None  # "yearly", "monthly", etc.
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    
+class VotingSession(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    kingdom_id: str
+    city_id: Optional[str] = None  # If city-specific voting
+    title: str
+    description: str
+    options: List[str]
+    start_date: dict  # {year: int, month: int, day: int}
+    end_date: dict
+    status: str = "active"  # active, completed, cancelled
+    created_by: str = "DM"
+    votes: Dict[str, str] = {}  # citizen_id -> option
+    results: Optional[Dict[str, int]] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class CalendarEventCreate(BaseModel):
+    title: str
+    description: str
+    event_date: dict
+    event_type: str = "custom"
+    is_recurring: bool = False
+    recurrence_pattern: Optional[str] = None
+
+class VotingSessionCreate(BaseModel):
+    city_id: Optional[str] = None
+    title: str
+    description: str
+    options: List[str]
+    start_date: dict
+    end_date: dict
+
+class CastVote(BaseModel):
+    citizen_id: str
+    option: str
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
