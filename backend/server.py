@@ -353,7 +353,6 @@ def generate_registry_event(event_type, city_name, details):
         logging.error(f"Error generating registry event: {e}")
         return f"📋 Registry updated in {city_name}."
 
-# Enhanced Data Models
 class Citizen(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
