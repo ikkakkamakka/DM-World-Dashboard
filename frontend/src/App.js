@@ -24,10 +24,18 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   );
 };
 
-// Navigation Component
-const Navigation = ({ currentView, onViewChange, kingdom }) => {
+// Navigation Component with Multi-Kingdom Support
+const Navigation = ({ currentView, onViewChange, kingdom, onBackToSelector }) => {
   return (
     <div className="navigation">
+      <button 
+        className="nav-button back-to-selector"
+        onClick={onBackToSelector}
+        title="Switch Kingdom"
+      >
+        🏛️ Switch Kingdom
+      </button>
+      
       <button 
         className={`nav-button ${currentView === 'kingdom' ? 'active' : ''}`}
         onClick={() => onViewChange('kingdom')}
