@@ -69,9 +69,23 @@ OCCUPATIONS = [
 ]
 
 GOVERNMENT_POSITIONS = [
-    "Captain of the Guard", "Master of Coin", "High Scribe", "Market Warden", 
-    "Harbor Master", "Gate Keeper", "Tax Collector", "Guild Representative",
-    "Court Wizard", "Head Cleric", "Master of Arms", "Trade Minister"
+    # High Council Positions
+    "Captain of the Guard", "Master of Coin", "High Scribe", "Court Wizard", "Head Cleric",
+    
+    # Administrative Positions  
+    "Tax Collector", "Market Warden", "Harbor Master", "Gate Keeper", "Master of Arms",
+    
+    # Trade & Commerce
+    "Trade Minister", "Guild Representative", "Merchant Overseer", "Customs Officer",
+    
+    # Law & Order
+    "City Magistrate", "Prison Warden", "Court Bailiff", "Sheriff Deputy",
+    
+    # Infrastructure
+    "Master Builder", "Road Warden", "Bridge Keeper", "City Engineer",
+    
+    # Cultural & Religious
+    "Festival Coordinator", "Temple Overseer", "Library Keeper", "Academy Dean"
 ]
 
 LIVESTOCK_TYPES = [
