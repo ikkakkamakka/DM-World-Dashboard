@@ -1069,6 +1069,25 @@ const TributeRegistry = ({ city }) => {
     }
   };
 
+  const handleAutoGenerate = async () => {
+    try {
+      const response = await fetch(`${API}/auto-generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          registry_type: 'tribute',
+          city_id: city.id,
+          count: Math.floor(Math.random() * 2) + 1 // 1-2 tribute records
+        })
+      });
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error auto-generating tribute:', error);
+    }
+  };
+
   return (
     <div className="registry-section">
       <div className="registry-header">
