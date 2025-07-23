@@ -238,17 +238,87 @@ const KingdomDashboard = ({ kingdom, events, autoEventsEnabled, onToggleAutoEven
   );
 };
 
-// Faerûn Map Component
+// Faerûn Map Component with Enhanced City Management
 const FaerunMap = ({ cities, onCitySelect, onMapClick }) => {
   const [showAddCityForm, setShowAddCityForm] = useState(false);
   const [newCityCoords, setNewCityCoords] = useState({ x: 0, y: 0 });
+  const [draggedCity, setDraggedCity] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleMapClick = (e) => {
+    if (isDragging) return; // Don't create city if we're dragging
+    
     const rect = e.target.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setNewCityCoords({ x, y });
     setShowAddCityForm(true);
+  };
+
+  const handleCityMouseDown = (e, city) => {
+    e.stopPropagation();
+    setDraggedCity(city);
+    setIsDragging(true);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || !draggedCity) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    // Update city position in real-time during drag
+    const cityMarker = document.querySelector(`[data-city-id="${draggedCity.id}"]`);
+    if (cityMarker) {
+      cityMarker.style.left = `${x}%`;
+      cityMarker.style.top = `${y}%`;
+    }
+  };
+
+  const handleMouseUp = async (e) => {
+    if (!isDragging || !draggedCity) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    try {
+      // Update city position in backend
+      const response = await fetch(`${API}/city/${draggedCity.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ x_coordinate: x, y_coordinate: y })
+      });
+      
+      if (response.ok) {
+        console.log(`City ${draggedCity.name} moved to (${x.toFixed(1)}, ${y.toFixed(1)})`);
+        // Refresh data
+        setTimeout(() => window.location.reload(), 100);
+      }
+    } catch (error) {
+      console.error('Error updating city position:', error);
+    }
+    
+    setDraggedCity(null);
+    setIsDragging(false);
+  };
+
+  const handleDeleteCity = async (e, city) => {
+    e.stopPropagation();
+    if (window.confirm(`Are you sure you want to delete ${city.name}? This action cannot be undone.`)) {
+      try {
+        const response = await fetch(`${API}/city/${city.id}`, {
+          method: 'DELETE'
+        });
+        
+        if (response.ok) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error('Error deleting city:', error);
+      }
+    }
   };
 
   const handleCreateCity = async (cityData) => {
