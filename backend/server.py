@@ -1096,6 +1096,8 @@ async def clear_all_kingdom_boundaries(kingdom_id: str):
         {"$set": {"boundaries": []}}
     )
     
+    return {"message": f"Cleared {result.deleted_count} boundaries for kingdom {kingdom_id}"}
+
 # Calendar Events Management
 @api_router.get("/calendar-events/{kingdom_id}")
 async def get_calendar_events(kingdom_id: str):
