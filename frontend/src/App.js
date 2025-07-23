@@ -484,16 +484,81 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     setCurrentBoundary([...currentBoundary, ...newPoints]);
   };
 
-  const eraseBoundaryArea = (centerX, centerY) => {
-    // Remove boundary points within erase radius
+  const eraseBoundaryArea = async (centerX, centerY) => {
+    // Enhanced erase mode - works on both current boundary and existing boundaries
     const eraseRadius = paintBrushSize / 10;
     
+    // Remove points from current boundary being drawn
     setCurrentBoundary(currentBoundary.filter(point => {
       const distance = Math.sqrt(
         Math.pow(point.x - centerX, 2) + Math.pow(point.y - centerY, 2)
       );
       return distance > eraseRadius;
     }));
+    
+    // Find and modify existing boundaries that intersect with erase area
+    for (const boundary of allBoundaries) {
+      if (boundary.kingdomColor === activeKingdom?.color) {
+        const pointsToRemove = boundary.boundary_points.filter(point => {
+          const distance = Math.sqrt(
+            Math.pow(point.x - centerX, 2) + Math.pow(point.y - centerY, 2)
+          );
+          return distance <= eraseRadius;
+        });
+        
+        if (pointsToRemove.length > 0) {
+          // Delete or modify this boundary
+          const remainingPoints = boundary.boundary_points.filter(point => {
+            const distance = Math.sqrt(
+              Math.pow(point.x - centerX, 2) + Math.pow(point.y - centerY, 2)
+            );
+            return distance > eraseRadius;
+          });
+          
+          if (remainingPoints.length < 3) {
+            // Delete entire boundary if too few points remain
+            await deleteBoundary(boundary.id);
+          } else {
+            // Update boundary with remaining points
+            await updateBoundary(boundary.id, remainingPoints);
+          }
+        }
+      }
+    }
+  };
+
+  const deleteBoundary = async (boundaryId) => {
+    try {
+      const response = await fetch(`${API}/kingdom-boundaries/${boundaryId}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        // Refresh boundaries
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error deleting boundary:', error);
+    }
+  };
+
+  const updateBoundary = async (boundaryId, newPoints) => {
+    try {
+      const response = await fetch(`${API}/kingdom-boundaries/${boundaryId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          boundary_points: newPoints
+        })
+      });
+      
+      if (response.ok) {
+        // Refresh boundaries
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error updating boundary:', error);
+    }
   };
 
   const completeBoundary = async () => {
