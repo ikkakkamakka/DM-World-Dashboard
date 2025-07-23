@@ -44,7 +44,13 @@ class BackendTester:
             'events_api': False,
             'websocket_connection': False,
             'database_initialization': False,
-            'simulation_engine': False
+            'simulation_engine': False,
+            'auto_generate_citizens': False,
+            'auto_generate_slaves': False,
+            'auto_generate_livestock': False,
+            'auto_generate_garrison': False,
+            'auto_generate_crimes': False,
+            'auto_generate_tribute': False
         }
         self.errors = []
 
