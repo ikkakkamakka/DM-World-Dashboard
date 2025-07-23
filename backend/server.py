@@ -315,39 +315,43 @@ def generate_tribute(from_city, to_city="Royal Treasury"):
 
 # FIXED Event generation for auto-generated content
 def generate_registry_event(event_type, city_name, details):
-    events_map = {
-        "citizen": [
-            f"🧑 {details['name']} ({details['age']} yrs, {details['occupation']}) joins {city_name}.",
-            f"👤 New citizen {details['name']} registers in {city_name} as a {details['occupation']}.",
-            f"🏠 {details['name']} arrives in {city_name} seeking work as a {details['occupation']}."
-        ],
-        "slave": [
-            f"⛓️ New slave {details['name']} acquired in {city_name} ({details.get('origin', 'Unknown origin')}).",
-            f"👥 {details['name']}, a {details.get('origin', 'slave')}, becomes enslaved in {city_name}.",
-            f"🏭 Slave {details['name']} assigned to {details.get('owner', 'City')} in {city_name}."
-        ],
-        "livestock": [
-            f"🐄 New {details['type'].lower()} '{details['name']}' added to {city_name} herds.",
-            f"💰 {details['name']} the {details['type']} purchased for {details['value']} GP in {city_name}.",
-            f"📝 Livestock registry updated: {details['name']} ({details['type']}) in {city_name}."
-        ],
-        "soldier": [
-            f"⚔️ {details['name']} enlists as {details['rank']} in {city_name} garrison.",
-            f"🛡️ New recruit {details['name']} joins {city_name}'s military forces.",
-            f"👨‍✈️ {details['rank']} {details['name']} reports for duty in {city_name}."
-        ],
-        "crime": [
-            f"🚨 {details['criminal_name']} accused of {details['crime_type']} in {city_name}.",
-            f"⚖️ Crime reported: {details['crime_type']} by {details['criminal_name']} in {city_name}.",
-            f"🕵️ {city_name} authorities investigate {details['criminal_name']} for {details['crime_type']}."
-        ],
-        "tribute": [
-            f"💎 {details['from_city']} owes {details['amount']} GP tribute for {details.get('purpose', 'royal decree')}.",
-            f"📜 Tribute demand: {details['from_city']} to pay {details['amount']} GP to {details.get('to_city', 'Royal Treasury')}.",
-            f"💰 {details['from_city']} tribute payment of {details['amount']} GP is {details.get('status', 'pending').lower()}."
-        ]
-    }
-    return random.choice(events_map.get(event_type, [f"📋 Registry updated in {city_name}."]))
+    try:
+        events_map = {
+            "citizen": [
+                f"🧑 {details.get('name', 'Unknown')} ({details.get('age', 0)} yrs, {details.get('occupation', 'Worker')}) joins {city_name}.",
+                f"👤 New citizen {details.get('name', 'Unknown')} registers in {city_name} as a {details.get('occupation', 'Worker')}.",
+                f"🏠 {details.get('name', 'Unknown')} arrives in {city_name} seeking work as a {details.get('occupation', 'Worker')}."
+            ],
+            "slave": [
+                f"⛓️ New slave {details.get('name', 'Unknown')} acquired in {city_name} ({details.get('origin', 'Unknown origin')}).",
+                f"👥 {details.get('name', 'Unknown')}, a {details.get('origin', 'slave')}, becomes enslaved in {city_name}.",
+                f"🏭 Slave {details.get('name', 'Unknown')} assigned to {details.get('owner', 'City')} in {city_name}."
+            ],
+            "livestock": [
+                f"🐄 New {details.get('type', 'animal').lower()} '{details.get('name', 'Unknown')}' added to {city_name} herds.",
+                f"💰 {details.get('name', 'Unknown')} the {details.get('type', 'animal')} purchased for {details.get('value', 0)} GP in {city_name}.",
+                f"📝 Livestock registry updated: {details.get('name', 'Unknown')} ({details.get('type', 'animal')}) in {city_name}."
+            ],
+            "soldier": [
+                f"⚔️ {details.get('name', 'Unknown')} enlists as {details.get('rank', 'Recruit')} in {city_name} garrison.",
+                f"🛡️ New recruit {details.get('name', 'Unknown')} joins {city_name}'s military forces.",
+                f"👨‍✈️ {details.get('rank', 'Recruit')} {details.get('name', 'Unknown')} reports for duty in {city_name}."
+            ],
+            "crime": [
+                f"🚨 {details.get('criminal_name', 'Unknown')} accused of {details.get('crime_type', 'unknown crime')} in {city_name}.",
+                f"⚖️ Crime reported: {details.get('crime_type', 'unknown crime')} by {details.get('criminal_name', 'Unknown')} in {city_name}.",
+                f"🕵️ {city_name} authorities investigate {details.get('criminal_name', 'Unknown')} for {details.get('crime_type', 'unknown crime')}."
+            ],
+            "tribute": [
+                f"💎 {details.get('from_city', 'Unknown City')} owes {details.get('amount', 0)} GP tribute for {details.get('purpose', 'royal decree')}.",
+                f"📜 Tribute demand: {details.get('from_city', 'Unknown City')} to pay {details.get('amount', 0)} GP to {details.get('to_city', 'Royal Treasury')}.",
+                f"💰 {details.get('from_city', 'Unknown City')} tribute payment of {details.get('amount', 0)} GP is {details.get('status', 'pending').lower()}."
+            ]
+        }
+        return random.choice(events_map.get(event_type, [f"📋 Registry updated in {city_name}."]))
+    except Exception as e:
+        logging.error(f"Error generating registry event: {e}")
+        return f"📋 Registry updated in {city_name}."
 
 # Enhanced Data Models
 class Citizen(BaseModel):
