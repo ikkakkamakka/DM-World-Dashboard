@@ -705,9 +705,14 @@ const LivestockRegistry = ({ city }) => {
     <div className="registry-section">
       <div className="registry-header">
         <h3>Livestock Registry</h3>
-        <button className="btn-primary" onClick={() => setShowAddForm(true)}>
-          Add Livestock
-        </button>
+        <div className="registry-actions">
+          <button className="btn-secondary" onClick={handleAutoGenerate}>
+            Auto Generate
+          </button>
+          <button className="btn-primary" onClick={() => setShowAddForm(true)}>
+            Add Livestock
+          </button>
+        </div>
       </div>
 
       <Modal isOpen={showAddForm} onClose={() => setShowAddForm(false)} title="Add New Livestock">
