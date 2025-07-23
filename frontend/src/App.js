@@ -3540,6 +3540,13 @@ function App() {
             />
           )}
 
+          {currentView === 'calendar' && (
+            <HarptosCalendar 
+              kingdom={activeKingdom}
+              isVisible={true}
+            />
+          )}
+
           {currentView === 'map' && (
             <EnhancedFaerunMap 
               kingdoms={multiKingdoms}
