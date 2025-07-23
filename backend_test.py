@@ -50,7 +50,15 @@ class BackendTester:
             'auto_generate_livestock': False,
             'auto_generate_garrison': False,
             'auto_generate_crimes': False,
-            'auto_generate_tribute': False
+            'auto_generate_tribute': False,
+            # Enhanced Boundary System Tests
+            'multi_kingdoms_api': False,
+            'kingdom_boundaries_create': False,
+            'kingdom_boundaries_get': False,
+            'kingdom_boundaries_update': False,
+            'kingdom_boundaries_delete': False,
+            'multi_kingdom_boundary_display': False,
+            'enhanced_erase_functionality': False
         }
         self.errors = []
 
