@@ -24,17 +24,175 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   );
 };
 
+// Navigation Component
+const Navigation = ({ currentView, onViewChange, kingdom }) => {
+  return (
+    <div className="navigation">
+      <button 
+        className={`nav-button ${currentView === 'kingdom' ? 'active' : ''}`}
+        onClick={() => onViewChange('kingdom')}
+      >
+        Kingdom Dashboard
+      </button>
+      <button 
+        className={`nav-button ${currentView === 'map' ? 'active' : ''}`}
+        onClick={() => onViewChange('map')}
+      >
+        Faerûn Map
+      </button>
+      {kingdom?.cities?.map(city => (
+        <button
+          key={city.id}
+          className={`nav-button city-nav ${currentView === city.id ? 'active' : ''}`}
+          onClick={() => onViewChange(city.id)}
+        >
+          {city.name}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+// Kingdom Dashboard Component with Totals
+const KingdomDashboard = ({ kingdom, events, autoEventsEnabled, onToggleAutoEvents }) => {
+  if (!kingdom) return <div className="loading">Loading kingdom...</div>;
+
+  const totalTreasury = kingdom.royal_treasury + (kingdom.cities?.reduce((sum, city) => sum + city.treasury, 0) || 0);
+  const totalSlaves = kingdom.cities?.reduce((sum, city) => sum + (city.slaves?.length || 0), 0) || 0;
+  const totalLivestock = kingdom.cities?.reduce((sum, city) => sum + (city.livestock?.length || 0), 0) || 0;
+  const totalSoldiers = kingdom.cities?.reduce((sum, city) => sum + (city.garrison?.length || 0), 0) || 0;
+  const totalCrimes = kingdom.cities?.reduce((sum, city) => sum + (city.crime_records?.length || 0), 0) || 0;
+
+  return (
+    <div className="kingdom-dashboard">
+      <div className="kingdom-header">
+        <h1 className="kingdom-title">{kingdom.name}</h1>
+        <p className="kingdom-ruler">Campaign managed by {kingdom.ruler}</p>
+      </div>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-number">{kingdom.total_population}</div>
+          <div className="stat-label">Total Population</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{totalTreasury}</div>
+          <div className="stat-label">Total Treasury (GP)</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{kingdom.cities?.length || 0}</div>
+          <div className="stat-label">Cities</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{totalSlaves}</div>
+          <div className="stat-label">Total Slaves</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{totalLivestock}</div>
+          <div className="stat-label">Total Livestock</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{totalSoldiers}</div>
+          <div className="stat-label">Total Soldiers</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{totalCrimes}</div>
+          <div className="stat-label">Total Crimes</div>
+        </div>
+      </div>
+
+      <div className="cities-section">
+        <h2>Cities Overview</h2>
+        <div className="cities-grid">
+          {kingdom.cities?.map(city => (
+            <div key={city.id} className="city-overview-card">
+              <h3>{city.name}</h3>
+              <p className="governor">Governor: {city.governor}</p>
+              <div className="city-details">
+                <div className="detail-row">
+                  <span>Population: {city.population}</span>
+                  <span>Treasury: {city.treasury} GP</span>
+                </div>
+                <div className="detail-row">
+                  <span>Slaves: {city.slaves?.length || 0}</span>
+                  <span>Livestock: {city.livestock?.length || 0}</span>
+                </div>
+                <div className="detail-row">
+                  <span>Garrison: {city.garrison?.length || 0}</span>
+                  <span>Crimes: {city.crime_records?.length || 0}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="events-section">
+        <div className="events-header">
+          <h2>Kingdom Events</h2>
+          <div className="events-controls">
+            <button 
+              className={`toggle-button ${autoEventsEnabled ? 'enabled' : 'disabled'}`}
+              onClick={onToggleAutoEvents}
+            >
+              Auto Events: {autoEventsEnabled ? 'ON' : 'OFF'}
+            </button>
+          </div>
+        </div>
+        <div className="events-feed">
+          {events.slice(0, 15).map(event => (
+            <div key={event.id} className="event-item">
+              <div className="event-header">
+                <div className="event-time">
+                  {new Date(event.timestamp).toLocaleTimeString()}
+                </div>
+                <div className={`event-type ${event.event_type}`}>
+                  {event.event_type === 'auto' ? '🤖' : '✍️'}
+                </div>
+              </div>
+              <div className="event-description">{event.description}</div>
+              <div className="event-city">📍 {event.city_name}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Faerûn Map Component
 const FaerunMap = ({ cities, onCitySelect, onMapClick }) => {
+  const [showAddCityForm, setShowAddCityForm] = useState(false);
+  const [newCityCoords, setNewCityCoords] = useState({ x: 0, y: 0 });
+
   const handleMapClick = (e) => {
     const rect = e.target.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    onMapClick(x, y);
+    setNewCityCoords({ x, y });
+    setShowAddCityForm(true);
+  };
+
+  const handleCreateCity = async (cityData) => {
+    try {
+      const response = await fetch(`${API}/cities`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...cityData, x_coordinate: newCityCoords.x, y_coordinate: newCityCoords.y })
+      });
+      
+      if (response.ok) {
+        setShowAddCityForm(false);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error creating city:', error);
+    }
   };
 
   return (
     <div className="map-container">
+      <h2>Faerûn Map</h2>
       <div className="map-placeholder" onClick={handleMapClick}>
         <img 
           src="https://images.unsplash.com/photo-1677295922463-147d7f2f718c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwbWFwfGVufDB8fHx8MTc1MzI0Mzk3OXww&ixlib=rb-4.1.0&q=85"
@@ -51,30 +209,41 @@ const FaerunMap = ({ cities, onCitySelect, onMapClick }) => {
             }}
             onClick={(e) => {
               e.stopPropagation();
-              onCitySelect(city);
+              onCitySelect(city.id);
             }}
             title={city.name}
           >
-            📍
+            🏰
           </div>
         ))}
       </div>
       <p className="map-instructions">
         Click anywhere on the map to place a new city, or click existing markers to manage cities
       </p>
+
+      <Modal 
+        isOpen={showAddCityForm} 
+        onClose={() => setShowAddCityForm(false)} 
+        title="Create New City"
+      >
+        <AddCityForm
+          onSubmit={handleCreateCity}
+          onCancel={() => setShowAddCityForm(false)}
+        />
+      </Modal>
     </div>
   );
 };
 
 // Add City Form
-const AddCityForm = ({ x, y, onSubmit, onCancel }) => {
+const AddCityForm = ({ onSubmit, onCancel }) => {
   const [name, setName] = useState('');
   const [governor, setGovernor] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name && governor) {
-      onSubmit({ name, governor, x_coordinate: x, y_coordinate: y });
+      onSubmit({ name, governor });
     }
   };
 
@@ -110,7 +279,7 @@ const AddCityForm = ({ x, y, onSubmit, onCancel }) => {
 
 // Registry Tabs Component
 const RegistryTabs = ({ city, activeTab, setActiveTab }) => {
-  const tabs = ['Citizens', 'Livestock', 'Garrison', 'Tribute', 'Crime'];
+  const tabs = ['Citizens', 'Slaves', 'Livestock', 'Garrison', 'Tribute', 'Crime'];
 
   return (
     <div className="registry-tabs">
@@ -121,13 +290,14 @@ const RegistryTabs = ({ city, activeTab, setActiveTab }) => {
             className={`tab-button ${activeTab === tab ? 'active' : ''}`}
             onClick={() => setActiveTab(tab)}
           >
-            {tab} ({city[tab.toLowerCase()]?.length || 0})
+            {tab} ({getTabCount(city, tab)})
           </button>
         ))}
       </div>
       
       <div className="tab-content">
         {activeTab === 'Citizens' && <CitizensRegistry city={city} />}
+        {activeTab === 'Slaves' && <SlavesRegistry city={city} />}
         {activeTab === 'Livestock' && <LivestockRegistry city={city} />}
         {activeTab === 'Garrison' && <GarrisonRegistry city={city} />}
         {activeTab === 'Tribute' && <TributeRegistry city={city} />}
@@ -135,6 +305,18 @@ const RegistryTabs = ({ city, activeTab, setActiveTab }) => {
       </div>
     </div>
   );
+};
+
+const getTabCount = (city, tab) => {
+  switch (tab) {
+    case 'Citizens': return city.citizens?.length || 0;
+    case 'Slaves': return city.slaves?.length || 0;
+    case 'Livestock': return city.livestock?.length || 0;
+    case 'Garrison': return city.garrison?.length || 0;
+    case 'Tribute': return city.tribute_records?.length || 0;
+    case 'Crime': return city.crime_records?.length || 0;
+    default: return 0;
+  }
 };
 
 // Citizens Registry
@@ -155,7 +337,7 @@ const CitizensRegistry = ({ city }) => {
       if (response.ok) {
         setShowAddForm(false);
         setFormData({ name: '', age: '', occupation: '', health: 'Healthy', notes: '' });
-        window.location.reload(); // Refresh to show new data
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error adding citizen:', error);
@@ -260,6 +442,161 @@ const CitizensRegistry = ({ city }) => {
               <p><strong>Occupation:</strong> {citizen.occupation}</p>
               <p><strong>Health:</strong> <span className={`health-${citizen.health.toLowerCase()}`}>{citizen.health}</span></p>
               {citizen.notes && <p><strong>Notes:</strong> {citizen.notes}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Slaves Registry
+const SlavesRegistry = ({ city }) => {
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '', age: '', origin: '', occupation: '', owner: '', purchase_price: '', notes: ''
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API}/slaves`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          ...formData, 
+          city_id: city.id,
+          age: parseInt(formData.age),
+          purchase_price: parseInt(formData.purchase_price)
+        })
+      });
+      if (response.ok) {
+        setShowAddForm(false);
+        setFormData({ name: '', age: '', origin: '', occupation: '', owner: '', purchase_price: '', notes: '' });
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error adding slave:', error);
+    }
+  };
+
+  const handleDelete = async (slaveId) => {
+    if (window.confirm('Are you sure you want to delete this slave record?')) {
+      try {
+        const response = await fetch(`${API}/slaves/${slaveId}`, {
+          method: 'DELETE'
+        });
+        if (response.ok) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error('Error deleting slave:', error);
+      }
+    }
+  };
+
+  return (
+    <div className="registry-section">
+      <div className="registry-header">
+        <h3>Slave Registry</h3>
+        <button className="btn-primary" onClick={() => setShowAddForm(true)}>
+          Add Slave
+        </button>
+      </div>
+
+      <Modal isOpen={showAddForm} onClose={() => setShowAddForm(false)} title="Add New Slave">
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Name:</label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Age:</label>
+            <input
+              type="number"
+              value={formData.age}
+              onChange={(e) => setFormData({...formData, age: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Origin:</label>
+            <input
+              type="text"
+              value={formData.origin}
+              onChange={(e) => setFormData({...formData, origin: e.target.value})}
+              placeholder="Where they came from"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Occupation:</label>
+            <input
+              type="text"
+              value={formData.occupation}
+              onChange={(e) => setFormData({...formData, occupation: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Owner:</label>
+            <input
+              type="text"
+              value={formData.owner}
+              onChange={(e) => setFormData({...formData, owner: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Purchase Price (GP):</label>
+            <input
+              type="number"
+              value={formData.purchase_price}
+              onChange={(e) => setFormData({...formData, purchase_price: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Notes:</label>
+            <textarea
+              value={formData.notes}
+              onChange={(e) => setFormData({...formData, notes: e.target.value})}
+              rows="3"
+            />
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">Add Slave</button>
+            <button type="button" onClick={() => setShowAddForm(false)} className="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </Modal>
+
+      <div className="registry-grid">
+        {city.slaves?.map(slave => (
+          <div key={slave.id} className="registry-card">
+            <div className="card-header">
+              <h4>{slave.name}</h4>
+              <button 
+                className="delete-btn"
+                onClick={() => handleDelete(slave.id)}
+                title="Delete slave record"
+              >
+                🗑️
+              </button>
+            </div>
+            <div className="card-details">
+              <p><strong>Age:</strong> {slave.age}</p>
+              <p><strong>Origin:</strong> {slave.origin}</p>
+              <p><strong>Occupation:</strong> {slave.occupation}</p>
+              <p><strong>Owner:</strong> {slave.owner}</p>
+              <p><strong>Purchase Price:</strong> {slave.purchase_price} GP</p>
+              <p><strong>Status:</strong> <span className={`status-${slave.status.toLowerCase()}`}>{slave.status}</span></p>
+              {slave.notes && <p><strong>Notes:</strong> {slave.notes}</p>}
             </div>
           </div>
         ))}
@@ -417,7 +754,7 @@ const LivestockRegistry = ({ city }) => {
               <p><strong>Weight:</strong> {animal.weight} lbs</p>
               <p><strong>Value:</strong> {animal.value} GP</p>
               <p><strong>Owner:</strong> {animal.owner}</p>
-              <p><strong>Health:</strong> <span className={`health-${animal.health.toLowerCase()}`}>{animal.health}</span></p>
+              <p><strong>Health:</strong> <span className={`health-${animal.health?.toLowerCase()}`}>{animal.health}</span></p>
               {animal.notes && <p><strong>Notes:</strong> {animal.notes}</p>}
             </div>
           </div>
@@ -578,8 +915,8 @@ const GarrisonRegistry = ({ city }) => {
               <p><strong>Rank:</strong> {soldier.rank}</p>
               <p><strong>Age:</strong> {soldier.age}</p>
               <p><strong>Service:</strong> {soldier.years_of_service} years</p>
-              <p><strong>Status:</strong> <span className={`status-${soldier.status.toLowerCase()}`}>{soldier.status}</span></p>
-              {soldier.equipment.length > 0 && (
+              <p><strong>Status:</strong> <span className={`status-${soldier.status?.toLowerCase()}`}>{soldier.status}</span></p>
+              {soldier.equipment?.length > 0 && (
                 <p><strong>Equipment:</strong> {soldier.equipment.join(', ')}</p>
               )}
               {soldier.notes && <p><strong>Notes:</strong> {soldier.notes}</p>}
@@ -591,34 +928,373 @@ const GarrisonRegistry = ({ city }) => {
   );
 };
 
-// Placeholder for other registries
-const TributeRegistry = ({ city }) => (
-  <div className="registry-section">
-    <h3>Tribute Ledger</h3>
-    <p>Tribute tracking coming soon...</p>
-  </div>
-);
+// Tribute Registry
+const TributeRegistry = ({ city }) => {
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState({
+    to_city: '', amount: '', type: 'Gold', purpose: '', due_date: '', notes: ''
+  });
 
-const CrimeRegistry = ({ city }) => (
-  <div className="registry-section">
-    <h3>Crime Records</h3>
-    <p>Crime tracking coming soon...</p>
-  </div>
-);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API}/tribute`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          ...formData, 
+          from_city: city.name,
+          amount: parseInt(formData.amount),
+          due_date: new Date(formData.due_date).toISOString()
+        })
+      });
+      if (response.ok) {
+        setShowAddForm(false);
+        setFormData({ to_city: '', amount: '', type: 'Gold', purpose: '', due_date: '', notes: '' });
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error adding tribute:', error);
+    }
+  };
+
+  const handleDelete = async (tributeId) => {
+    if (window.confirm('Are you sure you want to delete this tribute record?')) {
+      try {
+        const response = await fetch(`${API}/tribute/${tributeId}`, {
+          method: 'DELETE'
+        });
+        if (response.ok) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error('Error deleting tribute:', error);
+      }
+    }
+  };
+
+  return (
+    <div className="registry-section">
+      <div className="registry-header">
+        <h3>Tribute Ledger</h3>
+        <button className="btn-primary" onClick={() => setShowAddForm(true)}>
+          Add Tribute
+        </button>
+      </div>
+
+      <Modal isOpen={showAddForm} onClose={() => setShowAddForm(false)} title="Add New Tribute">
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>To City:</label>
+            <input
+              type="text"
+              value={formData.to_city}
+              onChange={(e) => setFormData({...formData, to_city: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Amount:</label>
+            <input
+              type="number"
+              value={formData.amount}
+              onChange={(e) => setFormData({...formData, amount: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Type:</label>
+            <select
+              value={formData.type}
+              onChange={(e) => setFormData({...formData, type: e.target.value})}
+            >
+              <option value="Gold">Gold</option>
+              <option value="Goods">Goods</option>
+              <option value="Services">Services</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Purpose:</label>
+            <input
+              type="text"
+              value={formData.purpose}
+              onChange={(e) => setFormData({...formData, purpose: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Due Date:</label>
+            <input
+              type="date"
+              value={formData.due_date}
+              onChange={(e) => setFormData({...formData, due_date: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Notes:</label>
+            <textarea
+              value={formData.notes}
+              onChange={(e) => setFormData({...formData, notes: e.target.value})}
+              rows="3"
+            />
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">Add Tribute</button>
+            <button type="button" onClick={() => setShowAddForm(false)} className="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </Modal>
+
+      <div className="registry-grid">
+        {city.tribute_records?.map(tribute => (
+          <div key={tribute.id} className="registry-card">
+            <div className="card-header">
+              <h4>To: {tribute.to_city}</h4>
+              <button 
+                className="delete-btn"
+                onClick={() => handleDelete(tribute.id)}
+                title="Delete tribute"
+              >
+                🗑️
+              </button>
+            </div>
+            <div className="card-details">
+              <p><strong>Amount:</strong> {tribute.amount} {tribute.type}</p>
+              <p><strong>Purpose:</strong> {tribute.purpose}</p>
+              <p><strong>Due:</strong> {new Date(tribute.due_date).toLocaleDateString()}</p>
+              <p><strong>Status:</strong> <span className={`status-${tribute.status?.toLowerCase()}`}>{tribute.status}</span></p>
+              {tribute.notes && <p><strong>Notes:</strong> {tribute.notes}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Crime Registry
+const CrimeRegistry = ({ city }) => {
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState({
+    criminal_name: '', crime_type: 'Theft', description: '', punishment: '', fine_amount: '0', date_occurred: '', notes: ''
+  });
+
+  const crimeTypes = ['Theft', 'Assault', 'Murder', 'Fraud', 'Smuggling', 'Vandalism', 'Disturbing Peace', 'Tax Evasion'];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API}/crimes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          ...formData, 
+          city_id: city.id,
+          fine_amount: parseInt(formData.fine_amount),
+          date_occurred: new Date(formData.date_occurred).toISOString()
+        })
+      });
+      if (response.ok) {
+        setShowAddForm(false);
+        setFormData({ criminal_name: '', crime_type: 'Theft', description: '', punishment: '', fine_amount: '0', date_occurred: '', notes: '' });
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error adding crime:', error);
+    }
+  };
+
+  const handleDelete = async (crimeId) => {
+    if (window.confirm('Are you sure you want to delete this crime record?')) {
+      try {
+        const response = await fetch(`${API}/crimes/${crimeId}`, {
+          method: 'DELETE'
+        });
+        if (response.ok) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error('Error deleting crime:', error);
+      }
+    }
+  };
+
+  return (
+    <div className="registry-section">
+      <div className="registry-header">
+        <h3>Crime Records</h3>
+        <button className="btn-primary" onClick={() => setShowAddForm(true)}>
+          Add Crime
+        </button>
+      </div>
+
+      <Modal isOpen={showAddForm} onClose={() => setShowAddForm(false)} title="Add New Crime">
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Criminal Name:</label>
+            <input
+              type="text"
+              value={formData.criminal_name}
+              onChange={(e) => setFormData({...formData, criminal_name: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Crime Type:</label>
+            <select
+              value={formData.crime_type}
+              onChange={(e) => setFormData({...formData, crime_type: e.target.value})}
+            >
+              {crimeTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Description:</label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({...formData, description: e.target.value})}
+              rows="3"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Punishment:</label>
+            <input
+              type="text"
+              value={formData.punishment}
+              onChange={(e) => setFormData({...formData, punishment: e.target.value})}
+              placeholder="e.g., 30 days in jail"
+            />
+          </div>
+          <div className="form-group">
+            <label>Fine Amount (GP):</label>
+            <input
+              type="number"
+              value={formData.fine_amount}
+              onChange={(e) => setFormData({...formData, fine_amount: e.target.value})}
+            />
+          </div>
+          <div className="form-group">
+            <label>Date Occurred:</label>
+            <input
+              type="date"
+              value={formData.date_occurred}
+              onChange={(e) => setFormData({...formData, date_occurred: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Notes:</label>
+            <textarea
+              value={formData.notes}
+              onChange={(e) => setFormData({...formData, notes: e.target.value})}
+              rows="3"
+            />
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">Add Crime</button>
+            <button type="button" onClick={() => setShowAddForm(false)} className="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </Modal>
+
+      <div className="registry-grid">
+        {city.crime_records?.map(crime => (
+          <div key={crime.id} className="registry-card">
+            <div className="card-header">
+              <h4>{crime.criminal_name}</h4>
+              <button 
+                className="delete-btn"
+                onClick={() => handleDelete(crime.id)}
+                title="Delete crime record"
+              >
+                🗑️
+              </button>
+            </div>
+            <div className="card-details">
+              <p><strong>Crime:</strong> {crime.crime_type}</p>
+              <p><strong>Description:</strong> {crime.description}</p>
+              <p><strong>Date:</strong> {new Date(crime.date_occurred).toLocaleDateString()}</p>
+              <p><strong>Status:</strong> <span className={`status-${crime.status?.toLowerCase()}`}>{crime.status}</span></p>
+              {crime.punishment && <p><strong>Punishment:</strong> {crime.punishment}</p>}
+              {crime.fine_amount > 0 && <p><strong>Fine:</strong> {crime.fine_amount} GP</p>}
+              {crime.notes && <p><strong>Notes:</strong> {crime.notes}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// City Dashboard Component
+const CityDashboard = ({ city, activeTab, setActiveTab }) => {
+  if (!city) return <div className="loading">Loading city...</div>;
+
+  const totalLivestockValue = city.livestock?.reduce((sum, animal) => sum + animal.value, 0) || 0;
+  const totalSlaveValue = city.slaves?.reduce((sum, slave) => sum + slave.purchase_price, 0) || 0;
+
+  return (
+    <div className="city-dashboard">
+      <div className="city-header">
+        <h1 className="city-title">{city.name}</h1>
+        <p className="city-governor">Governor: {city.governor}</p>
+      </div>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-number">{city.population}</div>
+          <div className="stat-label">Population</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{city.treasury}</div>
+          <div className="stat-label">City Treasury (GP)</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{city.slaves?.length || 0}</div>
+          <div className="stat-label">Slaves</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{totalLivestockValue}</div>
+          <div className="stat-label">Livestock Value (GP)</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{city.garrison?.length || 0}</div>
+          <div className="stat-label">Garrison Size</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{city.crime_records?.length || 0}</div>
+          <div className="stat-label">Crime Records</div>
+        </div>
+      </div>
+
+      <RegistryTabs 
+        city={city} 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+      />
+    </div>
+  );
+};
 
 // Main App Component
 function App() {
   const [kingdom, setKingdom] = useState(null);
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [showAddCityForm, setShowAddCityForm] = useState(false);
-  const [newCityCoords, setNewCityCoords] = useState({ x: 0, y: 0 });
+  const [currentView, setCurrentView] = useState('kingdom');
   const [activeTab, setActiveTab] = useState('Citizens');
+  const [events, setEvents] = useState([]);
+  const [autoEventsEnabled, setAutoEventsEnabled] = useState(true);
   const [wsConnection, setWsConnection] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState('Connecting...');
 
   // Fetch initial data
   useEffect(() => {
     fetchKingdom();
+    fetchEvents();
+    fetchAutoEventsStatus();
     connectWebSocket();
 
     return () => {
@@ -638,6 +1314,26 @@ function App() {
     }
   };
 
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch(`${API}/events`);
+      const data = await response.json();
+      setEvents(data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
+  const fetchAutoEventsStatus = async () => {
+    try {
+      const response = await fetch(`${API}/auto-events-status`);
+      const data = await response.json();
+      setAutoEventsEnabled(data.auto_events_enabled);
+    } catch (error) {
+      console.error('Error fetching auto events status:', error);
+    }
+  };
+
   const connectWebSocket = () => {
     try {
       const ws = new WebSocket(`${WS_URL}/api/ws`);
@@ -648,8 +1344,10 @@ function App() {
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        // Handle real-time updates
-        fetchKingdom();
+        if (data.type === 'new_event') {
+          setEvents(prevEvents => [data.event, ...prevEvents]);
+          fetchKingdom();
+        }
       };
 
       ws.onclose = () => {
@@ -664,37 +1362,31 @@ function App() {
     }
   };
 
-  const handleMapClick = (x, y) => {
-    setNewCityCoords({ x, y });
-    setShowAddCityForm(true);
-  };
-
-  const handleCreateCity = async (cityData) => {
+  const handleToggleAutoEvents = async () => {
     try {
-      const response = await fetch(`${API}/cities`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cityData)
+      const response = await fetch(`${API}/toggle-auto-events`, {
+        method: 'POST'
       });
-      
-      if (response.ok) {
-        setShowAddCityForm(false);
-        fetchKingdom();
-      }
+      const data = await response.json();
+      setAutoEventsEnabled(data.auto_events_enabled);
     } catch (error) {
-      console.error('Error creating city:', error);
+      console.error('Error toggling auto events:', error);
     }
   };
 
-  const handleCitySelect = (city) => {
-    setSelectedCity(city);
-  };
-
-  const handleBackToMap = () => {
-    setSelectedCity(null);
+  const handleViewChange = (view) => {
+    setCurrentView(view);
+    setActiveTab('Citizens'); // Reset tab when changing views
   };
 
   if (!kingdom) return <div className="loading">Loading Faerûn...</div>;
+
+  const getCurrentCity = () => {
+    if (currentView === 'kingdom' || currentView === 'map') return null;
+    return kingdom.cities?.find(city => city.id === currentView);
+  };
+
+  const currentCity = getCurrentCity();
 
   return (
     <div className="App">
@@ -702,74 +1394,34 @@ function App() {
         <span className="status-text">{connectionStatus}</span>
       </div>
       
-      <div className="kingdom-header">
-        <h1 className="kingdom-title">{kingdom.name}</h1>
-        <p className="kingdom-ruler">Campaign managed by {kingdom.ruler}</p>
-      </div>
+      <Navigation 
+        currentView={currentView} 
+        onViewChange={handleViewChange}
+        kingdom={kingdom}
+      />
 
-      {selectedCity ? (
-        <div className="city-management">
-          <div className="city-header">
-            <button className="back-button" onClick={handleBackToMap}>← Back to Map</button>
-            <h2>{selectedCity.name}</h2>
-            <p>Governor: {selectedCity.governor}</p>
-          </div>
-          
-          <div className="city-stats">
-            <div className="stat-card">
-              <div className="stat-number">{selectedCity.population}</div>
-              <div className="stat-label">Population</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-number">{selectedCity.treasury}</div>
-              <div className="stat-label">Treasury (GP)</div>
-            </div>
-          </div>
+      {currentView === 'kingdom' && (
+        <KingdomDashboard 
+          kingdom={kingdom} 
+          events={events}
+          autoEventsEnabled={autoEventsEnabled}
+          onToggleAutoEvents={handleToggleAutoEvents}
+        />
+      )}
 
-          <RegistryTabs 
-            city={selectedCity} 
-            activeTab={activeTab} 
-            setActiveTab={setActiveTab} 
-          />
-        </div>
-      ) : (
-        <>
-          <div className="kingdom-overview">
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-number">{kingdom.total_population}</div>
-                <div className="stat-label">Total Population</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-number">{kingdom.cities?.length || 0}</div>
-                <div className="stat-label">Cities</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-number">{kingdom.royal_treasury}</div>
-                <div className="stat-label">Royal Treasury (GP)</div>
-              </div>
-            </div>
-          </div>
+      {currentView === 'map' && (
+        <FaerunMap 
+          cities={kingdom.cities} 
+          onCitySelect={handleViewChange}
+        />
+      )}
 
-          <FaerunMap 
-            cities={kingdom.cities} 
-            onCitySelect={handleCitySelect}
-            onMapClick={handleMapClick}
-          />
-
-          <Modal 
-            isOpen={showAddCityForm} 
-            onClose={() => setShowAddCityForm(false)} 
-            title="Create New City"
-          >
-            <AddCityForm
-              x={newCityCoords.x}
-              y={newCityCoords.y}
-              onSubmit={handleCreateCity}
-              onCancel={() => setShowAddCityForm(false)}
-            />
-          </Modal>
-        </>
+      {currentCity && (
+        <CityDashboard 
+          city={currentCity}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
       )}
     </div>
   );

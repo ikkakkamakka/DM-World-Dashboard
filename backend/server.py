@@ -43,6 +43,9 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
+# Auto-events toggle
+auto_events_enabled = True
+
 # Fantasy name generators
 FANTASY_FIRST_NAMES = [
     "Aelindra", "Brak", "Caelynn", "Darius", "Eryndor", "Faelyn", "Gareth", 
@@ -75,6 +78,48 @@ CRIME_TYPES = [
 def generate_fantasy_name():
     return f"{random.choice(FANTASY_FIRST_NAMES)} {random.choice(FANTASY_LAST_NAMES)}"
 
+def generate_fantasy_event(kingdom_data):
+    event_templates = [
+        "{name} joins {city} as a new citizen.",
+        "A child is born to the {family_name} family in {city}.",
+        "{citizen} celebrates their birthday in {city}.",
+        "Captain {guard} reports all is well in {city}.",
+        "{merchant} opens a new shop in the market square of {city}.",
+        "Elder {elder} passes away peacefully in {city}.",
+        "{scholar} discovers an ancient tome in {city}.",
+        "A festival begins in {city} - citizens celebrate!",
+        "Heavy rains bless the crops around {city}.",
+        "{guard} catches a pickpocket in {city}'s market.",
+    ]
+    
+    event_template = random.choice(event_templates)
+    cities = kingdom_data.get('cities', [])
+    if not cities:
+        return "The kingdom grows quiet..."
+    
+    city = random.choice(cities)
+    city_name = city['name']
+    citizens = city.get('citizens', [])
+    
+    if citizens:
+        citizen = random.choice(citizens)
+        citizen_name = citizen['name']
+        
+        event = event_template.format(
+            name=generate_fantasy_name(),
+            city=city_name,
+            family_name=random.choice(FANTASY_LAST_NAMES),
+            citizen=citizen_name,
+            guard=f"Captain {random.choice(FANTASY_FIRST_NAMES)}",
+            merchant=citizen_name,
+            elder=f"Elder {generate_fantasy_name()}",
+            scholar=citizen_name
+        )
+    else:
+        event = f"A new citizen arrives in {city_name}."
+    
+    return event
+
 # Extended Data Models
 class Citizen(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -100,6 +145,32 @@ class CitizenUpdate(BaseModel):
     occupation: Optional[str] = None
     health: Optional[str] = None
     notes: Optional[str] = None
+
+class Slave(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    age: int
+    origin: str  # Where they came from
+    occupation: str
+    owner: str
+    purchase_price: int  # in gold pieces
+    city_id: str
+    health: str = "Healthy"
+    status: str = "Enslaved"  # Enslaved, Manumitted, Dead, Escaped
+    manumission_date: Optional[datetime] = None
+    notes: str = ""
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class SlaveCreate(BaseModel):
+    name: str
+    age: int
+    origin: str
+    occupation: str
+    owner: str
+    purchase_price: int
+    city_id: str
+    health: str = "Healthy"
+    notes: str = ""
 
 class Livestock(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -202,6 +273,7 @@ class City(BaseModel):
     x_coordinate: float = 0.0  # Map coordinates
     y_coordinate: float = 0.0
     citizens: List[Citizen] = []
+    slaves: List[Slave] = []
     livestock: List[Livestock] = []
     garrison: List[Soldier] = []
     tribute_records: List[TributeRecord] = []
@@ -238,30 +310,64 @@ class Event(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     event_type: str = "general"
 
+class EventCreate(BaseModel):
+    description: str
+    city_name: str
+    event_type: str = "manual"
+
+# Simulation engine
+async def simulation_engine():
+    """Background task that generates kingdom events"""
+    global auto_events_enabled
+    while True:
+        try:
+            if auto_events_enabled:
+                kingdom_data = await db.kingdoms.find_one()
+                if kingdom_data:
+                    event_description = generate_fantasy_event(kingdom_data)
+                    
+                    event = Event(
+                        description=event_description,
+                        city_name=random.choice(kingdom_data['cities'])['name'] if kingdom_data['cities'] else "Unknown",
+                        kingdom_name=kingdom_data['name'],
+                        event_type="auto"
+                    )
+                    
+                    await db.events.insert_one(event.dict())
+                    
+                    await manager.broadcast({
+                        "type": "new_event",
+                        "event": event.dict()
+                    })
+            
+            await asyncio.sleep(random.randint(15, 45))
+            
+        except Exception as e:
+            logging.error(f"Simulation error: {e}")
+            await asyncio.sleep(30)
+
 # Initialize kingdom data
 async def initialize_kingdom():
     """Create sample kingdom data if none exists"""
     existing_kingdom = await db.kingdoms.find_one()
     if not existing_kingdom:
-        # Create sample citizens
+        # Create sample data
         citizens_emberfalls = [
             Citizen(name="Thorin Emberthane", age=45, occupation="Blacksmith", city_id="city1"),
             Citizen(name="Elena Brightwater", age=32, occupation="Healer", city_id="city1"),
             Citizen(name="Marcus Ironforge", age=28, occupation="Guard", city_id="city1"),
         ]
         
-        citizens_stormhaven = [
-            Citizen(name="Gareth Stormwind", age=52, occupation="Captain", city_id="city2"),
-            Citizen(name="Aria Moonwhisper", age=29, occupation="Scholar", city_id="city2"),
+        slaves_emberfalls = [
+            Slave(name="Keth", age=25, origin="Captured Orc", occupation="Laborer", 
+                  owner="City", purchase_price=50, city_id="city1"),
         ]
         
-        # Create sample livestock
         livestock_emberfalls = [
             Livestock(name="Thunder", type="Horse", age=5, weight=1200, value=300, city_id="city1"),
             Livestock(name="Bessie", type="Cattle", age=3, weight=800, value=150, city_id="city1"),
         ]
         
-        # Create sample soldiers
         garrison_emberfalls = [
             Soldier(name="Captain Steel", rank="Captain", age=35, years_of_service=10, 
                    equipment=["Sword", "Shield", "Chain Mail"], city_id="city1"),
@@ -269,7 +375,6 @@ async def initialize_kingdom():
                    equipment=["Crossbow", "Leather Armor"], city_id="city1"),
         ]
         
-        # Create sample cities with coordinates
         cities = [
             City(
                 id="city1",
@@ -280,6 +385,7 @@ async def initialize_kingdom():
                 x_coordinate=45.2,
                 y_coordinate=67.8,
                 citizens=citizens_emberfalls,
+                slaves=slaves_emberfalls,
                 livestock=livestock_emberfalls,
                 garrison=garrison_emberfalls
             ),
@@ -287,17 +393,20 @@ async def initialize_kingdom():
                 id="city2", 
                 name="Stormhaven",
                 governor="Lady Vera Stormwind",
-                population=len(citizens_stormhaven),
+                population=2,
                 treasury=1800,
                 x_coordinate=72.1,
                 y_coordinate=34.5,
-                citizens=citizens_stormhaven,
+                citizens=[
+                    Citizen(name="Gareth Stormwind", age=52, occupation="Captain", city_id="city2"),
+                    Citizen(name="Aria Moonwhisper", age=29, occupation="Scholar", city_id="city2"),
+                ],
+                slaves=[],
                 livestock=[],
                 garrison=[]
             )
         ]
         
-        # Create kingdom
         kingdom = Kingdom(
             name="Faerûn Campaign",
             ruler="Dungeon Master",
@@ -314,9 +423,10 @@ async def initialize_kingdom():
 async def lifespan(app: FastAPI):
     # Startup
     await initialize_kingdom()
+    task = asyncio.create_task(simulation_engine())
     yield
     # Shutdown
-    pass
+    task.cancel()
 
 app = FastAPI(lifespan=lifespan)
 api_router = APIRouter(prefix="/api")
@@ -415,19 +525,6 @@ async def create_citizen(citizen: CitizenCreate):
         return new_citizen
     raise HTTPException(status_code=404, detail="City not found")
 
-@api_router.put("/citizens/{citizen_id}")
-async def update_citizen(citizen_id: str, updates: CitizenUpdate):
-    update_data = {f"cities.$[].citizens.$.{k}": v for k, v in updates.dict(exclude_unset=True).items()}
-    
-    result = await db.kingdoms.update_one(
-        {"cities.citizens.id": citizen_id},
-        {"$set": update_data}
-    )
-    
-    if result.modified_count:
-        return {"message": "Citizen updated successfully"}
-    raise HTTPException(status_code=404, detail="Citizen not found")
-
 @api_router.delete("/citizens/{citizen_id}")
 async def delete_citizen(citizen_id: str):
     result = await db.kingdoms.update_one(
@@ -441,6 +538,31 @@ async def delete_citizen(citizen_id: str):
     if result.modified_count:
         return {"message": "Citizen deleted successfully"}
     raise HTTPException(status_code=404, detail="Citizen not found")
+
+# Slaves Management
+@api_router.post("/slaves")
+async def create_slave(slave: SlaveCreate):
+    new_slave = Slave(**slave.dict())
+    
+    result = await db.kingdoms.update_one(
+        {"cities.id": slave.city_id},
+        {"$push": {"cities.$.slaves": new_slave.dict()}}
+    )
+    
+    if result.modified_count:
+        return new_slave
+    raise HTTPException(status_code=404, detail="City not found")
+
+@api_router.delete("/slaves/{slave_id}")
+async def delete_slave(slave_id: str):
+    result = await db.kingdoms.update_one(
+        {"cities.slaves.id": slave_id},
+        {"$pull": {"cities.$.slaves": {"id": slave_id}}}
+    )
+    
+    if result.modified_count:
+        return {"message": "Slave deleted successfully"}
+    raise HTTPException(status_code=404, detail="Slave not found")
 
 # Livestock Management
 @api_router.post("/livestock")
@@ -506,6 +628,17 @@ async def create_tribute(tribute: TributeCreate):
         return new_tribute
     raise HTTPException(status_code=404, detail="City not found")
 
+@api_router.delete("/tribute/{tribute_id}")
+async def delete_tribute(tribute_id: str):
+    result = await db.kingdoms.update_one(
+        {"cities.tribute_records.id": tribute_id},
+        {"$pull": {"cities.$.tribute_records": {"id": tribute_id}}}
+    )
+    
+    if result.modified_count:
+        return {"message": "Tribute record deleted successfully"}
+    raise HTTPException(status_code=404, detail="Tribute record not found")
+
 # Crime Management
 @api_router.post("/crimes")
 async def create_crime(crime: CrimeCreate):
@@ -520,7 +653,18 @@ async def create_crime(crime: CrimeCreate):
         return new_crime
     raise HTTPException(status_code=404, detail="City not found")
 
-# Events and WebSocket
+@api_router.delete("/crimes/{crime_id}")
+async def delete_crime(crime_id: str):
+    result = await db.kingdoms.update_one(
+        {"cities.crime_records.id": crime_id},
+        {"$pull": {"cities.$.crime_records": {"id": crime_id}}}
+    )
+    
+    if result.modified_count:
+        return {"message": "Crime record deleted successfully"}
+    raise HTTPException(status_code=404, detail="Crime record not found")
+
+# Events Management
 @api_router.get("/events")
 async def get_recent_events(limit: int = 20):
     events = await db.events.find().sort("timestamp", -1).limit(limit).to_list(limit)
@@ -528,13 +672,43 @@ async def get_recent_events(limit: int = 20):
         event.pop('_id', None)
     return events
 
+@api_router.post("/events")
+async def create_manual_event(event: EventCreate):
+    kingdom = await db.kingdoms.find_one()
+    kingdom_name = kingdom['name'] if kingdom else "Unknown Kingdom"
+    
+    new_event = Event(
+        description=event.description,
+        city_name=event.city_name,
+        kingdom_name=kingdom_name,
+        event_type="manual"
+    )
+    
+    await db.events.insert_one(new_event.dict())
+    
+    await manager.broadcast({
+        "type": "new_event",
+        "event": new_event.dict()
+    })
+    
+    return new_event
+
+@api_router.post("/toggle-auto-events")
+async def toggle_auto_events():
+    global auto_events_enabled
+    auto_events_enabled = not auto_events_enabled
+    return {"auto_events_enabled": auto_events_enabled}
+
+@api_router.get("/auto-events-status")
+async def get_auto_events_status():
+    return {"auto_events_enabled": auto_events_enabled}
+
 @api_router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_text()
-            # Echo back for now
             await websocket.send_text(f"Message received: {data}")
     except WebSocketDisconnect:
         manager.disconnect(websocket)
