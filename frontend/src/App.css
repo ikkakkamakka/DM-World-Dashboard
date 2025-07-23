@@ -348,7 +348,18 @@ body {
   font-style: italic;
 }
 
-/* Enhanced Map Controls */
+/* Enhanced Map Styles */
+.enhanced-map-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.map-container {
+  max-width: 1200px;  
+  margin: 0 auto;
+  padding: 20px;
+}
 .map-controls {
   display: flex;
   justify-content: center;
