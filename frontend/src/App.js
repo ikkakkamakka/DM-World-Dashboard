@@ -966,8 +966,7 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
               left: `${city.x_coordinate}%`,
               top: `${city.y_coordinate}%`,
               cursor: boundaryMode !== 'off' ? 'not-allowed' : (isDragging ? 'grabbing' : 'grab'),
-              opacity: boundaryMode !== 'off' ? 0.6 : 1,
-              borderColor: city.kingdomColor || '#1e3a8a'
+              opacity: boundaryMode !== 'off' ? 0.6 : 1
             }}
             onMouseDown={(e) => handleCityMouseDown(e, city)}
             onClick={(e) => {
@@ -982,13 +981,10 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
                 handleDeleteCity(e, city);
               }
             }}
-            title={boundaryMode !== 'off' ? 'Exit boundary mode to interact with cities' : `${city.name} (${city.kingdomName || 'Unknown Kingdom'}) - Right-click to delete, drag to move`}
+            title={boundaryMode !== 'off' ? 'Exit boundary mode to interact with cities' : `${city.name} - Right-click to delete, drag to move`}
           >
-            <span className="city-icon">🏰</span>
-            <div className="city-info">
-              <span className="city-name" style={{ backgroundColor: city.kingdomColor || '#1e3a8a' }}>{city.name}</span>
-              <span className="kingdom-label" style={{ color: city.kingdomColor || '#1e3a8a' }}>{city.kingdomName}</span>
-            </div>
+            <span className="city-icon" style={{ filter: `drop-shadow(0 0 3px ${city.kingdomColor || '#1e3a8a'})` }}>🏰</span>
+            <span className="city-name">{city.name}</span>
             {boundaryMode === 'off' && (
               <button 
                 className="city-delete-btn" 
