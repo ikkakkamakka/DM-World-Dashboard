@@ -3943,15 +3943,10 @@ function App() {
     if (!activeKingdom) return;
     
     try {
-      const response = await fetch(`${API}/events`);
+      // Use kingdom-specific endpoint for better performance
+      const response = await fetch(`${API}/events/${activeKingdom.id}`);
       if (response.ok) {
-        const allEvents = await response.json();
-        // Filter events to show only those for the active kingdom
-        const kingdomEvents = allEvents.filter(event => 
-          event.kingdom_id === activeKingdom.id || 
-          event.kingdom_name === activeKingdom.name ||
-          (!event.kingdom_id && event.kingdom_name === activeKingdom.name) // backward compatibility
-        );
+        const kingdomEvents = await response.json();
         setEvents(kingdomEvents);
       }
     } catch (error) {
