@@ -628,97 +628,162 @@ class MultiKingdomUpdate(BaseModel):
 
 # Enhanced simulation engine
 async def simulation_engine():
-    """Enhanced background task with better event generation"""
-    global auto_events_enabled
+    """Enhanced simulation engine that generates events for all active kingdoms"""
+    await asyncio.sleep(5)  # Initial delay
+    
     while True:
         try:
-            if auto_events_enabled:
-                kingdom_data = await db.kingdoms.find_one()
-                if kingdom_data and kingdom_data['cities']:
-                    # Generate enhanced events 80% of the time
-                    if random.random() < 0.8:
-                        event_description = generate_enhanced_event(kingdom_data)
-                        
-                        event = Event(
-                            description=event_description,
-                            city_name=random.choice(kingdom_data['cities'])['name'],
-                            kingdom_name=kingdom_data['name'],
-                            event_type="auto",
-                            priority=random.choices(["normal", "high"], weights=[80, 20])[0]
-                        )
-                        
-                        await db.events.insert_one(event.dict())
-                        await manager.broadcast({
-                            "type": "new_event",
-                            "event": event.dict()
-                        })
-                    
-                    # Auto-generate registry content 20% of the time
-                    else:
-                        city = random.choice(kingdom_data['cities'])
-                        registry_types = ["citizens", "livestock", "crimes", "soldiers"]
-                        registry_type = random.choice(registry_types)
-                        
-                        try:
-                            if registry_type == "citizens":
-                                new_citizen_data = generate_citizen(city['id'])
-                                new_citizen = Citizen(**new_citizen_data)
-                                
-                                result = await db.kingdoms.update_one(
-                                    {"cities.id": city['id']},
-                                    {
-                                        "$push": {"cities.$.citizens": new_citizen.dict()},
-                                        "$inc": {"cities.$.population": 1, "total_population": 1}
-                                    }
-                                )
-                                
-                                if result.modified_count:
-                                    event_desc = generate_registry_event("citizen", city['name'], new_citizen_data)
-                                    await create_and_broadcast_event(event_desc, city['name'], kingdom_data['name'], "auto-registry")
-                            
-                            elif registry_type == "livestock":
-                                new_livestock_data = generate_livestock(city['id'])
-                                new_livestock = Livestock(**new_livestock_data)
-                                
-                                result = await db.kingdoms.update_one(
-                                    {"cities.id": city['id']},
-                                    {"$push": {"cities.$.livestock": new_livestock.dict()}}
-                                )
-                                
-                                if result.modified_count:
-                                    event_desc = generate_registry_event("livestock", city['name'], new_livestock_data)
-                                    await create_and_broadcast_event(event_desc, city['name'], kingdom_data['name'], "auto-registry")
-                            
-                            elif registry_type == "crimes":
-                                new_crime_data = generate_crime(city['id'], city['name'])
-                                new_crime = CrimeRecord(**new_crime_data)
-                                
-                                result = await db.kingdoms.update_one(
-                                    {"cities.id": city['id']},
-                                    {"$push": {"cities.$.crime_records": new_crime.dict()}}
-                                )
-                                
-                                if result.modified_count:
-                                    event_desc = generate_registry_event("crime", city['name'], new_crime_data)
-                                    await create_and_broadcast_event(event_desc, city['name'], kingdom_data['name'], "auto-registry")
-                            
-                            elif registry_type == "soldiers":
-                                new_soldier_data = generate_soldier(city['id'])
-                                new_soldier = Soldier(**new_soldier_data)
-                                
-                                result = await db.kingdoms.update_one(
-                                    {"cities.id": city['id']},
-                                    {"$push": {"cities.$.garrison": new_soldier.dict()}}
-                                )
-                                
-                                if result.modified_count:
-                                    event_desc = generate_registry_event("soldier", city['name'], new_soldier_data)
-                                    await create_and_broadcast_event(event_desc, city['name'], kingdom_data['name'], "auto-registry")
-                            
-                        except Exception as e:
-                            logging.error(f"Auto-generation error for {registry_type}: {e}")
+            # Get all kingdoms from multi_kingdoms collection
+            kingdoms = await db.multi_kingdoms.find().to_list(None)
             
-            await asyncio.sleep(random.randint(15, 45))  # 15-45 seconds between events
+            if not kingdoms:
+                await asyncio.sleep(30)
+                continue
+            
+            for kingdom_data in kingdoms:
+                if not kingdom_data.get('cities'):
+                    continue
+                    
+                # Random event generation for each kingdom
+                if random.random() < 0.3:  # 30% chance per cycle per kingdom
+                    city = random.choice(kingdom_data['cities'])
+                    
+                    # Generate different types of events
+                    event_types = [
+                        lambda: f"🏰 A merchant caravan arrives in {city['name']}, bringing exotic goods and news from distant lands",
+                        lambda: f"⚔️ The guards of {city['name']} successfully repel a group of bandits attempting to raid the city",
+                        lambda: f"🎭 A traveling bard performs in {city['name']}'s town square, entertaining citizens with tales of heroic deeds",
+                        lambda: f"🌾 The farmers near {city['name']} report an exceptionally good harvest this season",
+                        lambda: f"🔥 A small fire breaks out in {city['name']} but is quickly contained by alert citizens",
+                        lambda: f"👑 A noble from {city['name']} announces their engagement, causing much celebration",
+                        lambda: f"⚡ A powerful storm passes over {city['name']}, but the city's defenses hold strong",
+                        lambda: f"📜 New trade agreements are signed in {city['name']}, boosting the local economy",
+                        lambda: f"🦅 Scouts from {city['name']} report unusual creature movements in the nearby wilderness",
+                        lambda: f"💰 A hidden cache of ancient coins is discovered during construction work in {city['name']}"
+                    ]
+                    
+                    event_description = random.choice(event_types)()
+                    
+                    # Create and broadcast kingdom-specific event
+                    await create_and_broadcast_event(
+                        event_description, 
+                        city['name'], 
+                        kingdom_data['name'], 
+                        "auto",
+                        kingdom_id=kingdom_data['id']
+                    )
+                
+                # Auto-generate registry items occasionally for this kingdom
+                if random.random() < 0.2:  # 20% chance per cycle per kingdom
+                    city = random.choice(kingdom_data['cities'])
+                    registry_types = ["citizens", "slaves", "livestock", "crimes", "soldiers", "tribute"]
+                    registry_type = random.choice(registry_types)
+                    
+                    try:
+                        if registry_type == "citizens":
+                            new_citizen_data = generate_citizen(city['id'])
+                            new_citizen = Citizen(**new_citizen_data)
+                            
+                            # Update the kingdom in multi_kingdoms collection
+                            result = await db.multi_kingdoms.update_one(
+                                {"id": kingdom_data['id'], "cities.id": city['id']},
+                                {
+                                    "$push": {"cities.$.citizens": new_citizen.dict()},
+                                    "$inc": {"cities.$.population": 1, "total_population": 1}
+                                }
+                            )
+                            
+                            if result.modified_count:
+                                event_desc = generate_registry_event("citizen", city['name'], new_citizen_data)
+                                await create_and_broadcast_event(
+                                    event_desc, city['name'], kingdom_data['name'], "auto-registry",
+                                    kingdom_id=kingdom_data['id']
+                                )
+                        
+                        elif registry_type == "slaves":
+                            new_slave_data = generate_slave(city['id'])
+                            new_slave = Slave(**new_slave_data)
+                            
+                            result = await db.multi_kingdoms.update_one(
+                                {"id": kingdom_data['id'], "cities.id": city['id']},
+                                {"$push": {"cities.$.slaves": new_slave.dict()}}
+                            )
+                            
+                            if result.modified_count:
+                                event_desc = generate_registry_event("slave", city['name'], new_slave_data)
+                                await create_and_broadcast_event(
+                                    event_desc, city['name'], kingdom_data['name'], "auto-registry",
+                                    kingdom_id=kingdom_data['id']
+                                )
+                        
+                        elif registry_type == "livestock":
+                            new_livestock_data = generate_livestock(city['id'])
+                            new_livestock = Livestock(**new_livestock_data)
+                            
+                            result = await db.multi_kingdoms.update_one(
+                                {"id": kingdom_data['id'], "cities.id": city['id']},
+                                {"$push": {"cities.$.livestock": new_livestock.dict()}}
+                            )
+                            
+                            if result.modified_count:
+                                event_desc = generate_registry_event("livestock", city['name'], new_livestock_data)
+                                await create_and_broadcast_event(
+                                    event_desc, city['name'], kingdom_data['name'], "auto-registry",
+                                    kingdom_id=kingdom_data['id']
+                                )
+                        
+                        elif registry_type == "crimes":
+                            new_crime_data = generate_crime(city['id'], city['name'])
+                            new_crime = CrimeRecord(**new_crime_data)
+                            
+                            result = await db.multi_kingdoms.update_one(
+                                {"id": kingdom_data['id'], "cities.id": city['id']},
+                                {"$push": {"cities.$.crime_records": new_crime.dict()}}
+                            )
+                            
+                            if result.modified_count:
+                                event_desc = generate_registry_event("crime", city['name'], new_crime_data)
+                                await create_and_broadcast_event(
+                                    event_desc, city['name'], kingdom_data['name'], "auto-registry",
+                                    kingdom_id=kingdom_data['id']
+                                )
+                        
+                        elif registry_type == "soldiers":
+                            new_soldier_data = generate_soldier(city['id'])
+                            new_soldier = Soldier(**new_soldier_data)
+                            
+                            result = await db.multi_kingdoms.update_one(
+                                {"id": kingdom_data['id'], "cities.id": city['id']},
+                                {"$push": {"cities.$.garrison": new_soldier.dict()}}
+                            )
+                            
+                            if result.modified_count:
+                                event_desc = generate_registry_event("soldier", city['name'], new_soldier_data)
+                                await create_and_broadcast_event(
+                                    event_desc, city['name'], kingdom_data['name'], "auto-registry",
+                                    kingdom_id=kingdom_data['id']
+                                )
+                        
+                        elif registry_type == "tribute":
+                            new_tribute_data = generate_tribute(city['name'])
+                            new_tribute = TributeRecord(**new_tribute_data)
+                            
+                            result = await db.multi_kingdoms.update_one(
+                                {"id": kingdom_data['id'], "cities.id": city['id']},
+                                {"$push": {"cities.$.tribute_records": new_tribute.dict()}}
+                            )
+                            
+                            if result.modified_count:
+                                event_desc = generate_registry_event("tribute", city['name'], new_tribute_data)
+                                await create_and_broadcast_event(
+                                    event_desc, city['name'], kingdom_data['name'], "auto-registry",
+                                    kingdom_id=kingdom_data['id']
+                                )
+                        
+                    except Exception as e:
+                        logging.error(f"Auto-generation error for {registry_type} in kingdom {kingdom_data['name']}: {e}")
+            
+            await asyncio.sleep(random.randint(15, 45))  # 15-45 seconds between cycles
             
         except Exception as e:
             logging.error(f"Simulation error: {e}")
