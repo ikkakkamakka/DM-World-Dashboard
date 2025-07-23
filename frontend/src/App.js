@@ -1020,9 +1020,9 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
           const result = await response.json();
           console.log('Clear boundaries result:', result);
           
-          // Update UI immediately
+          // Update UI immediately by filtering out boundaries for this kingdom
           setAllBoundaries(prevBoundaries => 
-            prevBoundaries.filter(boundary => boundary.kingdomColor !== activeKingdom.color)
+            prevBoundaries.filter(boundary => boundary.kingdom_id !== activeKingdom.id)
           );
           
           alert(`Successfully cleared all boundaries for ${activeKingdom.name}: ${result.message}`);
