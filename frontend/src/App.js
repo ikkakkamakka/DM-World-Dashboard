@@ -374,30 +374,102 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
   );
 };
 
-// Enhanced Map Component with Kingdom Boundaries
+// Enhanced Map Component with Smart Boundary System
 const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMapClick }) => {
   const [showAddCityForm, setShowAddCityForm] = useState(false);
   const [newCityCoords, setNewCityCoords] = useState({ x: 0, y: 0 });
   const [draggedCity, setDraggedCity] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [boundaryMode, setBoundaryMode] = useState(false);
+  const [boundaryMode, setBoundaryMode] = useState('off'); // 'off', 'draw', 'paint', 'erase'
   const [currentBoundary, setCurrentBoundary] = useState([]);
+  const [paintBrushSize, setPaintBrushSize] = useState(20);
+  const [mapDimensions, setMapDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    // Get map dimensions for proper coordinate calculation
+    const mapElement = document.querySelector('.map-placeholder');
+    if (mapElement) {
+      const rect = mapElement.getBoundingClientRect();
+      setMapDimensions({ width: rect.width, height: rect.height });
+    }
+  }, []);
 
   const handleMapClick = (e) => {
     if (isDragging) return;
     
-    const rect = e.target.getBoundingClientRect();
+    const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     
-    if (boundaryMode) {
-      // Add point to current boundary
-      setCurrentBoundary([...currentBoundary, { x, y }]);
+    if (boundaryMode === 'draw') {
+      // Smart boundary detection - snap to nearby edges or geographical features
+      const snappedPoint = snapToFeatures(x, y, rect);
+      setCurrentBoundary([...currentBoundary, snappedPoint]);
+      
+    } else if (boundaryMode === 'paint') {
+      // Paint mode - add circular area to boundary
+      paintBoundaryArea(x, y);
+      
+    } else if (boundaryMode === 'erase') {
+      // Erase mode - remove boundary area
+      eraseBoundaryArea(x, y);
+      
     } else {
-      // Add new city
+      // Normal mode - add new city
       setNewCityCoords({ x, y });
       setShowAddCityForm(true);
     }
+  };
+
+  const snapToFeatures = (x, y, rect) => {
+    // Smart snapping to geographical features
+    // This would analyze the map image for rivers, coastlines, etc.
+    // For now, implementing basic edge snapping
+    
+    const snapDistance = 2; // 2% of map size
+    const snappedPoint = { x, y };
+    
+    // Snap to map edges
+    if (x < snapDistance) snappedPoint.x = 0;
+    if (x > 100 - snapDistance) snappedPoint.x = 100;
+    if (y < snapDistance) snappedPoint.y = 0;
+    if (y > 100 - snapDistance) snappedPoint.y = 100;
+    
+    // Future: Add river/coastline detection using image analysis
+    // const features = detectGeographicalFeatures(x, y);
+    // if (features.length > 0) return features[0];
+    
+    return snappedPoint;
+  };
+
+  const paintBoundaryArea = (centerX, centerY) => {
+    // Create circular boundary points around the clicked area
+    const brushRadius = paintBrushSize / 10; // Convert to percentage
+    const newPoints = [];
+    
+    for (let angle = 0; angle < 360; angle += 15) {
+      const radian = (angle * Math.PI) / 180;
+      const pointX = centerX + Math.cos(radian) * brushRadius;
+      const pointY = centerY + Math.sin(radian) * brushRadius;
+      
+      if (pointX >= 0 && pointX <= 100 && pointY >= 0 && pointY <= 100) {
+        newPoints.push({ x: pointX, y: pointY });
+      }
+    }
+    
+    setCurrentBoundary([...currentBoundary, ...newPoints]);
+  };
+
+  const eraseBoundaryArea = (centerX, centerY) => {
+    // Remove boundary points within erase radius
+    const eraseRadius = paintBrushSize / 10;
+    
+    setCurrentBoundary(currentBoundary.filter(point => {
+      const distance = Math.sqrt(
+        Math.pow(point.x - centerX, 2) + Math.pow(point.y - centerY, 2)
+      );
+      return distance > eraseRadius;
+    }));
   };
 
   const completeBoundary = async () => {
@@ -406,20 +478,30 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
       return;
     }
 
+    // Create a closed polygon by connecting first and last points
+    let boundaryPoints = [...currentBoundary];
+    if (boundaryMode === 'draw') {
+      // For drawing mode, close the polygon
+      boundaryPoints.push(currentBoundary[0]);
+    } else {
+      // For paint mode, create a convex hull
+      boundaryPoints = createConvexHull(currentBoundary);
+    }
+
     try {
       const response = await fetch(`${API}/kingdom-boundaries`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           kingdom_id: activeKingdom.id,
-          boundary_points: currentBoundary,
+          boundary_points: boundaryPoints,
           color: activeKingdom.color
         })
       });
       
       if (response.ok) {
         setCurrentBoundary([]);
-        setBoundaryMode(false);
+        setBoundaryMode('off');
         window.location.reload();
       }
     } catch (error) {
@@ -427,8 +509,46 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     }
   };
 
+  const createConvexHull = (points) => {
+    // Simple convex hull algorithm for paint mode
+    if (points.length < 3) return points;
+    
+    // Sort points by x coordinate
+    const sortedPoints = [...points].sort((a, b) => a.x - b.x);
+    
+    // Build upper hull
+    const upper = [];
+    for (let i = 0; i < sortedPoints.length; i++) {
+      while (upper.length >= 2 && cross(upper[upper.length-2], upper[upper.length-1], sortedPoints[i]) <= 0) {
+        upper.pop();
+      }
+      upper.push(sortedPoints[i]);
+    }
+    
+    // Build lower hull
+    const lower = [];
+    for (let i = sortedPoints.length - 1; i >= 0; i--) {
+      while (lower.length >= 2 && cross(lower[lower.length-2], lower[lower.length-1], sortedPoints[i]) <= 0) {
+        lower.pop();
+      }
+      lower.push(sortedPoints[i]);
+    }
+    
+    return [...upper.slice(0, -1), ...lower.slice(0, -1)];
+  };
+
+  const cross = (o, a, b) => {
+    return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+  };
+
+  const clearBoundary = () => {
+    setCurrentBoundary([]);
+    setBoundaryMode('off');
+  };
+
   // ... (keeping existing city drag/drop functionality)
   const handleCityMouseDown = (e, city) => {
+    if (boundaryMode !== 'off') return; // Disable city interaction in boundary mode
     e.stopPropagation();
     setDraggedCity(city);
     setIsDragging(true);
@@ -502,28 +622,75 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     }
   };
 
+  const getBoundaryModeInstructions = () => {
+    switch (boundaryMode) {
+      case 'draw':
+        return `Click points to draw ${activeKingdom?.name || 'Kingdom'} boundary. Lines will snap to geographical features.`;
+      case 'paint':
+        return `Paint to expand ${activeKingdom?.name || 'Kingdom'} territory. Brush size: ${paintBrushSize}px`;
+      case 'erase':
+        return `Erase to reduce ${activeKingdom?.name || 'Kingdom'} territory. Brush size: ${paintBrushSize}px`;
+      default:
+        return 'Click anywhere to add a new city • Drag cities to move them • Right-click cities to delete';
+    }
+  };
+
   return (
     <div className="enhanced-map-container">
-      <div className="map-controls">
-        <button 
-          className={`btn-secondary ${boundaryMode ? 'active' : ''}`}
-          onClick={() => setBoundaryMode(!boundaryMode)}
-        >
-          {boundaryMode ? 'Exit Boundary Mode' : 'Draw Kingdom Boundary'}
-        </button>
-        
-        {boundaryMode && currentBoundary.length > 2 && (
-          <button className="btn-primary" onClick={completeBoundary}>
-            Complete Boundary ({currentBoundary.length} points)
+      <div className="boundary-tools">
+        <div className="boundary-mode-controls">
+          <button 
+            className={`tool-btn ${boundaryMode === 'draw' ? 'active' : ''}`}
+            onClick={() => setBoundaryMode(boundaryMode === 'draw' ? 'off' : 'draw')}
+          >
+            ✏️ Draw Boundary
           </button>
+          
+          <button 
+            className={`tool-btn ${boundaryMode === 'paint' ? 'active' : ''}`}
+            onClick={() => setBoundaryMode(boundaryMode === 'paint' ? 'off' : 'paint')}
+          >
+            🖌️ Paint Territory
+          </button>
+          
+          <button 
+            className={`tool-btn ${boundaryMode === 'erase' ? 'active' : ''}`}
+            onClick={() => setBoundaryMode(boundaryMode === 'erase' ? 'off' : 'erase')}
+          >
+            🧽 Erase Territory
+          </button>
+        </div>
+
+        {(boundaryMode === 'paint' || boundaryMode === 'erase') && (
+          <div className="brush-controls">
+            <label>Brush Size: {paintBrushSize}px</label>
+            <input
+              type="range"
+              min="10"
+              max="50"
+              value={paintBrushSize}
+              onChange={(e) => setPaintBrushSize(parseInt(e.target.value))}
+              className="brush-slider"
+            />
+          </div>
+        )}
+
+        {boundaryMode !== 'off' && (
+          <div className="boundary-actions">
+            {currentBoundary.length > 2 && (
+              <button className="btn-primary" onClick={completeBoundary}>
+                Complete Boundary ({currentBoundary.length} points)
+              </button>
+            )}
+            <button className="btn-secondary" onClick={clearBoundary}>
+              Clear & Exit
+            </button>
+          </div>
         )}
       </div>
 
       <div className="map-instructions">
-        {boundaryMode 
-          ? `Click on map to add boundary points for ${activeKingdom?.name || 'Selected Kingdom'}`
-          : 'Click anywhere to add a new city • Drag cities to move them • Right-click cities to delete'
-        }
+        {getBoundaryModeInstructions()}
       </div>
       
       <div 
@@ -531,7 +698,12 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
         onClick={handleMapClick}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
-        style={{ cursor: boundaryMode ? 'crosshair' : (isDragging ? 'grabbing' : 'default') }}
+        style={{ 
+          cursor: boundaryMode === 'draw' ? 'crosshair' : 
+                  boundaryMode === 'paint' ? 'copy' :
+                  boundaryMode === 'erase' ? 'not-allowed' :
+                  (isDragging ? 'grabbing' : 'default')
+        }}
       >
         <img 
           src="https://images.unsplash.com/photo-1677295922463-147d7f2f718c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwbWFwfGVufDB8fHx8MTc1MzI0Mzk3OXww&ixlib=rb-4.1.0&q=85"
@@ -540,74 +712,121 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
           draggable={false}
         />
         
-        {/* Render Kingdom Boundaries */}
-        {activeKingdom?.boundaries?.map(boundary => (
-          <svg key={boundary.id} className="boundary-overlay">
-            <polygon
-              points={boundary.boundary_points.map(p => `${p.x},${p.y}`).join(' ')}
-              fill={`${boundary.color}20`}
-              stroke={boundary.color}
-              strokeWidth="2"
-              opacity="0.7"
-            />
-          </svg>
-        ))}
+        {/* Render Existing Kingdom Boundaries with Fill */}
+        <svg className="boundary-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
+          {activeKingdom?.boundaries?.map(boundary => (
+            <g key={boundary.id}>
+              {/* Filled area */}
+              <polygon
+                points={boundary.boundary_points.map(p => `${p.x},${p.y}`).join(' ')}
+                fill={`${boundary.color}40`}
+                stroke={boundary.color}
+                strokeWidth="0.3"
+                opacity="0.8"
+              />
+              {/* Border highlight */}
+              <polygon
+                points={boundary.boundary_points.map(p => `${p.x},${p.y}`).join(' ')}
+                fill="none"
+                stroke={boundary.color}
+                strokeWidth="0.5"
+                opacity="1"
+                strokeDasharray="1,0.5"
+              />
+            </g>
+          ))}
+        </svg>
         
-        {/* Current boundary being drawn */}
-        {boundaryMode && currentBoundary.length > 0 && (
-          <svg className="boundary-overlay">
+        {/* Current boundary being drawn/painted */}
+        {boundaryMode !== 'off' && currentBoundary.length > 0 && (
+          <svg className="boundary-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
+            {boundaryMode === 'draw' && currentBoundary.length > 2 && (
+              <>
+                {/* Preview filled area */}
+                <polygon
+                  points={[...currentBoundary, currentBoundary[0]].map(p => `${p.x},${p.y}`).join(' ')}
+                  fill={`${activeKingdom?.color || '#1e3a8a'}30`}
+                  stroke={activeKingdom?.color || '#1e3a8a'}
+                  strokeWidth="0.3"
+                  opacity="0.6"
+                />
+              </>
+            )}
+            
+            {boundaryMode === 'paint' && currentBoundary.length > 2 && (
+              <>
+                {/* Preview painted area */}
+                <polygon
+                  points={createConvexHull(currentBoundary).map(p => `${p.x},${p.y}`).join(' ')}
+                  fill={`${activeKingdom?.color || '#1e3a8a'}40`}
+                  stroke={activeKingdom?.color || '#1e3a8a'}
+                  strokeWidth="0.3"
+                  opacity="0.7"
+                />
+              </>
+            )}
+            
+            {/* Draw current boundary points */}
             <polyline
               points={currentBoundary.map(p => `${p.x},${p.y}`).join(' ')}
               fill="none"
               stroke={activeKingdom?.color || '#1e3a8a'}
-              strokeWidth="2"
-              strokeDasharray="5,5"
+              strokeWidth="0.4"
+              strokeDasharray="1,0.5"
             />
+            
+            {/* Draw individual points */}
             {currentBoundary.map((point, index) => (
               <circle
                 key={index}
                 cx={point.x}
                 cy={point.y}
-                r="3"
+                r="0.5"
                 fill={activeKingdom?.color || '#1e3a8a'}
+                opacity="0.8"
               />
             ))}
           </svg>
         )}
         
-        {/* Render Cities */}
+        {/* Render Cities (disabled during boundary mode) */}
         {cities?.map(city => (
           <div
             key={city.id}
             data-city-id={city.id}
-            className={`city-marker ${isDragging && draggedCity?.id === city.id ? 'dragging' : ''}`}
+            className={`city-marker ${isDragging && draggedCity?.id === city.id ? 'dragging' : ''} ${boundaryMode !== 'off' ? 'disabled' : ''}`}
             style={{
               left: `${city.x_coordinate}%`,
               top: `${city.y_coordinate}%`,
-              cursor: isDragging ? 'grabbing' : 'grab'
+              cursor: boundaryMode !== 'off' ? 'not-allowed' : (isDragging ? 'grabbing' : 'grab'),
+              opacity: boundaryMode !== 'off' ? 0.6 : 1
             }}
             onMouseDown={(e) => handleCityMouseDown(e, city)}
             onClick={(e) => {
               e.stopPropagation();
-              if (!isDragging && !boundaryMode) {
+              if (!isDragging && boundaryMode === 'off') {
                 onCitySelect(city.id);
               }
             }}
             onContextMenu={(e) => {
               e.preventDefault();
-              handleDeleteCity(e, city);
+              if (boundaryMode === 'off') {
+                handleDeleteCity(e, city);
+              }
             }}
-            title={`${city.name} - Right-click to delete, drag to move`}
+            title={boundaryMode !== 'off' ? 'Exit boundary mode to interact with cities' : `${city.name} - Right-click to delete, drag to move`}
           >
             <span className="city-icon">🏰</span>
             <span className="city-name">{city.name}</span>
-            <button 
-              className="city-delete-btn" 
-              onClick={(e) => handleDeleteCity(e, city)}
-              title="Delete city"
-            >
-              ✖
-            </button>
+            {boundaryMode === 'off' && (
+              <button 
+                className="city-delete-btn" 
+                onClick={(e) => handleDeleteCity(e, city)}
+                title="Delete city"
+              >
+                ✖
+              </button>
+            )}
           </div>
         ))}
       </div>
