@@ -754,7 +754,7 @@ const LivestockRegistry = ({ city }) => {
               <p><strong>Weight:</strong> {animal.weight} lbs</p>
               <p><strong>Value:</strong> {animal.value} GP</p>
               <p><strong>Owner:</strong> {animal.owner}</p>
-              <p><strong>Health:</strong> <span className={`health-${animal.health?.toLowerCase()}`}>{animal.health}</span></p>
+              <p><strong>Health:</strong> <span className={`health-${animal.health?.toLowerCase() || 'healthy'}`}>{animal.health}</span></p>
               {animal.notes && <p><strong>Notes:</strong> {animal.notes}</p>}
             </div>
           </div>
