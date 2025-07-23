@@ -341,33 +341,57 @@ const FaerunMap = ({ cities, onCitySelect, onMapClick }) => {
   return (
     <div className="map-container">
       <h2>Faerûn Map</h2>
-      <div className="map-placeholder" onClick={handleMapClick}>
+      <div className="map-instructions">
+        Click anywhere to add a new city • Drag cities to move them • Right-click cities to delete
+      </div>
+      <div 
+        className="map-placeholder" 
+        onClick={handleMapClick}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        style={{ cursor: isDragging ? 'grabbing' : 'default' }}
+      >
         <img 
           src="https://images.unsplash.com/photo-1677295922463-147d7f2f718c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwbWFwfGVufDB8fHx8MTc1MzI0Mzk3OXww&ixlib=rb-4.1.0&q=85"
           alt="Faerûn Map"
           className="map-image"
+          draggable={false}
         />
         {cities?.map(city => (
           <div
             key={city.id}
-            className="city-marker"
+            data-city-id={city.id}
+            className={`city-marker ${isDragging && draggedCity?.id === city.id ? 'dragging' : ''}`}
             style={{
               left: `${city.x_coordinate}%`,
-              top: `${city.y_coordinate}%`
+              top: `${city.y_coordinate}%`,
+              cursor: isDragging ? 'grabbing' : 'grab'
             }}
+            onMouseDown={(e) => handleCityMouseDown(e, city)}
             onClick={(e) => {
               e.stopPropagation();
-              onCitySelect(city.id);
+              if (!isDragging) {
+                onCitySelect(city.id);
+              }
             }}
-            title={city.name}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              handleDeleteCity(e, city);
+            }}
+            title={`${city.name} - Right-click to delete, drag to move`}
           >
-            🏰
+            <span className="city-icon">🏰</span>
+            <span className="city-name">{city.name}</span>
+            <button 
+              className="city-delete-btn" 
+              onClick={(e) => handleDeleteCity(e, city)}
+              title="Delete city"
+            >
+              ✖
+            </button>
           </div>
         ))}
       </div>
-      <p className="map-instructions">
-        Click anywhere on the map to place a new city, or click existing markers to manage cities
-      </p>
 
       <Modal 
         isOpen={showAddCityForm} 
