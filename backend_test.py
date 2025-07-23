@@ -495,6 +495,62 @@ class BackendTester:
         except:
             return False
 
+    async def test_simulation_engine(self):
+        """Test if simulation engine is generating events"""
+        print("\n⚙️ Testing Real-time Simulation Engine...")
+        try:
+            # Get initial event count
+            async with self.session.get(f"{API_BASE}/events") as response:
+                if response.status != 200:
+                    self.errors.append("Cannot test simulation engine - Events API failed")
+                    return False
+                
+                initial_events = await response.json()
+                initial_count = len(initial_events)
+                
+                print(f"   Initial event count: {initial_count}")
+                print("   Waiting 35 seconds for new events to be generated...")
+                
+                # Wait for simulation to generate new events (simulation runs every 10-30 seconds)
+                await asyncio.sleep(35)
+                
+                # Check for new events
+                async with self.session.get(f"{API_BASE}/events") as response2:
+                    if response2.status != 200:
+                        self.errors.append("Events API failed during simulation test")
+                        return False
+                    
+                    new_events = await response2.json()
+                    new_count = len(new_events)
+                    
+                    if new_count > initial_count:
+                        print(f"✅ Simulation engine working - Generated {new_count - initial_count} new events")
+                        
+                        # Check if events have fantasy content
+                        latest_event = new_events[0] if new_events else None
+                        if latest_event:
+                            description = latest_event['description']
+                            print(f"   Latest event: {description}")
+                            
+                            # Check for fantasy names and content
+                            fantasy_indicators = ['Thorin', 'Elena', 'Gareth', 'Emberfalls', 'Stormhaven', 'citizen', 'kingdom']
+                            has_fantasy_content = any(indicator in description for indicator in fantasy_indicators)
+                            
+                            if has_fantasy_content:
+                                print("   ✅ Events contain fantasy content as expected")
+                            else:
+                                print("   ⚠️ Events may not contain expected fantasy content")
+                        
+                        self.test_results['simulation_engine'] = True
+                        return True
+                    else:
+                        self.errors.append(f"Simulation engine not generating events - count remained {initial_count}")
+                        return False
+                        
+        except Exception as e:
+            self.errors.append(f"Simulation engine test error: {str(e)}")
+            return False
+
     async def run_all_tests(self):
         """Run all backend tests"""
         print("🚀 Starting Fantasy Kingdom Backend Tests")
