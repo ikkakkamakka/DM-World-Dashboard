@@ -1550,19 +1550,29 @@ async def remove_government_official(city_id: str, official_id: str):
 # FIXED Auto-generation endpoints
 @api_router.post("/auto-generate")
 async def auto_generate_registry_items(request: AutoGenerateRequest):
+    """Fixed auto-generate functionality for multi-kingdom database structure"""
     try:
-        kingdom = await db.kingdoms.find_one()
-        if not kingdom:
-            raise HTTPException(status_code=404, detail="Kingdom not found")
+        # Find the kingdom that contains the specified city
+        kingdom = None
+        target_city = None
         
-        city = None
-        for c in kingdom['cities']:
-            if c['id'] == request.city_id:
-                city = c
+        # Search through all kingdoms in multi_kingdoms collection
+        kingdoms = await db.multi_kingdoms.find().to_list(None)
+        
+        for k in kingdoms:
+            for city in k.get('cities', []):
+                if city['id'] == request.city_id:
+                    kingdom = k
+                    target_city = city
+                    break
+            if kingdom:
                 break
         
-        if not city:
-            raise HTTPException(status_code=404, detail="City not found")
+        if not kingdom:
+            raise HTTPException(status_code=404, detail="Kingdom containing the specified city not found")
+        
+        if not target_city:
+            raise HTTPException(status_code=404, detail="City not found in any kingdom")
         
         generated_items = []
         
@@ -1571,8 +1581,8 @@ async def auto_generate_registry_items(request: AutoGenerateRequest):
                 new_citizen_data = generate_citizen(request.city_id)
                 new_citizen = Citizen(**new_citizen_data)
                 
-                result = await db.kingdoms.update_one(
-                    {"cities.id": request.city_id},
+                result = await db.multi_kingdoms.update_one(
+                    {"id": kingdom['id'], "cities.id": request.city_id},
                     {
                         "$push": {"cities.$.citizens": new_citizen.dict()},
                         "$inc": {"cities.$.population": 1, "total_population": 1}
@@ -1581,78 +1591,96 @@ async def auto_generate_registry_items(request: AutoGenerateRequest):
                 
                 if result.modified_count:
                     generated_items.append(new_citizen.dict())
-                    event_desc = generate_registry_event("citizen", city['name'], new_citizen_data)
-                    await create_and_broadcast_event(event_desc, city['name'], kingdom['name'], "manual-generate")
+                    event_desc = generate_registry_event("citizen", target_city['name'], new_citizen_data)
+                    await create_and_broadcast_event(
+                        event_desc, target_city['name'], kingdom['name'], "manual-generate",
+                        kingdom_id=kingdom['id']
+                    )
             
             elif request.registry_type == "slaves":
                 new_slave_data = generate_slave(request.city_id)
                 new_slave = Slave(**new_slave_data)
                 
-                result = await db.kingdoms.update_one(
-                    {"cities.id": request.city_id},
+                result = await db.multi_kingdoms.update_one(
+                    {"id": kingdom['id'], "cities.id": request.city_id},
                     {"$push": {"cities.$.slaves": new_slave.dict()}}
                 )
                 
                 if result.modified_count:
                     generated_items.append(new_slave.dict())
-                    event_desc = generate_registry_event("slave", city['name'], new_slave_data)
-                    await create_and_broadcast_event(event_desc, city['name'], kingdom['name'], "manual-generate")
+                    event_desc = generate_registry_event("slave", target_city['name'], new_slave_data)
+                    await create_and_broadcast_event(
+                        event_desc, target_city['name'], kingdom['name'], "manual-generate",
+                        kingdom_id=kingdom['id']
+                    )
             
             elif request.registry_type == "livestock":
                 new_livestock_data = generate_livestock(request.city_id)
                 new_livestock = Livestock(**new_livestock_data)
                 
-                result = await db.kingdoms.update_one(
-                    {"cities.id": request.city_id},
+                result = await db.multi_kingdoms.update_one(
+                    {"id": kingdom['id'], "cities.id": request.city_id},
                     {"$push": {"cities.$.livestock": new_livestock.dict()}}
                 )
                 
                 if result.modified_count:
                     generated_items.append(new_livestock.dict())
-                    event_desc = generate_registry_event("livestock", city['name'], new_livestock_data)
-                    await create_and_broadcast_event(event_desc, city['name'], kingdom['name'], "manual-generate")
+                    event_desc = generate_registry_event("livestock", target_city['name'], new_livestock_data)
+                    await create_and_broadcast_event(
+                        event_desc, target_city['name'], kingdom['name'], "manual-generate",
+                        kingdom_id=kingdom['id']
+                    )
             
             elif request.registry_type == "garrison":
                 new_soldier_data = generate_soldier(request.city_id)
                 new_soldier = Soldier(**new_soldier_data)
                 
-                result = await db.kingdoms.update_one(
-                    {"cities.id": request.city_id},
+                result = await db.multi_kingdoms.update_one(
+                    {"id": kingdom['id'], "cities.id": request.city_id},
                     {"$push": {"cities.$.garrison": new_soldier.dict()}}
                 )
                 
                 if result.modified_count:
                     generated_items.append(new_soldier.dict())
-                    event_desc = generate_registry_event("soldier", city['name'], new_soldier_data)
-                    await create_and_broadcast_event(event_desc, city['name'], kingdom['name'], "manual-generate")
+                    event_desc = generate_registry_event("soldier", target_city['name'], new_soldier_data)
+                    await create_and_broadcast_event(
+                        event_desc, target_city['name'], kingdom['name'], "manual-generate",
+                        kingdom_id=kingdom['id']
+                    )
             
             elif request.registry_type == "crimes":
-                new_crime_data = generate_crime(request.city_id, city['name'])
+                new_crime_data = generate_crime(request.city_id, target_city['name'])
                 new_crime = CrimeRecord(**new_crime_data)
                 
-                result = await db.kingdoms.update_one(
-                    {"cities.id": request.city_id},
+                result = await db.multi_kingdoms.update_one(
+                    {"id": kingdom['id'], "cities.id": request.city_id},
                     {"$push": {"cities.$.crime_records": new_crime.dict()}}
                 )
                 
                 if result.modified_count:
                     generated_items.append(new_crime.dict())
-                    event_desc = generate_registry_event("crime", city['name'], new_crime_data)
-                    await create_and_broadcast_event(event_desc, city['name'], kingdom['name'], "manual-generate")
+                    event_desc = generate_registry_event("crime", target_city['name'], new_crime_data)
+                    await create_and_broadcast_event(
+                        event_desc, target_city['name'], kingdom['name'], "manual-generate",
+                        kingdom_id=kingdom['id']
+                    )
             
             elif request.registry_type == "tribute":
-                new_tribute_data = generate_tribute(city['name'])
+                new_tribute_data = generate_tribute(target_city['name'])
                 new_tribute = TributeRecord(**new_tribute_data)
                 
-                result = await db.kingdoms.update_one(
-                    {"cities.id": request.city_id},
+                result = await db.multi_kingdoms.update_one(
+                    {"id": kingdom['id'], "cities.id": request.city_id},
                     {"$push": {"cities.$.tribute_records": new_tribute.dict()}}
                 )
                 
                 if result.modified_count:
                     generated_items.append(new_tribute.dict())
-                    event_desc = generate_registry_event("tribute", city['name'], new_tribute_data)
-                    await create_and_broadcast_event(event_desc, city['name'], kingdom['name'], "manual-generate")
+                    event_desc = generate_registry_event("tribute", target_city['name'], new_tribute_data)
+                    await create_and_broadcast_event(
+                        event_desc, target_city['name'], kingdom['name'], "manual-generate",
+                        kingdom_id=kingdom['id']
+                    )
         
         return {"generated_items": generated_items, "count": len(generated_items)}
     
