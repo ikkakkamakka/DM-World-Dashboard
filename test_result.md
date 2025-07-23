@@ -264,6 +264,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETE: All user feedback improvements successfully implemented and working. 1) Double-click city creation works perfectly (single-click does NOT create cities) 2) Enhanced erase functionality working with brush controls and targets existing boundaries 3) Scroll wheel zoom only works when hovering over map 4) Cities appear as simple castle icons without white cards or kingdom labels 5) All kingdom boundaries visible simultaneously with proper color coding 6) Zoom controls (in/out/reset) fully functional 7) Map sizing properly contained. Boundary tools (draw, paint, erase) all activate correctly with proper UI feedback. Cities properly disabled during boundary modes. Map instructions clearly mention double-click requirement. Only minor issue: page scroll behavior when not hovering over map needs verification, but core functionality is excellent."
+      - working: true
+        agent: "testing"
+        comment: "✅ BACKEND BOUNDARY MANAGEMENT FULLY FUNCTIONAL: Comprehensive backend testing confirms all boundary management APIs work perfectly. User's reported issue 'Clear Border buttons do nothing' is NOT a backend problem. All 4 key endpoints tested: GET /api/multi-kingdoms (✅), GET /api/kingdom-boundaries/{kingdom_id} (✅), DELETE /api/kingdom-boundaries/clear/{kingdom_id} (✅ - successfully cleared 2 boundaries), POST /api/kingdom-boundaries (✅). Database consistency verified between both collections. Edge cases tested: empty clears, invalid IDs, malformed data, large datasets, concurrent operations - all handled correctly. The issue is in frontend implementation not calling APIs properly or not updating UI after successful backend responses."
 
   - task: "Enhanced Notification Engine"
     implemented: true
