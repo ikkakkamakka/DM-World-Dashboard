@@ -2240,10 +2240,12 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
   );
 };
 
-// Main App Component
+// Main App Component with Multi-Kingdom Support
 function App() {
   const [kingdom, setKingdom] = useState(null);
-  const [currentView, setCurrentView] = useState('kingdom');
+  const [multiKingdoms, setMultiKingdoms] = useState([]);
+  const [activeKingdom, setActiveKingdom] = useState(null);
+  const [currentView, setCurrentView] = useState('kingdom-selector'); // Start with kingdom selector
   const [activeTab, setActiveTab] = useState('Citizens');
   const [events, setEvents] = useState([]);
   const [autoEventsEnabled, setAutoEventsEnabled] = useState(true);
@@ -2252,7 +2254,8 @@ function App() {
 
   // Fetch initial data
   useEffect(() => {
-    fetchKingdom();
+    fetchMultiKingdoms();
+    fetchActiveKingdom();
     fetchEvents();
     fetchAutoEventsStatus();
     connectWebSocket();
@@ -2264,14 +2267,46 @@ function App() {
     };
   }, []);
 
-  const fetchKingdom = async () => {
+  const fetchMultiKingdoms = async () => {
     try {
-      const response = await fetch(`${API}/kingdom`);
+      const response = await fetch(`${API}/multi-kingdoms`);
       const data = await response.json();
-      setKingdom(data);
+      setMultiKingdoms(data);
     } catch (error) {
-      console.error('Error fetching kingdom:', error);
+      console.error('Error fetching multi kingdoms:', error);
     }
+  };
+
+  const fetchActiveKingdom = async () => {
+    try {
+      const response = await fetch(`${API}/active-kingdom`);
+      const data = await response.json();
+      setActiveKingdom(data);
+      setKingdom(data); // For backward compatibility
+    } catch (error) {
+      console.error('Error fetching active kingdom:', error);
+    }
+  };
+
+  const handleKingdomChange = async (selectedKingdom) => {
+    try {
+      const response = await fetch(`${API}/multi-kingdom/${selectedKingdom.id}/set-active`, {
+        method: 'POST'
+      });
+      
+      if (response.ok) {
+        setActiveKingdom(selectedKingdom);
+        setKingdom(selectedKingdom);
+        setCurrentView('kingdom');
+      }
+    } catch (error) {
+      console.error('Error setting active kingdom:', error);
+    }
+  };
+
+  const handleCreateNewKingdom = (newKingdom) => {
+    setMultiKingdoms([...multiKingdoms, newKingdom]);
+    handleKingdomChange(newKingdom);
   };
 
   const fetchEvents = async () => {
@@ -2306,7 +2341,7 @@ function App() {
         const data = JSON.parse(event.data);
         if (data.type === 'new_event') {
           setEvents(prevEvents => [data.event, ...prevEvents]);
-          fetchKingdom();
+          fetchActiveKingdom(); // Refresh kingdom data
         }
       };
 
@@ -2339,11 +2374,9 @@ function App() {
     setActiveTab('Citizens'); // Reset tab when changing views
   };
 
-  if (!kingdom) return <div className="loading">Loading Faerûn...</div>;
-
   const getCurrentCity = () => {
-    if (currentView === 'kingdom' || currentView === 'map') return null;
-    return kingdom.cities?.find(city => city.id === currentView);
+    if (currentView === 'kingdom' || currentView === 'map' || currentView === 'kingdom-selector') return null;
+    return (activeKingdom || kingdom)?.cities?.find(city => city.id === currentView);
   };
 
   const currentCity = getCurrentCity();
