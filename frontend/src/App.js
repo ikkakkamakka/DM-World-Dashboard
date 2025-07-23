@@ -695,26 +695,44 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
   };
 
   const clearAllBoundaries = async () => {
-    if (!activeKingdom) return;
+    if (!activeKingdom) {
+      alert('No active kingdom selected');
+      return;
+    }
     
     if (window.confirm(`Are you sure you want to clear ALL boundaries for ${activeKingdom.name}? This action cannot be undone.`)) {
       try {
+        console.log(`Clearing boundaries for kingdom: ${activeKingdom.id}`);
+        
         const response = await fetch(`${API}/kingdom-boundaries/clear/${activeKingdom.id}`, {
-          method: 'DELETE'
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
         });
         
         if (response.ok) {
           const result = await response.json();
-          console.log(result.message);
-          alert(`Successfully cleared all boundaries for ${activeKingdom.name}`);
-          setTimeout(() => window.location.reload(), 1000);
+          console.log('Clear boundaries result:', result);
+          
+          // Update UI immediately
+          setAllBoundaries(prevBoundaries => 
+            prevBoundaries.filter(boundary => boundary.kingdomColor !== activeKingdom.color)
+          );
+          
+          alert(`Successfully cleared all boundaries for ${activeKingdom.name}: ${result.message}`);
+          
+          // Force a complete reload after user acknowledges
+          setTimeout(() => window.location.reload(), 500);
         } else {
-          throw new Error('Failed to clear boundaries');
+          const errorText = await response.text();
+          console.error('Clear boundaries failed:', response.status, errorText);
+          throw new Error(`Failed to clear boundaries: ${response.status}`);
         }
         
       } catch (error) {
         console.error('Error clearing all boundaries:', error);
-        alert('Failed to clear boundaries. Please try again.');
+        alert(`Failed to clear boundaries: ${error.message}. Please try again.`);
       }
     }
   };
