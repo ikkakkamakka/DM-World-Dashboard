@@ -2385,36 +2385,55 @@ function App() {
     <div className="App">
       <div className="status-bar">
         <span className="status-text">{connectionStatus}</span>
+        {activeKingdom && (
+          <span className="active-kingdom">Managing: {activeKingdom.name}</span>
+        )}
       </div>
       
-      <Navigation 
-        currentView={currentView} 
-        onViewChange={handleViewChange}
-        kingdom={kingdom}
-      />
-
-      {currentView === 'kingdom' && (
-        <KingdomDashboard 
-          kingdom={kingdom} 
-          events={events}
-          autoEventsEnabled={autoEventsEnabled}
-          onToggleAutoEvents={handleToggleAutoEvents}
+      {currentView === 'kingdom-selector' && (
+        <KingdomSelector 
+          kingdoms={multiKingdoms}
+          activeKingdom={activeKingdom}
+          onKingdomChange={handleKingdomChange}
+          onCreateNew={handleCreateNewKingdom}
         />
       )}
 
-      {currentView === 'map' && (
-        <FaerunMap 
-          cities={kingdom.cities} 
-          onCitySelect={handleViewChange}
-        />
-      )}
+      {activeKingdom && currentView !== 'kingdom-selector' && (
+        <>
+          <Navigation 
+            currentView={currentView} 
+            onViewChange={handleViewChange}
+            kingdom={activeKingdom}
+            onBackToSelector={() => setCurrentView('kingdom-selector')}
+          />
 
-      {currentCity && (
-        <CityDashboard 
-          city={currentCity}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
+          {currentView === 'kingdom' && (
+            <KingdomDashboard 
+              kingdom={activeKingdom} 
+              events={events}
+              autoEventsEnabled={autoEventsEnabled}
+              onToggleAutoEvents={handleToggleAutoEvents}
+            />
+          )}
+
+          {currentView === 'map' && (
+            <EnhancedFaerunMap 
+              kingdoms={multiKingdoms}
+              activeKingdom={activeKingdom}
+              cities={activeKingdom.cities} 
+              onCitySelect={handleViewChange}
+            />
+          )}
+
+          {currentCity && (
+            <CityDashboard 
+              city={currentCity}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+          )}
+        </>
       )}
     </div>
   );
