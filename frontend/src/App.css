@@ -650,6 +650,128 @@ body {
   margin: 0;
 }
 
+.registry-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Government Hierarchy */
+.government-section {
+  margin: 30px 0;
+  background: linear-gradient(135deg, white, var(--parchment));
+  border: 2px solid var(--primary-gold);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 25px var(--shadow);
+}
+
+.government-section h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  color: var(--royal-blue);
+  margin-bottom: 25px;
+  text-align: center;
+  border-bottom: 3px solid var(--primary-gold);
+  padding-bottom: 10px;
+}
+
+.government-hierarchy {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.governor-card {
+  background: linear-gradient(135deg, var(--royal-blue), var(--deep-blue));
+  color: var(--primary-gold);
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 20px var(--shadow);
+  border: 3px solid var(--primary-gold);
+}
+
+.government-officials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.government-official {
+  background: linear-gradient(135deg, var(--parchment), white);
+  border: 2px solid var(--dark-gold);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.government-official:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px var(--shadow);
+}
+
+.official-rank {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--forest-green);
+  margin-bottom: 5px;
+}
+
+.official-name {
+  color: var(--royal-blue);
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.governor-card .official-rank {
+  font-size: 1.4rem;
+  color: var(--primary-gold);
+}
+
+.governor-card .official-name {
+  font-size: 1.6rem;
+  color: white;
+}
+
+.no-officials {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--royal-blue);
+  font-style: italic;
+  padding: 20px;
+}
+
+/* City Header with Edit */
+.city-header-content {
+  position: relative;
+  text-align: center;
+}
+
+.edit-city-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--primary-gold);
+  color: var(--forest-green);
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.edit-city-btn:hover {
+  background: var(--dark-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
 .registry-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
