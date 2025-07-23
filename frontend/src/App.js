@@ -3938,11 +3938,22 @@ function App() {
     handleKingdomChange(newKingdom);
   };
 
+  // Fetch events for the active kingdom
   const fetchEvents = async () => {
+    if (!activeKingdom) return;
+    
     try {
       const response = await fetch(`${API}/events`);
-      const data = await response.json();
-      setEvents(data);
+      if (response.ok) {
+        const allEvents = await response.json();
+        // Filter events to show only those for the active kingdom
+        const kingdomEvents = allEvents.filter(event => 
+          event.kingdom_id === activeKingdom.id || 
+          event.kingdom_name === activeKingdom.name ||
+          (!event.kingdom_id && event.kingdom_name === activeKingdom.name) // backward compatibility
+        );
+        setEvents(kingdomEvents);
+      }
     } catch (error) {
       console.error('Error fetching events:', error);
     }
