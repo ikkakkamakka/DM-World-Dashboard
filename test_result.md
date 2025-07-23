@@ -282,9 +282,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "City Dashboard UI"
+    - "Enhanced Boundary Drawing System"
     - "Government Position Management"
-  stuck_tasks: []
+  stuck_tasks: 
+    - "Enhanced Boundary Drawing System"
   test_all: false
   test_priority: "high_first"
 
