@@ -999,6 +999,29 @@ async def delete_kingdom_boundary(boundary_id: str):
     
     return {"message": "Boundary deleted successfully"}
 
+@api_router.put("/kingdom-boundaries/{boundary_id}")
+async def update_kingdom_boundary(boundary_id: str, boundary_update: dict):
+    """Update existing kingdom boundary with new points"""
+    boundary = await db.kingdom_boundaries.find_one({"id": boundary_id})
+    if not boundary:
+        raise HTTPException(status_code=404, detail="Boundary not found")
+    
+    # Update boundary points
+    updated_boundary = {**boundary, "boundary_points": boundary_update["boundary_points"]}
+    
+    # Update in both collections
+    await db.kingdom_boundaries.update_one(
+        {"id": boundary_id},
+        {"$set": {"boundary_points": boundary_update["boundary_points"]}}
+    )
+    
+    await db.multi_kingdoms.update_one(
+        {"id": boundary["kingdom_id"], "boundaries.id": boundary_id},
+        {"$set": {"boundaries.$.boundary_points": boundary_update["boundary_points"]}}
+    )
+    
+    return {"message": "Boundary updated successfully"}
+
 # City assignment to kingdoms
 @api_router.put("/cities/{city_id}/assign-kingdom/{kingdom_id}")
 async def assign_city_to_kingdom(city_id: str, kingdom_id: str):
