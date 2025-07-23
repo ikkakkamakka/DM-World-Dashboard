@@ -790,7 +790,7 @@ async def simulation_engine():
             await asyncio.sleep(30)
 
 async def create_and_broadcast_event(description, city_name, kingdom_name, event_type, priority="normal", kingdom_id=None):
-    """Helper function to create and broadcast events"""
+    """Helper function to create and broadcast kingdom-specific events"""
     event = Event(
         description=description,
         city_name=city_name,
@@ -799,11 +799,16 @@ async def create_and_broadcast_event(description, city_name, kingdom_name, event
         priority=priority
     )
     
-    await db.events.insert_one(event.dict())
+    # Add kingdom_id to event data if provided
+    event_data = event.dict()
+    if kingdom_id:
+        event_data['kingdom_id'] = kingdom_id
+    
+    await db.events.insert_one(event_data)
     await manager.broadcast({
         "type": "new_event",
-        "event": event.dict(),
-        "kingdom_id": kingdom_id
+        "event": event_data,
+        "kingdom_id": kingdom_id  # Include kingdom_id in broadcast for frontend filtering
     })
 
 # Initialize multi-kingdom data and migrate existing data
