@@ -545,6 +545,7 @@ class Kingdom(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     ruler: str
+    government_type: str = "Monarchy"
     total_population: int = 0
     royal_treasury: int = 5000
     cities: List[City] = []
