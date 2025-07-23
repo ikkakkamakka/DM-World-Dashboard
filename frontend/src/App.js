@@ -915,7 +915,7 @@ const GarrisonRegistry = ({ city }) => {
               <p><strong>Rank:</strong> {soldier.rank}</p>
               <p><strong>Age:</strong> {soldier.age}</p>
               <p><strong>Service:</strong> {soldier.years_of_service} years</p>
-              <p><strong>Status:</strong> <span className={`status-${soldier.status?.toLowerCase()}`}>{soldier.status}</span></p>
+              <p><strong>Status:</strong> <span className={`status-${soldier.status?.toLowerCase() || 'active'}`}>{soldier.status}</span></p>
               {soldier.equipment?.length > 0 && (
                 <p><strong>Equipment:</strong> {soldier.equipment.join(', ')}</p>
               )}
