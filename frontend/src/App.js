@@ -1076,11 +1076,24 @@ const TributeRegistry = ({ city }) => {
 // Crime Registry
 const CrimeRegistry = ({ city }) => {
   const [showAddForm, setShowAddForm] = useState(false);
+  const [crimeTypes, setCrimeTypes] = useState([]);
   const [formData, setFormData] = useState({
-    criminal_name: '', crime_type: 'Theft', description: '', punishment: '', fine_amount: '0', date_occurred: '', notes: ''
+    criminal_name: '', crime_type: 'Petty Theft', description: '', punishment: '', fine_amount: '0', date_occurred: '', notes: ''
   });
 
-  const crimeTypes = ['Theft', 'Assault', 'Murder', 'Fraud', 'Smuggling', 'Vandalism', 'Disturbing Peace', 'Tax Evasion'];
+  useEffect(() => {
+    fetchCrimeTypes();
+  }, []);
+
+  const fetchCrimeTypes = async () => {
+    try {
+      const response = await fetch(`${API}/crime-types`);
+      const data = await response.json();
+      setCrimeTypes(data.crime_types || []);
+    } catch (error) {
+      console.error('Error fetching crime types:', error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -1097,7 +1110,7 @@ const CrimeRegistry = ({ city }) => {
       });
       if (response.ok) {
         setShowAddForm(false);
-        setFormData({ criminal_name: '', crime_type: 'Theft', description: '', punishment: '', fine_amount: '0', date_occurred: '', notes: '' });
+        setFormData({ criminal_name: '', crime_type: 'Petty Theft', description: '', punishment: '', fine_amount: '0', date_occurred: '', notes: '' });
         window.location.reload();
       }
     } catch (error) {
@@ -1120,13 +1133,37 @@ const CrimeRegistry = ({ city }) => {
     }
   };
 
+  const handleAutoGenerate = async () => {
+    try {
+      const response = await fetch(`${API}/auto-generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          registry_type: 'crimes',
+          city_id: city.id,
+          count: Math.floor(Math.random() * 3) + 1 // 1-3 crimes
+        })
+      });
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error auto-generating crimes:', error);
+    }
+  };
+
   return (
     <div className="registry-section">
       <div className="registry-header">
         <h3>Crime Records</h3>
-        <button className="btn-primary" onClick={() => setShowAddForm(true)}>
-          Add Crime
-        </button>
+        <div className="registry-actions">
+          <button className="btn-secondary" onClick={handleAutoGenerate}>
+            Auto Generate
+          </button>
+          <button className="btn-primary" onClick={() => setShowAddForm(true)}>
+            Add Crime
+          </button>
+        </div>
       </div>
 
       <Modal isOpen={showAddForm} onClose={() => setShowAddForm(false)} title="Add New Crime">
