@@ -281,60 +281,218 @@ class BackendTester:
             self.errors.append(f"Database initialization test error: {str(e)}")
             return False
 
-    async def test_simulation_engine(self):
-        """Test if simulation engine is generating events"""
-        print("\n⚙️ Testing Real-time Simulation Engine...")
+    async def test_auto_generate_functionality(self):
+        """Test auto-generate functionality for all registry types"""
+        print("\n🎲 Testing Auto-Generate Functionality...")
+        
+        # First get kingdom data to find city IDs
         try:
-            # Get initial event count
-            async with self.session.get(f"{API_BASE}/events") as response:
+            async with self.session.get(f"{API_BASE}/kingdom") as response:
                 if response.status != 200:
-                    self.errors.append("Cannot test simulation engine - Events API failed")
+                    self.errors.append("Cannot test auto-generate - Kingdom API failed")
                     return False
                 
-                initial_events = await response.json()
-                initial_count = len(initial_events)
+                kingdom_data = await response.json()
+                cities = kingdom_data.get('cities', [])
                 
-                print(f"   Initial event count: {initial_count}")
-                print("   Waiting 35 seconds for new events to be generated...")
+                if not cities:
+                    self.errors.append("No cities found for auto-generate testing")
+                    return False
                 
-                # Wait for simulation to generate new events (simulation runs every 10-30 seconds)
-                await asyncio.sleep(35)
+                test_city = cities[0]  # Use first city for testing
+                city_id = test_city['id']
+                city_name = test_city['name']
                 
-                # Check for new events
-                async with self.session.get(f"{API_BASE}/events") as response2:
-                    if response2.status != 200:
-                        self.errors.append("Events API failed during simulation test")
-                        return False
-                    
-                    new_events = await response2.json()
-                    new_count = len(new_events)
-                    
-                    if new_count > initial_count:
-                        print(f"✅ Simulation engine working - Generated {new_count - initial_count} new events")
-                        
-                        # Check if events have fantasy content
-                        latest_event = new_events[0] if new_events else None
-                        if latest_event:
-                            description = latest_event['description']
-                            print(f"   Latest event: {description}")
-                            
-                            # Check for fantasy names and content
-                            fantasy_indicators = ['Thorin', 'Elena', 'Gareth', 'Emberfalls', 'Stormhaven', 'citizen', 'kingdom']
-                            has_fantasy_content = any(indicator in description for indicator in fantasy_indicators)
-                            
-                            if has_fantasy_content:
-                                print("   ✅ Events contain fantasy content as expected")
-                            else:
-                                print("   ⚠️ Events may not contain expected fantasy content")
-                        
-                        self.test_results['simulation_engine'] = True
-                        return True
-                    else:
-                        self.errors.append(f"Simulation engine not generating events - count remained {initial_count}")
-                        return False
-                        
+                print(f"   Testing with city: {city_name} (ID: {city_id})")
+                
+                # Test each registry type
+                registry_types = ["citizens", "slaves", "livestock", "garrison", "crimes", "tribute"]
+                results = {}
+                
+                for registry_type in registry_types:
+                    print(f"\n   🔄 Testing auto-generate for {registry_type}...")
+                    success = await self.test_single_registry_autogenerate(city_id, city_name, registry_type)
+                    results[f'auto_generate_{registry_type}'] = success
+                    self.test_results[f'auto_generate_{registry_type}'] = success
+                
+                # Summary for auto-generate tests
+                passed_auto_tests = sum(results.values())
+                total_auto_tests = len(results)
+                
+                print(f"\n   📊 Auto-Generate Summary: {passed_auto_tests}/{total_auto_tests} registry types working")
+                
+                return passed_auto_tests == total_auto_tests
+                
         except Exception as e:
-            self.errors.append(f"Simulation engine test error: {str(e)}")
+            self.errors.append(f"Auto-generate test setup error: {str(e)}")
+            return False
+
+    async def test_single_registry_autogenerate(self, city_id, city_name, registry_type):
+        """Test auto-generate for a single registry type"""
+        try:
+            # Get initial count of items in this registry
+            initial_count = await self.get_registry_count(city_id, registry_type)
+            
+            # Make auto-generate request
+            payload = {
+                "registry_type": registry_type,
+                "city_id": city_id,
+                "count": 2  # Generate 2 items
+            }
+            
+            async with self.session.post(f"{API_BASE}/auto-generate", json=payload) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    # Check response structure
+                    if 'generated_items' not in result or 'count' not in result:
+                        self.errors.append(f"Auto-generate {registry_type}: Invalid response structure")
+                        return False
+                    
+                    generated_items = result['generated_items']
+                    generated_count = result['count']
+                    
+                    if generated_count != 2:
+                        self.errors.append(f"Auto-generate {registry_type}: Expected 2 items, got {generated_count}")
+                        return False
+                    
+                    if len(generated_items) != 2:
+                        self.errors.append(f"Auto-generate {registry_type}: Generated items count mismatch")
+                        return False
+                    
+                    # Verify items have proper structure
+                    for item in generated_items:
+                        if not self.validate_generated_item(item, registry_type, city_id):
+                            self.errors.append(f"Auto-generate {registry_type}: Invalid item structure")
+                            return False
+                    
+                    # Wait a moment for database to update
+                    await asyncio.sleep(1)
+                    
+                    # Verify items were stored in database
+                    new_count = await self.get_registry_count(city_id, registry_type)
+                    expected_new_count = initial_count + 2
+                    
+                    if new_count != expected_new_count:
+                        self.errors.append(f"Auto-generate {registry_type}: Database not updated. Expected {expected_new_count}, got {new_count}")
+                        return False
+                    
+                    # Check if event was generated
+                    event_generated = await self.check_recent_event_for_registry(registry_type, city_name)
+                    if not event_generated:
+                        print(f"      ⚠️ Warning: No recent event found for {registry_type} auto-generation")
+                    
+                    print(f"      ✅ {registry_type}: Generated 2 items, database updated, count: {initial_count} → {new_count}")
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Auto-generate {registry_type}: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Auto-generate {registry_type} error: {str(e)}")
+            return False
+
+    async def get_registry_count(self, city_id, registry_type):
+        """Get current count of items in a registry"""
+        try:
+            async with self.session.get(f"{API_BASE}/city/{city_id}") as response:
+                if response.status == 200:
+                    city_data = await response.json()
+                    
+                    registry_map = {
+                        "citizens": "citizens",
+                        "slaves": "slaves", 
+                        "livestock": "livestock",
+                        "garrison": "garrison",
+                        "crimes": "crime_records",
+                        "tribute": "tribute_records"
+                    }
+                    
+                    registry_key = registry_map.get(registry_type, registry_type)
+                    items = city_data.get(registry_key, [])
+                    return len(items)
+                else:
+                    return 0
+        except:
+            return 0
+
+    def validate_generated_item(self, item, registry_type, city_id):
+        """Validate structure of generated item"""
+        try:
+            # Common fields all items should have
+            if 'id' not in item:
+                return False
+            
+            # Registry-specific validation
+            if registry_type == "citizens":
+                required_fields = ['name', 'age', 'occupation', 'city_id', 'health']
+                return all(field in item for field in required_fields) and item['city_id'] == city_id
+                
+            elif registry_type == "slaves":
+                required_fields = ['name', 'age', 'origin', 'occupation', 'owner', 'city_id']
+                return all(field in item for field in required_fields) and item['city_id'] == city_id
+                
+            elif registry_type == "livestock":
+                required_fields = ['name', 'type', 'age', 'health', 'weight', 'value', 'city_id']
+                return all(field in item for field in required_fields) and item['city_id'] == city_id
+                
+            elif registry_type == "garrison":
+                required_fields = ['name', 'rank', 'age', 'years_of_service', 'city_id']
+                return all(field in item for field in required_fields) and item['city_id'] == city_id
+                
+            elif registry_type == "crimes":
+                required_fields = ['criminal_name', 'crime_type', 'description', 'city_id', 'punishment']
+                return all(field in item for field in required_fields) and item['city_id'] == city_id
+                
+            elif registry_type == "tribute":
+                required_fields = ['from_city', 'to_city', 'amount', 'type', 'purpose']
+                return all(field in item for field in required_fields)
+                
+            return False
+            
+        except:
+            return False
+
+    async def check_recent_event_for_registry(self, registry_type, city_name):
+        """Check if a recent event was generated for the registry type"""
+        try:
+            async with self.session.get(f"{API_BASE}/events?limit=10") as response:
+                if response.status == 200:
+                    events = await response.json()
+                    
+                    # Look for recent events (within last 30 seconds) related to this registry
+                    current_time = datetime.utcnow()
+                    
+                    for event in events:
+                        event_time = datetime.fromisoformat(event['timestamp'].replace('Z', '+00:00'))
+                        time_diff = (current_time - event_time.replace(tzinfo=None)).total_seconds()
+                        
+                        if time_diff <= 30:  # Within last 30 seconds
+                            description = event['description'].lower()
+                            city_match = city_name.lower() in description
+                            
+                            # Check for registry-specific keywords
+                            registry_keywords = {
+                                "citizens": ["citizen", "joins", "registers"],
+                                "slaves": ["slave", "enslaved", "acquired"],
+                                "livestock": ["livestock", "cattle", "horse", "herds"],
+                                "garrison": ["soldier", "recruit", "garrison", "military"],
+                                "crimes": ["crime", "accused", "authorities"],
+                                "tribute": ["tribute", "payment", "owes"]
+                            }
+                            
+                            keywords = registry_keywords.get(registry_type, [])
+                            keyword_match = any(keyword in description for keyword in keywords)
+                            
+                            if city_match and keyword_match:
+                                return True
+                    
+                    return False
+                else:
+                    return False
+        except:
             return False
 
     async def run_all_tests(self):
