@@ -419,7 +419,7 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
   }, [kingdoms]);
 
   const handleMapClick = (e) => {
-    if (isDragging) return;
+    if (isDragging || isPanning) return;
     
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left - pan.x) / (rect.width * zoom)) * 100;
@@ -437,12 +437,20 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     } else if (boundaryMode === 'erase') {
       // Enhanced erase mode - remove boundary area from existing boundaries
       eraseBoundaryArea(x, y);
-      
-    } else {
-      // Normal mode - add new city
-      setNewCityCoords({ x, y });
-      setShowAddCityForm(true);
     }
+    // Removed single-click city creation - now requires double-click
+  };
+
+  const handleMapDoubleClick = (e) => {
+    if (isDragging || isPanning || boundaryMode !== 'off') return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left - pan.x) / (rect.width * zoom)) * 100;
+    const y = ((e.clientY - rect.top - pan.y) / (rect.height * zoom)) * 100;
+    
+    // Double-click to add new city
+    setNewCityCoords({ x, y });
+    setShowAddCityForm(true);
   };
 
   const snapToFeatures = (x, y, rect) => {
