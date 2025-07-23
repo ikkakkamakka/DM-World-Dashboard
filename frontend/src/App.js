@@ -2815,7 +2815,13 @@ function App() {
             <EnhancedFaerunMap 
               kingdoms={multiKingdoms}
               activeKingdom={activeKingdom}
-              cities={activeKingdom.cities} 
+              cities={multiKingdoms.flatMap(kingdom => 
+                kingdom.cities?.map(city => ({
+                  ...city, 
+                  kingdomColor: kingdom.color,
+                  kingdomName: kingdom.name
+                })) || []
+              )} 
               onCitySelect={handleViewChange}
             />
           )}
