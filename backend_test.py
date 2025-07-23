@@ -59,7 +59,13 @@ class BackendTester:
             'kingdom_boundaries_delete': False,
             'kingdom_boundaries_clear_all': False,
             'multi_kingdom_boundary_isolation': False,
-            'database_consistency_check': False
+            'database_consistency_check': False,
+            # City Management with Multi-Kingdom Support Tests
+            'city_creation_multi_kingdom': False,
+            'city_update_multi_kingdom': False,
+            'city_deletion_multi_kingdom': False,
+            'city_retrieval_cross_kingdom': False,
+            'city_multi_kingdom_isolation': False
         }
         self.errors = []
 
