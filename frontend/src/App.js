@@ -53,9 +53,38 @@ const Navigation = ({ currentView, onViewChange, kingdom }) => {
   );
 };
 
-// Kingdom Dashboard Component with Totals
+// Kingdom Dashboard Component with Totals and Kingdom Editing
 const KingdomDashboard = ({ kingdom, events, autoEventsEnabled, onToggleAutoEvents }) => {
+  const [showKingdomEditForm, setShowKingdomEditForm] = useState(false);
+  const [kingdomEditData, setKingdomEditData] = useState({
+    name: kingdom?.name || '',
+    ruler: kingdom?.ruler || '',
+    government_type: kingdom?.government_type || 'Monarchy'
+  });
+
+  const governmentTypes = [
+    'Monarchy', 'Republic', 'Empire', 'Council', 'Federation', 
+    'Theocracy', 'Magocracy', 'Oligarchy', 'Democracy', 'Confederation'
+  ];
+
   if (!kingdom) return <div className="loading">Loading kingdom...</div>;
+
+  const handleKingdomEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API}/kingdom`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(kingdomEditData)
+      });
+      if (response.ok) {
+        setShowKingdomEditForm(false);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error updating kingdom:', error);
+    }
+  };
 
   const totalTreasury = kingdom.royal_treasury + (kingdom.cities?.reduce((sum, city) => sum + city.treasury, 0) || 0);
   const totalSlaves = kingdom.cities?.reduce((sum, city) => sum + (city.slaves?.length || 0), 0) || 0;
