@@ -1073,9 +1073,14 @@ const TributeRegistry = ({ city }) => {
     <div className="registry-section">
       <div className="registry-header">
         <h3>Tribute Ledger</h3>
-        <button className="btn-primary" onClick={() => setShowAddForm(true)}>
-          Add Tribute
-        </button>
+        <div className="registry-actions">
+          <button className="btn-secondary" onClick={handleAutoGenerate}>
+            Auto Generate
+          </button>
+          <button className="btn-primary" onClick={() => setShowAddForm(true)}>
+            Add Tribute
+          </button>
+        </div>
       </div>
 
       <Modal isOpen={showAddForm} onClose={() => setShowAddForm(false)} title="Add New Tribute">
