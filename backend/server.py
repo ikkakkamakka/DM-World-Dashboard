@@ -876,7 +876,7 @@ async def initialize_kingdom():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    await initialize_kingdom()
+    await initialize_multi_kingdoms()
     task = asyncio.create_task(simulation_engine())
     yield
     # Shutdown
