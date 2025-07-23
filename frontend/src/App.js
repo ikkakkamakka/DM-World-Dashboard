@@ -630,10 +630,34 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
   };
 
-  const clearBoundary = () => {
-    setCurrentBoundary([]);
-    setBoundaryMode('off');
+  // Zoom and Pan handlers
+  const handleWheel = (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+    const newZoom = Math.max(0.5, Math.min(3, zoom + delta));
+    setZoom(newZoom);
   };
+
+  const handlePanStart = (e) => {
+    if (boundaryMode !== 'off') return;
+    setIsPanning(true);
+    setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+  };
+
+  const handlePanMove = (e) => {
+    if (!isPanning) return;
+    setPan({
+      x: e.clientX - panStart.x,
+      y: e.clientY - panStart.y
+    });
+  };
+
+  const handlePanEnd = () => {
+    setIsPanning(false);
+  };
+
+  const [isPanning, setIsPanning] = useState(false);
+  const [panStart, setPanStart] = useState({ x: 0, y: 0 });
 
   // ... (keeping existing city drag/drop functionality)
   const handleCityMouseDown = (e, city) => {
