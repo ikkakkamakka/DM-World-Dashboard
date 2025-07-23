@@ -26,7 +26,7 @@ print(f"Testing WebSocket at: {WS_URL}")
 async def test_websocket():
     try:
         print("Attempting WebSocket connection...")
-        async with websockets.connect(WS_URL, timeout=10) as websocket:
+        async with websockets.connect(WS_URL) as websocket:
             print("✅ WebSocket connected successfully!")
             
             # Send test message
