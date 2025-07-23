@@ -571,6 +571,46 @@ class AutoGenerateRequest(BaseModel):
     city_id: str
     count: int = 1
 
+# Enhanced Data Models for Multiple Kingdoms
+
+class KingdomBoundary(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    kingdom_id: str
+    boundary_points: List[dict] = []  # Array of {x: float, y: float} coordinates
+    color: str = "#1e3a8a"  # Default blue
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class KingdomBoundaryCreate(BaseModel):
+    kingdom_id: str
+    boundary_points: List[dict]
+    color: str = "#1e3a8a"
+
+class MultiKingdom(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    ruler: str
+    government_type: str = "Monarchy"
+    color: str = "#1e3a8a"  # Kingdom's primary color
+    total_population: int = 0
+    royal_treasury: int = 5000
+    cities: List[City] = []
+    boundaries: List[KingdomBoundary] = []
+    is_active: bool = True  # Whether this kingdom is currently being managed
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class MultiKingdomCreate(BaseModel):
+    name: str
+    ruler: str
+    government_type: str = "Monarchy"
+    color: str = "#1e3a8a"
+
+class MultiKingdomUpdate(BaseModel):
+    name: Optional[str] = None
+    ruler: Optional[str] = None
+    government_type: Optional[str] = None
+    color: Optional[str] = None
+    is_active: Optional[bool] = None
+
 # Enhanced simulation engine
 async def simulation_engine():
     """Enhanced background task with better event generation"""
