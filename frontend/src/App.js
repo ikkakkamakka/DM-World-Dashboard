@@ -1128,6 +1128,8 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
             )}
           </div>
         ))}
+          </div>
+        </div>
       </div>
 
       <Modal 
