@@ -565,6 +565,7 @@ class BackendTester:
             await self.test_events_api()
             await self.test_websocket_connection()
             await self.test_database_initialization()
+            await self.test_auto_generate_functionality()  # Test auto-generate functionality
             await self.test_simulation_engine()
             
         finally:
