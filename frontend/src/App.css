@@ -768,6 +768,14 @@ body {
   border-color: #991b1b;
 }
 
+.boundary-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding-top: 15px;
+  border-top: 1px solid var(--primary-gold);
+}
+
 /* Enhanced Boundary Overlay */
 .boundary-overlay {
   position: absolute;
