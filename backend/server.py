@@ -608,11 +608,20 @@ async def initialize_kingdom():
             GovernmentOfficial(name="Captain Marcus Steel", position="Captain of the Guard", city_id="city1"),
             GovernmentOfficial(name="Elena Goldleaf", position="Master of Coin", city_id="city1"),
             GovernmentOfficial(name="Sage Thorin", position="High Scribe", city_id="city1"),
+            GovernmentOfficial(name="Wizard Aldara", position="Court Wizard", city_id="city1"),
+            GovernmentOfficial(name="Brother Felix", position="Head Cleric", city_id="city1"),
+            GovernmentOfficial(name="Merchant Gareth", position="Trade Minister", city_id="city1"),
+            GovernmentOfficial(name="Collector Bran", position="Tax Collector", city_id="city1"),
+            GovernmentOfficial(name="Warden Kira", position="Market Warden", city_id="city1"),
         ]
         
         stormhaven_officials = [
             GovernmentOfficial(name="Commander Vera", position="Captain of the Guard", city_id="city2"),
-            GovernmentOfficial(name="Merchant Gareth", position="Trade Minister", city_id="city2"),
+            GovernmentOfficial(name="Treasurer Orin", position="Master of Coin", city_id="city2"),
+            GovernmentOfficial(name="Scholar Lyra", position="High Scribe", city_id="city2"),
+            GovernmentOfficial(name="Magistrate Quinn", position="City Magistrate", city_id="city2"),
+            GovernmentOfficial(name="Admiral Thane", position="Harbor Master", city_id="city2"),
+            GovernmentOfficial(name="Builder Magnus", position="Master Builder", city_id="city2"),
         ]
         
         # Create sample citizens
