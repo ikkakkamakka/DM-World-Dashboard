@@ -5,7 +5,305 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 const WS_URL = BACKEND_URL.replace('https://', 'wss://').replace('http://', 'ws://');
 
-// Modal Component for Forms
+// Harptos Calendar System
+const HARPTOS_MONTHS = [
+  { name: 'Hammer', alias: 'Deepwinter', days: 30 },
+  { name: 'Alturiak', alias: 'The Claw of Winter', days: 30 },
+  { name: 'Ches', alias: 'The Claw of the Sunsets', days: 30 },
+  { name: 'Tarsakh', alias: 'The Claw of the Storms', days: 30 },
+  { name: 'Mirtul', alias: 'The Melting', days: 30 },
+  { name: 'Kythorn', alias: 'The Time of Flowers', days: 30 },
+  { name: 'Flamerule', alias: 'Summertide', days: 30 },
+  { name: 'Eleasis', alias: 'Highsun', days: 30 },
+  { name: 'Eleint', alias: 'The Fading', days: 30 },
+  { name: 'Marpenoth', alias: 'Leaffall', days: 30 },
+  { name: 'Uktar', alias: 'The Rotting', days: 30 },
+  { name: 'Nightal', alias: 'The Drawing Down', days: 30 }
+];
+
+const SPECIAL_DAYS = [
+  { name: 'Midwinter', afterMonth: 0, description: 'A festival day of reflection and celebration' },
+  { name: 'Greengrass', afterMonth: 3, description: 'Celebrates the arrival of spring' },
+  { name: 'Midsummer', afterMonth: 6, description: 'A day of celebration and festivity' },
+  { name: 'Highharvestide', afterMonth: 8, description: 'Marks the harvest time' },
+  { name: 'The Feast of the Moon', afterMonth: 10, description: 'Honors the dead and ancestors' }
+];
+
+// Base conversion: 1492 DR = 2020 AD
+const DR_BASE_YEAR = 1492;
+const AD_BASE_YEAR = 2020;
+
+const convertRealTimeToHarptos = () => {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const dayOfYear = Math.floor((now - new Date(currentYear, 0, 0)) / (1000 * 60 * 60 * 24));
+  
+  // Calculate DR year
+  const drYear = DR_BASE_YEAR + (currentYear - AD_BASE_YEAR);
+  
+  // Convert day of year to Harptos date
+  let remainingDays = dayOfYear - 1; // 0-indexed
+  let currentMonth = 0;
+  let currentDay = 1;
+  let specialDay = null;
+  
+  // Account for special days and months
+  for (let month = 0; month < HARPTOS_MONTHS.length; month++) {
+    // Check for special day before this month
+    const specialBefore = SPECIAL_DAYS.find(sd => sd.afterMonth === month);
+    if (specialBefore && remainingDays === 0) {
+      specialDay = specialBefore;
+      break;
+    } else if (specialBefore && remainingDays > 0) {
+      remainingDays--; // Account for special day
+    }
+    
+    if (remainingDays < HARPTOS_MONTHS[month].days) {
+      currentMonth = month;
+      currentDay = remainingDays + 1;
+      break;
+    }
+    
+    remainingDays -= HARPTOS_MONTHS[month].days;
+  }
+  
+  // Check for Shieldmeet (leap year every 4 years)
+  const isShieldmeetYear = drYear % 4 === 0;
+  if (isShieldmeetYear && dayOfYear > 180 && dayOfYear < 182) { // Around midsummer
+    specialDay = { name: 'Shieldmeet', description: 'A day of open council and treaty making' };
+  }
+  
+  return {
+    drYear,
+    month: currentMonth,
+    day: currentDay,
+    monthName: HARPTOS_MONTHS[currentMonth]?.name || 'Unknown',
+    monthAlias: HARPTOS_MONTHS[currentMonth]?.alias || '',
+    specialDay,
+    isShieldmeetYear,
+    realTime: now
+  };
+};
+
+const getSeasonalEvents = (harptos) => {
+  const events = [];
+  const { month, day, monthName, specialDay } = harptos;
+  
+  // Special day events
+  if (specialDay) {
+    events.push({
+      type: 'special_day',
+      title: specialDay.name,
+      description: specialDay.description,
+      isToday: true
+    });
+  }
+  
+  // Monthly seasonal events
+  switch (month) {
+    case 0: // Hammer
+      events.push({ type: 'season', title: 'Deep Winter', description: 'The coldest time of year, when travel is treacherous' });
+      break;
+    case 1: // Alturiak
+      events.push({ type: 'season', title: 'Winter\'s Grip', description: 'The harshest winter storms rage across the land' });
+      break;
+    case 2: // Ches
+      events.push({ type: 'season', title: 'Late Winter', description: 'The first hints of spring begin to appear' });
+      break;
+    case 3: // Tarsakh
+      events.push({ type: 'season', title: 'Storm Season', description: 'Violent storms herald the changing season' });
+      break;
+    case 4: // Mirtul
+      events.push({ type: 'season', title: 'Spring Thaw', description: 'Ice melts and the land awakens from winter slumber' });
+      break;
+    case 5: // Kythorn
+      events.push({ type: 'season', title: 'Flowering', description: 'Flowers bloom and life returns to the world' });
+      break;
+    case 6: // Flamerule
+      events.push({ type: 'season', title: 'High Summer', description: 'The height of summer warmth and growth' });
+      break;
+    case 7: // Eleasis
+      events.push({ type: 'season', title: 'Late Summer', description: 'The peak of the year\'s heat and abundance' });
+      break;
+    case 8: // Eleint
+      events.push({ type: 'season', title: 'Early Autumn', description: 'Leaves begin to change and harvests are gathered' });
+      break;
+    case 9: // Marpenoth
+      events.push({ type: 'season', title: 'Autumn Harvest', description: 'The time of great harvests and preparation for winter' });
+      break;
+    case 10: // Uktar
+      events.push({ type: 'season', title: 'Late Autumn', description: 'Decay and preparation for the coming cold' });
+      break;
+    case 11: // Nightal
+      events.push({ type: 'season', title: 'Early Winter', description: 'The year draws to a close as winter approaches' });
+      break;
+  }
+  
+  return events;
+};
+
+// Harptos Calendar Component
+const HarptosCalendar = ({ kingdom, isVisible }) => {
+  const [currentHarptos, setCurrentHarptos] = useState(convertRealTimeToHarptos());
+  const [seasonalEvents, setSeasonalEvents] = useState([]);
+  const [calendarMode, setCalendarMode] = useState('current'); // 'current' or 'manual'
+  const [manualDate, setManualDate] = useState({ year: 1492, month: 0, day: 1 });
+
+  useEffect(() => {
+    if (isVisible) {
+      const updateCalendar = () => {
+        const harptos = convertRealTimeToHarptos();
+        setCurrentHarptos(harptos);
+        setSeasonalEvents(getSeasonalEvents(harptos));
+      };
+      
+      updateCalendar();
+      const interval = setInterval(updateCalendar, 60000); // Update every minute
+      
+      return () => clearInterval(interval);
+    }
+  }, [isVisible]);
+
+  const formatHarptosDate = (harptos) => {
+    if (harptos.specialDay) {
+      return `${harptos.specialDay.name}, ${harptos.drYear} DR`;
+    }
+    return `${harptos.day} ${harptos.monthName}, ${harptos.drYear} DR`;
+  };
+
+  const handleManualDateChange = (field, value) => {
+    setManualDate(prev => ({
+      ...prev,
+      [field]: parseInt(value)
+    }));
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="harptos-calendar">
+      <div className="calendar-header">
+        <h2>🗓️ Harptos Calendar</h2>
+        <div className="calendar-mode-selector">
+          <button 
+            className={`mode-btn ${calendarMode === 'current' ? 'active' : ''}`}
+            onClick={() => setCalendarMode('current')}
+          >
+            Current Time
+          </button>
+          <button 
+            className={`mode-btn ${calendarMode === 'manual' ? 'active' : ''}`}
+            onClick={() => setCalendarMode('manual')}
+          >
+            Campaign Date
+          </button>
+        </div>
+      </div>
+
+      {calendarMode === 'current' ? (
+        <div className="current-date-display">
+          <div className="main-date">
+            <h3>{formatHarptosDate(currentHarptos)}</h3>
+            <p className="month-alias">{currentHarptos.monthAlias}</p>
+            {currentHarptos.specialDay && (
+              <div className="special-day-notice">
+                <span className="special-day-icon">✨</span>
+                <span>{currentHarptos.specialDay.description}</span>
+              </div>
+            )}
+          </div>
+          
+          <div className="real-time-reference">
+            <small>Real Time: {currentHarptos.realTime.toLocaleString()}</small>
+            <small>Conversion: 1492 DR = 2020 AD</small>
+            {currentHarptos.isShieldmeetYear && (
+              <small className="shieldmeet-notice">🛡️ This is a Shieldmeet year!</small>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="manual-date-selector">
+          <h3>Set Campaign Date</h3>
+          <div className="date-inputs">
+            <div className="input-group">
+              <label>Year (DR):</label>
+              <input 
+                type="number" 
+                value={manualDate.year}
+                onChange={(e) => handleManualDateChange('year', e.target.value)}
+                min="1"
+              />
+            </div>
+            <div className="input-group">
+              <label>Month:</label>
+              <select 
+                value={manualDate.month}
+                onChange={(e) => handleManualDateChange('month', e.target.value)}
+              >
+                {HARPTOS_MONTHS.map((month, index) => (
+                  <option key={index} value={index}>
+                    {month.name} ({month.alias})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group">
+              <label>Day:</label>
+              <input 
+                type="number" 
+                value={manualDate.day}
+                onChange={(e) => handleManualDateChange('day', e.target.value)}
+                min="1"
+                max="30"
+              />
+            </div>
+          </div>
+          <div className="manual-date-display">
+            <p>Campaign Date: {manualDate.day} {HARPTOS_MONTHS[manualDate.month].name}, {manualDate.year} DR</p>
+          </div>
+        </div>
+      )}
+
+      <div className="seasonal-events">
+        <h4>Seasonal Information</h4>
+        <div className="events-list">
+          {seasonalEvents.map((event, index) => (
+            <div key={index} className={`event-item ${event.type}`}>
+              <span className="event-title">{event.title}</span>
+              <span className="event-description">{event.description}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="calendar-grid">
+        <h4>Month of {HARPTOS_MONTHS[currentHarptos.month]?.name || 'Unknown'}</h4>
+        <div className="days-grid">
+          {Array.from({ length: 30 }, (_, i) => (
+            <div 
+              key={i} 
+              className={`day-cell ${i + 1 === currentHarptos.day ? 'current-day' : ''}`}
+            >
+              {i + 1}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="special-days-info">
+        <h4>Upcoming Special Days</h4>
+        <div className="special-days-list">
+          {SPECIAL_DAYS.map((specialDay, index) => (
+            <div key={index} className="special-day-item">
+              <span className="special-day-name">{specialDay.name}</span>
+              <span className="special-day-desc">{specialDay.description}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
