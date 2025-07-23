@@ -1480,7 +1480,331 @@ body {
   animation: slideInFromTop 0.5s ease-out;
 }
 
-/* Responsive Design */
+/* Harptos Calendar Styles */
+.harptos-calendar {
+  padding: 2rem;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #e8dcc6;
+  border-radius: 12px;
+  margin: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #8b7355;
+  padding-bottom: 1rem;
+}
+
+.calendar-header h2 {
+  color: #d4af37;
+  font-family: 'Cinzel', serif;
+  margin: 0;
+  font-size: 2rem;
+}
+
+.calendar-mode-selector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mode-btn {
+  padding: 0.5rem 1rem;
+  background: #3a3a5c;
+  color: #e8dcc6;
+  border: 1px solid #8b7355;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.mode-btn:hover {
+  background: #4a4a6c;
+  border-color: #d4af37;
+}
+
+.mode-btn.active {
+  background: #d4af37;
+  color: #1a1a2e;
+  border-color: #d4af37;
+}
+
+.current-date-display {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 8px;
+  border: 1px solid #8b7355;
+}
+
+.main-date h3 {
+  font-size: 2.5rem;
+  color: #d4af37;
+  margin: 0 0 0.5rem 0;
+  font-family: 'Cinzel', serif;
+}
+
+.month-alias {
+  font-size: 1.2rem;
+  color: #c4a373;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.special-day-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(255, 215, 0, 0.2);
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+  border: 1px solid #ffd700;
+}
+
+.special-day-icon {
+  font-size: 1.5rem;
+}
+
+.real-time-reference {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #8b7355;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.real-time-reference small {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+}
+
+.shieldmeet-notice {
+  color: #ffd700 !important;
+  font-weight: bold;
+}
+
+.manual-date-selector {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(58, 58, 92, 0.3);
+  border-radius: 8px;
+  border: 1px solid #8b7355;
+}
+
+.manual-date-selector h3 {
+  color: #d4af37;
+  margin-bottom: 1rem;
+  font-family: 'Cinzel', serif;
+}
+
+.date-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  color: #c4a373;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.input-group input,
+.input-group select {
+  padding: 0.5rem;
+  background: #2a2a4a;
+  color: #e8dcc6;
+  border: 1px solid #8b7355;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  outline: none;
+  border-color: #d4af37;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+.manual-date-display {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #d4af37;
+  font-weight: bold;
+}
+
+.seasonal-events {
+  margin-bottom: 2rem;
+}
+
+.seasonal-events h4 {
+  color: #d4af37;
+  margin-bottom: 1rem;
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.event-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: rgba(58, 58, 92, 0.4);
+  border-radius: 6px;
+  border-left: 4px solid #8b7355;
+}
+
+.event-item.special_day {
+  border-left-color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.event-item.season {
+  border-left-color: #8fbc8f;
+}
+
+.event-title {
+  font-weight: bold;
+  color: #d4af37;
+  font-size: 1.1rem;
+}
+
+.event-description {
+  color: #c4a373;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.calendar-grid {
+  margin-bottom: 2rem;
+}
+
+.calendar-grid h4 {
+  color: #d4af37;
+  margin-bottom: 1rem;
+  font-family: 'Cinzel', serif;
+  text-align: center;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.day-cell {
+  aspect-ratio: 1;
+  background: #3a3a5c;
+  border: 1px solid #8b7355;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e8dcc6;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.day-cell:hover {
+  background: #4a4a6c;
+  border-color: #d4af37;
+}
+
+.day-cell.current-day {
+  background: #d4af37;
+  color: #1a1a2e;
+  border-color: #d4af37;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+
+.special-days-info {
+  border-top: 2px solid #8b7355;
+  padding-top: 1.5rem;
+}
+
+.special-days-info h4 {
+  color: #d4af37;
+  margin-bottom: 1rem;
+  font-family: 'Cinzel', serif;
+}
+
+.special-days-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.special-day-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid #ffd700;
+  border-radius: 6px;
+}
+
+.special-day-name {
+  font-weight: bold;
+  color: #ffd700;
+  font-size: 1.1rem;
+}
+
+.special-day-desc {
+  color: #c4a373;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Responsive Design for Calendar */
+@media (max-width: 768px) {
+  .harptos-calendar {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+  
+  .calendar-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .days-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  
+  .date-inputs {
+    grid-template-columns: 1fr;
+  }
+  
+  .special-days-list {
+    grid-template-columns: 1fr;
+  }
+}
 @media (max-width: 768px) {
   .kingdom-title {
     font-size: 2.5rem;
