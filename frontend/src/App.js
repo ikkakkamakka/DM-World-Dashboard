@@ -3980,8 +3980,14 @@ function App() {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === 'new_event') {
-          setEvents(prevEvents => [data.event, ...prevEvents]);
-          fetchActiveKingdom(); // Refresh kingdom data
+          // Only add events for the active kingdom
+          if (activeKingdom && 
+              (data.kingdom_id === activeKingdom.id || 
+               data.event.kingdom_name === activeKingdom.name ||
+               (!data.kingdom_id && data.event.kingdom_name === activeKingdom.name))) {
+            setEvents(prevEvents => [data.event, ...prevEvents]);
+            fetchActiveKingdom(); // Refresh kingdom data
+          }
         }
       };
 
