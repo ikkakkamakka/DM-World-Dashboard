@@ -839,7 +839,158 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 api_router = APIRouter(prefix="/api")
 
-# Kingdom & City Management
+# Multiple Kingdoms Management
+@api_router.get("/multi-kingdoms")
+async def get_all_kingdoms():
+    """Get all kingdoms for selection interface"""
+    kingdoms = await db.multi_kingdoms.find().to_list(100)
+    for kingdom in kingdoms:
+        kingdom.pop('_id', None)
+    return kingdoms
+
+@api_router.post("/multi-kingdoms")
+async def create_multi_kingdom(kingdom: MultiKingdomCreate):
+    """Create a new kingdom"""
+    new_kingdom = MultiKingdom(**kingdom.dict())
+    
+    result = await db.multi_kingdoms.insert_one(new_kingdom.dict())
+    if result.inserted_id:
+        return new_kingdom
+    raise HTTPException(status_code=500, detail="Failed to create kingdom")
+
+@api_router.get("/multi-kingdom/{kingdom_id}")
+async def get_multi_kingdom(kingdom_id: str):
+    """Get specific kingdom data"""
+    kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
+    if kingdom:
+        kingdom.pop('_id', None)
+        return kingdom
+    raise HTTPException(status_code=404, detail="Kingdom not found")
+
+@api_router.put("/multi-kingdom/{kingdom_id}")
+async def update_multi_kingdom(kingdom_id: str, updates: MultiKingdomUpdate):
+    update_data = {k: v for k, v in updates.dict(exclude_unset=True).items()}
+    
+    result = await db.multi_kingdoms.update_one(
+        {"id": kingdom_id},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count:
+        return {"message": "Kingdom updated successfully"}
+    raise HTTPException(status_code=404, detail="Kingdom not found")
+
+@api_router.delete("/multi-kingdom/{kingdom_id}")
+async def delete_multi_kingdom(kingdom_id: str):
+    result = await db.multi_kingdoms.delete_one({"id": kingdom_id})
+    
+    if result.deleted_count:
+        return {"message": "Kingdom deleted successfully"}
+    raise HTTPException(status_code=404, detail="Kingdom not found")
+
+@api_router.post("/multi-kingdom/{kingdom_id}/set-active")
+async def set_active_kingdom(kingdom_id: str):
+    """Set a kingdom as the active one and deactivate others"""
+    # Deactivate all kingdoms
+    await db.multi_kingdoms.update_many({}, {"$set": {"is_active": False}})
+    
+    # Activate the selected kingdom
+    result = await db.multi_kingdoms.update_one(
+        {"id": kingdom_id},
+        {"$set": {"is_active": True}}
+    )
+    
+    if result.modified_count:
+        return {"message": "Kingdom set as active"}
+    raise HTTPException(status_code=404, detail="Kingdom not found")
+
+@api_router.get("/active-kingdom")
+async def get_active_kingdom():
+    """Get the currently active kingdom"""
+    kingdom = await db.multi_kingdoms.find_one({"is_active": True})
+    if kingdom:
+        kingdom.pop('_id', None)
+        return kingdom
+    # Fallback to legacy kingdom for backward compatibility
+    return await get_kingdom()
+
+# Kingdom Boundaries Management
+@api_router.post("/kingdom-boundaries")
+async def create_kingdom_boundary(boundary: KingdomBoundaryCreate):
+    """Create a new kingdom boundary"""
+    new_boundary = KingdomBoundary(**boundary.dict())
+    
+    result = await db.kingdom_boundaries.insert_one(new_boundary.dict())
+    if result.inserted_id:
+        # Update the kingdom with this boundary
+        await db.multi_kingdoms.update_one(
+            {"id": boundary.kingdom_id},
+            {"$push": {"boundaries": new_boundary.dict()}}
+        )
+        return new_boundary
+    raise HTTPException(status_code=500, detail="Failed to create boundary")
+
+@api_router.get("/kingdom-boundaries/{kingdom_id}")
+async def get_kingdom_boundaries(kingdom_id: str):
+    """Get all boundaries for a specific kingdom"""
+    boundaries = await db.kingdom_boundaries.find({"kingdom_id": kingdom_id}).to_list(100)
+    for boundary in boundaries:
+        boundary.pop('_id', None)
+    return boundaries
+
+@api_router.delete("/kingdom-boundaries/{boundary_id}")
+async def delete_kingdom_boundary(boundary_id: str):
+    boundary = await db.kingdom_boundaries.find_one({"id": boundary_id})
+    if not boundary:
+        raise HTTPException(status_code=404, detail="Boundary not found")
+    
+    # Remove from both collections
+    await db.kingdom_boundaries.delete_one({"id": boundary_id})
+    await db.multi_kingdoms.update_one(
+        {"id": boundary["kingdom_id"]},
+        {"$pull": {"boundaries": {"id": boundary_id}}}
+    )
+    
+    return {"message": "Boundary deleted successfully"}
+
+# City assignment to kingdoms
+@api_router.put("/cities/{city_id}/assign-kingdom/{kingdom_id}")
+async def assign_city_to_kingdom(city_id: str, kingdom_id: str):
+    """Assign a city to a specific kingdom"""
+    # Get city data from legacy kingdom
+    legacy_kingdom = await db.kingdoms.find_one()
+    city_data = None
+    
+    if legacy_kingdom:
+        for city in legacy_kingdom.get('cities', []):
+            if city['id'] == city_id:
+                city_data = city
+                break
+    
+    if not city_data:
+        raise HTTPException(status_code=404, detail="City not found")
+    
+    # Add city to new kingdom
+    result = await db.multi_kingdoms.update_one(
+        {"id": kingdom_id},
+        {
+            "$push": {"cities": city_data},
+            "$inc": {"total_population": city_data.get('population', 0)}
+        }
+    )
+    
+    if result.modified_count:
+        # Remove city from legacy kingdom
+        await db.kingdoms.update_one(
+            {},
+            {
+                "$pull": {"cities": {"id": city_id}},
+                "$inc": {"total_population": -city_data.get('population', 0)}
+            }
+        )
+        return {"message": "City assigned successfully"}
+    
+    raise HTTPException(status_code=404, detail="Kingdom not found")
 @api_router.get("/kingdom")
 async def get_kingdom():
     kingdom = await db.kingdoms.find_one()
