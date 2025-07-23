@@ -1102,56 +1102,89 @@ async def update_kingdom(updates: dict):
 
 @api_router.post("/cities")
 async def create_city(city: CityCreate):
+    # Get the active kingdom
+    active_kingdom = await db.multi_kingdoms.find_one({"is_active": True})
+    if not active_kingdom:
+        raise HTTPException(status_code=404, detail="No active kingdom found")
+    
     new_city = City(**city.dict())
     
-    result = await db.kingdoms.update_one(
-        {},
+    # Add city to the active kingdom
+    result = await db.multi_kingdoms.update_one(
+        {"id": active_kingdom["id"]},
         {"$push": {"cities": new_city.dict()}}
     )
     
     if result.modified_count:
         await manager.broadcast({
             "type": "city_created",
-            "city": new_city.dict()
+            "city": new_city.dict(),
+            "kingdom_id": active_kingdom["id"]
         })
         return new_city
-    raise HTTPException(status_code=404, detail="Kingdom not found")
+    raise HTTPException(status_code=404, detail="Failed to create city")
 
 @api_router.get("/city/{city_id}")
 async def get_city(city_id: str):
-    kingdom = await db.kingdoms.find_one()
-    if kingdom:
-        for city in kingdom['cities']:
-            if city['id'] == city_id:
-                return city
+    # Search across all kingdoms for the city
+    kingdoms = await db.multi_kingdoms.find().to_list(None)
+    for kingdom in kingdoms:
+        if kingdom.get('cities'):
+            for city in kingdom['cities']:
+                if city['id'] == city_id:
+                    return city
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.put("/city/{city_id}")
 async def update_city(city_id: str, updates: CityUpdate):
-    update_data = {f"cities.$.{k}": v for k, v in updates.dict(exclude_unset=True).items()}
-    
-    result = await db.kingdoms.update_one(
-        {"cities.id": city_id},
-        {"$set": update_data}
-    )
-    
-    if result.modified_count:
-        return {"message": "City updated successfully"}
+    # Find which kingdom contains this city and update it
+    kingdoms = await db.multi_kingdoms.find().to_list(None)
+    for kingdom in kingdoms:
+        if kingdom.get('cities'):
+            for i, city in enumerate(kingdom['cities']):
+                if city['id'] == city_id:
+                    # Update the city in this kingdom
+                    update_data = {}
+                    for k, v in updates.dict(exclude_unset=True).items():
+                        update_data[f"cities.{i}.{k}"] = v
+                    
+                    result = await db.multi_kingdoms.update_one(
+                        {"id": kingdom["id"]},
+                        {"$set": update_data}
+                    )
+                    
+                    if result.modified_count:
+                        await manager.broadcast({
+                            "type": "city_updated",
+                            "city_id": city_id,
+                            "updates": updates.dict(exclude_unset=True),
+                            "kingdom_id": kingdom["id"]
+                        })
+                        return {"message": "City updated successfully"}
+                    break
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/city/{city_id}")
 async def delete_city(city_id: str):
-    result = await db.kingdoms.update_one(
-        {},
-        {"$pull": {"cities": {"id": city_id}}}
-    )
-    
-    if result.modified_count:
-        await manager.broadcast({
-            "type": "city_deleted",
-            "city_id": city_id
-        })
-        return {"message": "City deleted successfully"}
+    # Find which kingdom contains this city and remove it
+    kingdoms = await db.multi_kingdoms.find().to_list(None)
+    for kingdom in kingdoms:
+        if kingdom.get('cities'):
+            for city in kingdom['cities']:
+                if city['id'] == city_id:
+                    result = await db.multi_kingdoms.update_one(
+                        {"id": kingdom["id"]},
+                        {"$pull": {"cities": {"id": city_id}}}
+                    )
+                    
+                    if result.modified_count:
+                        await manager.broadcast({
+                            "type": "city_deleted",
+                            "city_id": city_id,
+                            "kingdom_id": kingdom["id"]
+                        })
+                        return {"message": "City deleted successfully"}
+                    break
     raise HTTPException(status_code=404, detail="City not found")
 
 # Government Position Management
