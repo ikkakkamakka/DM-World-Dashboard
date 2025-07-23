@@ -701,6 +701,25 @@ const LivestockRegistry = ({ city }) => {
     }
   };
 
+  const handleAutoGenerate = async () => {
+    try {
+      const response = await fetch(`${API}/auto-generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          registry_type: 'livestock',
+          city_id: city.id,
+          count: Math.floor(Math.random() * 4) + 2 // 2-5 livestock
+        })
+      });
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error auto-generating livestock:', error);
+    }
+  };
+
   return (
     <div className="registry-section">
       <div className="registry-header">
