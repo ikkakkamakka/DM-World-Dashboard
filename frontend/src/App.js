@@ -1390,6 +1390,7 @@ const CrimeRegistry = ({ city }) => {
 // City Dashboard Component with editing and government hierarchy
 const CityDashboard = ({ city, activeTab, setActiveTab }) => {
   const [showEditForm, setShowEditForm] = useState(false);
+  const [showGovtManagement, setShowGovtManagement] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: city?.name || '',
     governor: city?.governor || ''
