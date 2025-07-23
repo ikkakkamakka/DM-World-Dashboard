@@ -885,6 +885,25 @@ const GarrisonRegistry = ({ city }) => {
     }
   };
 
+  const handleAutoGenerate = async () => {
+    try {
+      const response = await fetch(`${API}/auto-generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          registry_type: 'garrison',
+          city_id: city.id,
+          count: Math.floor(Math.random() * 3) + 2 // 2-4 soldiers
+        })
+      });
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error auto-generating soldiers:', error);
+    }
+  };
+
   return (
     <div className="registry-section">
       <div className="registry-header">
