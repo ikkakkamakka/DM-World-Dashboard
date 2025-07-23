@@ -694,6 +694,83 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     setBoundaryMode('off');
   };
 
+  const clearAllBoundaries = async () => {
+    if (!activeKingdom) return;
+    
+    if (window.confirm(`Are you sure you want to clear ALL boundaries for ${activeKingdom.name}? This action cannot be undone.`)) {
+      try {
+        // Delete all boundaries for this kingdom
+        const boundariesToDelete = allBoundaries.filter(boundary => 
+          boundary.kingdomColor === activeKingdom.color || boundary.kingdom_id === activeKingdom.id
+        );
+        
+        for (const boundary of boundariesToDelete) {
+          if (boundary.id) {
+            await deleteBoundary(boundary.id);
+          }
+        }
+        
+        console.log(`Cleared ${boundariesToDelete.length} boundaries for ${activeKingdom.name}`);
+        setTimeout(() => window.location.reload(), 1000);
+        
+      } catch (error) {
+        console.error('Error clearing all boundaries:', error);
+        alert('Failed to clear boundaries. Please try again.');
+      }
+    }
+  };
+
+  const generateAutomaticBorders = async () => {
+    if (!activeKingdom || !activeKingdom.cities || activeKingdom.cities.length === 0) {
+      alert('No cities found to generate borders around');
+      return;
+    }
+    
+    try {
+      // Generate a convex hull around all cities of this kingdom
+      const kingdomCities = activeKingdom.cities.map(city => ({
+        x: city.x_coordinate,
+        y: city.y_coordinate
+      }));
+      
+      // Add some padding around cities
+      const paddedPoints = [];
+      kingdomCities.forEach(city => {
+        const radius = 8; // Radius around each city
+        for (let angle = 0; angle < 360; angle += 45) {
+          const radian = (angle * Math.PI) / 180;
+          const x = Math.max(0, Math.min(100, city.x + Math.cos(radian) * radius));
+          const y = Math.max(0, Math.min(100, city.y + Math.sin(radian) * radius));
+          paddedPoints.push({ x, y });
+        }
+      });
+      
+      // Create convex hull
+      const hullPoints = createConvexHull(paddedPoints);
+      
+      if (hullPoints.length >= 3) {
+        const response = await fetch(`${API}/kingdom-boundaries`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            kingdom_id: activeKingdom.id,
+            boundary_points: hullPoints,
+            color: activeKingdom.color
+          })
+        });
+        
+        if (response.ok) {
+          console.log(`Generated automatic border with ${hullPoints.length} points`);
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      }
+      
+    } catch (error) {
+      console.error('Error generating automatic borders:', error);
+      alert('Failed to generate automatic borders. Please try again.');
+    }
+  };
+
   // ... (keeping existing city drag/drop functionality)
   const handleCityMouseDown = (e, city) => {
     if (boundaryMode !== 'off') return; // Disable city interaction in boundary mode
