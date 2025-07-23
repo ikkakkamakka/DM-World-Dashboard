@@ -1291,18 +1291,72 @@ const CrimeRegistry = ({ city }) => {
   );
 };
 
-// City Dashboard Component
+// City Dashboard Component with editing and government hierarchy
 const CityDashboard = ({ city, activeTab, setActiveTab }) => {
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    name: city?.name || '',
+    governor: city?.governor || ''
+  });
+
   if (!city) return <div className="loading">Loading city...</div>;
 
   const totalLivestockValue = city.livestock?.reduce((sum, animal) => sum + animal.value, 0) || 0;
   const totalSlaveValue = city.slaves?.reduce((sum, slave) => sum + slave.purchase_price, 0) || 0;
 
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API}/city/${city.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editFormData)
+      });
+      if (response.ok) {
+        setShowEditForm(false);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error updating city:', error);
+    }
+  };
+
   return (
     <div className="city-dashboard">
       <div className="city-header">
-        <h1 className="city-title">{city.name}</h1>
-        <p className="city-governor">Governor: {city.governor}</p>
+        <div className="city-header-content">
+          <h1 className="city-title">{city.name}</h1>
+          <p className="city-governor">Governor: {city.governor}</p>
+          <button 
+            className="edit-city-btn"
+            onClick={() => setShowEditForm(true)}
+            title="Edit city details"
+          >
+            ✏️ Edit
+          </button>
+        </div>
+      </div>
+
+      {/* Government Hierarchy Section */}
+      <div className="government-section">
+        <h2>Local Government</h2>
+        <div className="government-hierarchy">
+          <div className="government-official governor-card">
+            <div className="official-rank">Governor</div>
+            <div className="official-name">{city.governor}</div>
+          </div>
+          <div className="government-officials">
+            {city.government_officials?.map(official => (
+              <div key={official.id} className="government-official">
+                <div className="official-rank">{official.position}</div>
+                <div className="official-name">{official.name}</div>
+              </div>
+            ))}
+            {(!city.government_officials || city.government_officials.length === 0) && (
+              <div className="no-officials">No officials appointed</div>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="stats-grid">
@@ -1331,6 +1385,33 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
           <div className="stat-label">Crime Records</div>
         </div>
       </div>
+
+      <Modal isOpen={showEditForm} onClose={() => setShowEditForm(false)} title="Edit City Details">
+        <form onSubmit={handleEditSubmit}>
+          <div className="form-group">
+            <label>City Name:</label>
+            <input
+              type="text"
+              value={editFormData.name}
+              onChange={(e) => setEditFormData({...editFormData, name: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Governor:</label>
+            <input
+              type="text"
+              value={editFormData.governor}
+              onChange={(e) => setEditFormData({...editFormData, governor: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">Update City</button>
+            <button type="button" onClick={() => setShowEditForm(false)} className="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </Modal>
 
       <RegistryTabs 
         city={city} 
