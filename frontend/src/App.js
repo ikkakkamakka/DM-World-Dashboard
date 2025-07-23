@@ -958,32 +958,38 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
         </button>
       </div>
       
-      <div 
-        className="map-placeholder" 
-        onClick={handleMapClick}
-        onDoubleClick={handleMapDoubleClick}
-        onMouseMove={(e) => {
-          handleMouseMove(e);
-          handlePanMove(e);
-        }}
-        onMouseUp={(e) => {
-          handleMouseUp(e);
-          handlePanEnd();
-        }}
-        onMouseDown={handlePanStart}
-        onWheel={handleWheel}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{ 
-          cursor: boundaryMode === 'draw' ? 'crosshair' : 
-                  boundaryMode === 'paint' ? 'copy' :
-                  boundaryMode === 'erase' ? 'not-allowed' :
-                  isPanning ? 'grabbing' :
-                  (isDragging ? 'grabbing' : (boundaryMode === 'off' ? 'grab' : 'default')),
-          transform: `scale(${zoom})`,
-          transformOrigin: 'center center'
-        }}
-      >
+      <div className="map-container-locked">
+        <div 
+          className="map-placeholder" 
+          onClick={handleMapClick}
+          onDoubleClick={handleMapDoubleClick}
+          onMouseMove={(e) => {
+            handleMouseMove(e);
+            handlePanMove(e);
+          }}
+          onMouseUp={(e) => {
+            handleMouseUp(e);
+            handlePanEnd();
+          }}
+          onMouseDown={handlePanStart}
+          onWheel={handleWheel}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          style={{ 
+            cursor: boundaryMode === 'draw' ? 'crosshair' : 
+                    boundaryMode === 'paint' ? 'copy' :
+                    boundaryMode === 'erase' ? 'not-allowed' :
+                    isPanning ? 'grabbing' :
+                    (isDragging ? 'grabbing' : (boundaryMode === 'off' ? 'grab' : 'default'))
+          }}
+        >
+          <div 
+            className="map-content"
+            style={{
+              transform: `scale(${zoom}) translate(${pan.x / zoom}px, ${pan.y / zoom}px)`,
+              transformOrigin: 'center center'
+            }}
+          >
         <img 
           src="https://images.unsplash.com/photo-1677295922463-147d7f2f718c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwbWFwfGVufDB8fHx8MTc1MzI0Mzk3OXww&ixlib=rb-4.1.0&q=85"
           alt="Faerûn Map"
