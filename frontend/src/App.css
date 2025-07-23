@@ -746,12 +746,26 @@ body {
   border: 2px solid var(--primary-gold);
 }
 
-.boundary-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  padding-top: 15px;
-  border-top: 1px solid var(--primary-gold);
+.tool-btn.auto-generate {
+  background: var(--forest-green);
+  border-color: var(--forest-green);
+  color: white;
+}
+
+.tool-btn.auto-generate:hover {
+  background: #0f5132;
+  border-color: #0f5132;
+}
+
+.tool-btn.clear-all {
+  background: var(--burgundy);
+  border-color: var(--burgundy);
+  color: white;
+}
+
+.tool-btn.clear-all:hover {
+  background: #991b1b;
+  border-color: #991b1b;
 }
 
 /* Enhanced Boundary Overlay */
