@@ -699,19 +699,18 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     
     if (window.confirm(`Are you sure you want to clear ALL boundaries for ${activeKingdom.name}? This action cannot be undone.`)) {
       try {
-        // Delete all boundaries for this kingdom
-        const boundariesToDelete = allBoundaries.filter(boundary => 
-          boundary.kingdomColor === activeKingdom.color || boundary.kingdom_id === activeKingdom.id
-        );
+        const response = await fetch(`${API}/kingdom-boundaries/clear/${activeKingdom.id}`, {
+          method: 'DELETE'
+        });
         
-        for (const boundary of boundariesToDelete) {
-          if (boundary.id) {
-            await deleteBoundary(boundary.id);
-          }
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result.message);
+          alert(`Successfully cleared all boundaries for ${activeKingdom.name}`);
+          setTimeout(() => window.location.reload(), 1000);
+        } else {
+          throw new Error('Failed to clear boundaries');
         }
-        
-        console.log(`Cleared ${boundariesToDelete.length} boundaries for ${activeKingdom.name}`);
-        setTimeout(() => window.location.reload(), 1000);
         
       } catch (error) {
         console.error('Error clearing all boundaries:', error);
