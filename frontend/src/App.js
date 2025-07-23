@@ -440,7 +440,7 @@ const CitizensRegistry = ({ city }) => {
             <div className="card-details">
               <p><strong>Age:</strong> {citizen.age}</p>
               <p><strong>Occupation:</strong> {citizen.occupation}</p>
-              <p><strong>Health:</strong> <span className={`health-${citizen.health.toLowerCase()}`}>{citizen.health}</span></p>
+              <p><strong>Health:</strong> <span className={`health-${citizen.health?.toLowerCase() || 'healthy'}`}>{citizen.health}</span></p>
               {citizen.notes && <p><strong>Notes:</strong> {citizen.notes}</p>}
             </div>
           </div>
