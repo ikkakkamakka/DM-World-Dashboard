@@ -737,6 +737,198 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     }
   };
 
+  const analyzeMapImageForBoundaries = async (canvasElement, cities) => {
+    // This function analyzes the map image to detect color boundaries for geographical features
+    const ctx = canvasElement.getContext('2d');
+    const imageData = ctx.getImageData(0, 0, canvasElement.width, canvasElement.height);
+    const data = imageData.data;
+    
+    // Helper function to get pixel color at specific coordinates
+    const getPixelColor = (x, y) => {
+      const index = (y * canvasElement.width + x) * 4;
+      return [data[index], data[index + 1], data[index + 2]]; // RGB
+    };
+    
+    // Helper function to calculate color difference (Euclidean distance)
+    const colorDistance = (color1, color2) => {
+      return Math.sqrt(
+        Math.pow(color1[0] - color2[0], 2) + 
+        Math.pow(color1[1] - color2[1], 2) + 
+        Math.pow(color1[2] - color2[2], 2)
+      );
+    };
+    
+    // Define minimum contrast threshold for edge detection
+    const contrastThreshold = 40; // Adjust this value to control sensitivity
+    
+    // Get city positions as reference points
+    const cityPositions = cities.map(city => ({
+      x: Math.floor((city.x_coordinate / 100) * canvasElement.width),
+      y: Math.floor((city.y_coordinate / 100) * canvasElement.height)
+    }));
+    
+    // Find the bounding box around all cities with padding
+    const padding = Math.min(canvasElement.width, canvasElement.height) * 0.15; // 15% of smaller dimension
+    let minX = Math.min(...cityPositions.map(p => p.x)) - padding;
+    let maxX = Math.max(...cityPositions.map(p => p.x)) + padding;
+    let minY = Math.min(...cityPositions.map(p => p.y)) - padding;
+    let maxY = Math.max(...cityPositions.map(p => p.y)) + padding;
+    
+    // Clamp to canvas boundaries
+    minX = Math.max(0, minX);
+    maxX = Math.min(canvasElement.width - 1, maxX);
+    minY = Math.max(0, minY);
+    maxY = Math.min(canvasElement.height - 1, maxY);
+    
+    // Edge detection around the perimeter of the bounding box
+    const boundaryPoints = [];
+    const sampleStep = 5; // Sample every 5 pixels for performance
+    
+    // Top edge - scan for color contrasts
+    for (let x = minX; x <= maxX; x += sampleStep) {
+      for (let y = minY; y <= maxY; y += sampleStep) {
+        const currentColor = getPixelColor(x, y);
+        
+        // Check neighbors for color contrast
+        const neighbors = [
+          {dx: -1, dy: 0}, {dx: 1, dy: 0}, // left, right
+          {dx: 0, dy: -1}, {dx: 0, dy: 1}, // up, down
+          {dx: -1, dy: -1}, {dx: 1, dy: 1}, // diagonals
+          {dx: -1, dy: 1}, {dx: 1, dy: -1}
+        ];
+        
+        let hasContrast = false;
+        for (const neighbor of neighbors) {
+          const nx = x + neighbor.dx * sampleStep;
+          const ny = y + neighbor.dy * sampleStep;
+          
+          if (nx >= 0 && nx < canvasElement.width && ny >= 0 && ny < canvasElement.height) {
+            const neighborColor = getPixelColor(nx, ny);
+            if (colorDistance(currentColor, neighborColor) > contrastThreshold) {
+              hasContrast = true;
+              break;
+            }
+          }
+        }
+        
+        if (hasContrast) {
+          boundaryPoints.push({
+            x: (x / canvasElement.width) * 100, // Convert back to percentage
+            y: (y / canvasElement.height) * 100
+          });
+        }
+      }
+    }
+    
+    // If no contrasts found, fall back to city-based boundary
+    if (boundaryPoints.length < 3) {
+      console.log('No sufficient color contrasts found, falling back to city-based boundary');
+      return generateCityBasedBoundary(cities);
+    }
+    
+    // Create a simplified boundary from the detected points
+    return createSimplifiedBoundary(boundaryPoints);
+  };
+  
+  const generateCityBasedBoundary = (cities) => {
+    // Fallback: Generate boundary around cities with padding
+    const cityPoints = cities.map(city => ({
+      x: city.x_coordinate,
+      y: city.y_coordinate
+    }));
+    
+    // Add padding around each city
+    const paddedPoints = [];
+    cityPoints.forEach(city => {
+      const radius = 8; // Radius around each city
+      for (let angle = 0; angle < 360; angle += 45) {
+        const radian = (angle * Math.PI) / 180;
+        const x = Math.max(0, Math.min(100, city.x + Math.cos(radian) * radius));
+        const y = Math.max(0, Math.min(100, city.y + Math.sin(radian) * radius));
+        paddedPoints.push({ x, y });
+      }
+    });
+    
+    return createConvexHull(paddedPoints);
+  };
+  
+  const createSimplifiedBoundary = (points) => {
+    // Simplify the boundary points to create a cleaner polygon
+    if (points.length < 3) return points;
+    
+    // Use Douglas-Peucker algorithm for line simplification
+    const simplifyTolerance = 2.0; // Adjust for desired simplification level
+    const simplified = douglasPeucker(points, simplifyTolerance);
+    
+    // Ensure we have a valid boundary
+    if (simplified.length < 3) {
+      return createConvexHull(points);
+    }
+    
+    return simplified;
+  };
+  
+  const douglasPeucker = (points, tolerance) => {
+    if (points.length <= 2) return points;
+    
+    // Find the point with maximum distance from line between first and last points
+    let maxDistance = 0;
+    let maxIndex = 0;
+    
+    const firstPoint = points[0];
+    const lastPoint = points[points.length - 1];
+    
+    for (let i = 1; i < points.length - 1; i++) {
+      const distance = perpendicularDistance(points[i], firstPoint, lastPoint);
+      if (distance > maxDistance) {
+        maxDistance = distance;
+        maxIndex = i;
+      }
+    }
+    
+    // If max distance is greater than tolerance, recursively simplify
+    if (maxDistance > tolerance) {
+      const leftPart = douglasPeucker(points.slice(0, maxIndex + 1), tolerance);
+      const rightPart = douglasPeucker(points.slice(maxIndex), tolerance);
+      
+      // Combine results (remove duplicate point at junction)
+      return leftPart.slice(0, -1).concat(rightPart);
+    } else {
+      // All points are within tolerance, return simplified line
+      return [firstPoint, lastPoint];
+    }
+  };
+  
+  const perpendicularDistance = (point, lineStart, lineEnd) => {
+    const A = lineEnd.x - lineStart.x;
+    const B = lineEnd.y - lineStart.y;
+    const C = point.x - lineStart.x;
+    const D = point.y - lineStart.y;
+    
+    const dot = C * A + D * B;
+    const lenSq = A * A + B * B;
+    
+    if (lenSq === 0) return Math.sqrt(C * C + D * D);
+    
+    const param = dot / lenSq;
+    
+    let xx, yy;
+    if (param < 0) {
+      xx = lineStart.x;
+      yy = lineStart.y;
+    } else if (param > 1) {
+      xx = lineEnd.x;
+      yy = lineEnd.y;
+    } else {
+      xx = lineStart.x + param * A;
+      yy = lineStart.y + param * B;
+    }
+    
+    const dx = point.x - xx;
+    const dy = point.y - yy;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
   const generateAutomaticBorders = async () => {
     if (!activeKingdom || !activeKingdom.cities || activeKingdom.cities.length === 0) {
       alert('No cities found to generate borders around');
@@ -744,47 +936,90 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     }
     
     try {
-      // Generate a convex hull around all cities of this kingdom
-      const kingdomCities = activeKingdom.cities.map(city => ({
-        x: city.x_coordinate,
-        y: city.y_coordinate
-      }));
+      console.log(`Generating automatic borders for ${activeKingdom.name} using color detection...`);
       
-      // Add some padding around cities
-      const paddedPoints = [];
-      kingdomCities.forEach(city => {
-        const radius = 8; // Radius around each city
-        for (let angle = 0; angle < 360; angle += 45) {
-          const radian = (angle * Math.PI) / 180;
-          const x = Math.max(0, Math.min(100, city.x + Math.cos(radian) * radius));
-          const y = Math.max(0, Math.min(100, city.y + Math.sin(radian) * radius));
-          paddedPoints.push({ x, y });
-        }
-      });
+      // Create a canvas to analyze the map image
+      const mapImage = document.querySelector('.map-image');
+      if (!mapImage) {
+        throw new Error('Map image not found');
+      }
       
-      // Create convex hull
-      const hullPoints = createConvexHull(paddedPoints);
+      // Wait for image to load if needed
+      if (!mapImage.complete) {
+        await new Promise((resolve) => {
+          mapImage.onload = resolve;
+        });
+      }
       
-      if (hullPoints.length >= 3) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Set canvas size to match image display size
+      const rect = mapImage.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      
+      // Draw the image to canvas for analysis
+      ctx.drawImage(mapImage, 0, 0, canvas.width, canvas.height);
+      
+      // Analyze the image for color-based boundaries
+      const boundaryPoints = await analyzeMapImageForBoundaries(canvas, activeKingdom.cities);
+      
+      if (boundaryPoints.length >= 3) {
         const response = await fetch(`${API}/kingdom-boundaries`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             kingdom_id: activeKingdom.id,
-            boundary_points: hullPoints,
+            boundary_points: boundaryPoints,
             color: activeKingdom.color
           })
         });
         
         if (response.ok) {
-          console.log(`Generated automatic border with ${hullPoints.length} points`);
+          console.log(`Generated automatic border with ${boundaryPoints.length} points using color detection`);
+          alert(`Successfully generated border with ${boundaryPoints.length} points based on map features!`);
           setTimeout(() => window.location.reload(), 1000);
+        } else {
+          throw new Error('Failed to save boundary to server');
         }
+      } else {
+        throw new Error('Insufficient boundary points detected');
       }
       
     } catch (error) {
       console.error('Error generating automatic borders:', error);
-      alert('Failed to generate automatic borders. Please try again.');
+      alert(`Failed to generate automatic borders: ${error.message}. Falling back to city-based generation.`);
+      
+      // Fallback to the original city-based method
+      try {
+        const kingdomCities = activeKingdom.cities.map(city => ({
+          x: city.x_coordinate,
+          y: city.y_coordinate
+        }));
+        
+        const hullPoints = generateCityBasedBoundary(kingdomCities);
+        
+        if (hullPoints.length >= 3) {
+          const response = await fetch(`${API}/kingdom-boundaries`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              kingdom_id: activeKingdom.id,
+              boundary_points: hullPoints,
+              color: activeKingdom.color
+            })
+          });
+          
+          if (response.ok) {
+            console.log(`Generated fallback border with ${hullPoints.length} points around cities`);
+            setTimeout(() => window.location.reload(), 1000);
+          }
+        }
+      } catch (fallbackError) {
+        console.error('Fallback border generation also failed:', fallbackError);
+        alert('Failed to generate borders using both methods. Please try manual drawing.');
+      }
     }
   };
 
