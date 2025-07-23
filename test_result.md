@@ -306,7 +306,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Government Position Management"
+    - "Multi-Kingdom Autogenerate Functionality"
+    - "Real-time Dashboard Updates from Events"
   stuck_tasks: 
     []
   test_all: false
