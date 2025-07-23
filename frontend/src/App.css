@@ -44,6 +44,54 @@ body {
   border-bottom: 2px solid var(--primary-gold);
 }
 
+/* Navigation */
+.navigation {
+  background: var(--deep-blue);
+  padding: 15px 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-bottom: 3px solid var(--primary-gold);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.nav-button {
+  background: transparent;
+  color: var(--primary-gold);
+  border: 2px solid var(--primary-gold);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.nav-button:hover {
+  background: var(--primary-gold);
+  color: var(--deep-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.nav-button.active {
+  background: var(--primary-gold);
+  color: var(--deep-blue);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.nav-button.city-nav {
+  border-color: var(--forest-green);
+  color: var(--forest-green);
+}
+
+.nav-button.city-nav:hover,
+.nav-button.city-nav.active {
+  background: var(--forest-green);
+  color: var(--primary-gold);
+}
+
 /* Loading */
 .loading {
   display: flex;
@@ -147,23 +195,21 @@ body {
   gap: 25px;
 }
 
-.city-card {
+.city-overview-card {
   background: linear-gradient(135deg, white, var(--parchment));
   padding: 25px;
   border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
   border: 2px solid var(--dark-gold);
   box-shadow: 0 4px 15px var(--shadow);
+  transition: transform 0.3s ease;
 }
 
-.city-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 35px var(--shadow);
-  border-color: var(--primary-gold);
+.city-overview-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px var(--shadow);
 }
 
-.city-card h3 {
+.city-overview-card h3 {
   font-family: 'Cinzel', serif;
   font-size: 1.8rem;
   color: var(--royal-blue);
@@ -177,11 +223,185 @@ body {
   font-style: italic;
 }
 
-.city-stats {
+.city-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-row {
   display: flex;
   justify-content: space-between;
-  font-weight: 600;
   color: var(--burgundy);
+  font-weight: 500;
+}
+
+/* Events Section */
+.events-section {
+  background: linear-gradient(135deg, white, var(--parchment));
+  border-radius: 15px;
+  padding: 30px;
+  border: 2px solid var(--primary-gold);
+  box-shadow: 0 8px 25px var(--shadow);
+}
+
+.events-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid var(--primary-gold);
+}
+
+.events-header h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 2.2rem;
+  color: var(--royal-blue);
+  margin: 0;
+}
+
+.events-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.toggle-button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid;
+}
+
+.toggle-button.enabled {
+  background: var(--forest-green);
+  color: white;
+  border-color: var(--forest-green);
+}
+
+.toggle-button.disabled {
+  background: var(--burgundy);
+  color: white;
+  border-color: var(--burgundy);
+}
+
+.events-feed {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid var(--dark-gold);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.event-item {
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+.event-item:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.event-item:last-child {
+  border-bottom: none;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.event-time {
+  color: var(--royal-blue);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.event-type {
+  font-size: 1.2rem;
+}
+
+.event-type.auto {
+  color: var(--forest-green);
+}
+
+.event-type.manual {
+  color: var(--burgundy);
+}
+
+.event-description {
+  color: var(--burgundy);
+  line-height: 1.5;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.event-city {
+  color: var(--royal-blue);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Map Styles */
+.map-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.map-container h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 2.5rem;
+  color: var(--royal-blue);
+  margin-bottom: 30px;
+  border-bottom: 3px solid var(--primary-gold);
+  padding-bottom: 15px;
+}
+
+.map-placeholder {
+  position: relative;
+  display: inline-block;
+  border: 3px solid var(--primary-gold);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px var(--shadow);
+  cursor: crosshair;
+}
+
+.map-image {
+  width: 100%;
+  max-width: 800px;
+  height: 500px;
+  object-fit: cover;
+  display: block;
+}
+
+.city-marker {
+  position: absolute;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  z-index: 10;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.city-marker:hover {
+  transform: scale(1.3);
+  filter: brightness(1.2);
+}
+
+.map-instructions {
+  margin-top: 15px;
+  color: var(--royal-blue);
+  font-style: italic;
+  font-size: 1.1rem;
 }
 
 /* City Dashboard */
@@ -199,24 +419,7 @@ body {
   margin-bottom: 30px;
   box-shadow: 0 8px 25px var(--shadow);
   border: 3px solid var(--primary-gold);
-  position: relative;
-}
-
-.back-button {
-  background: var(--primary-gold);
-  color: var(--forest-green);
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  margin-bottom: 15px;
-  transition: all 0.3s ease;
-}
-
-.back-button:hover {
-  background: var(--dark-gold);
-  transform: translateX(-5px);
+  text-align: center;
 }
 
 .city-title {
@@ -230,173 +433,6 @@ body {
   font-size: 1.3rem;
   opacity: 0.9;
   font-style: italic;
-}
-
-/* Citizens Section */
-.citizens-section {
-  margin-bottom: 40px;
-}
-
-.citizens-section h2 {
-  font-family: 'Cinzel', serif;
-  font-size: 2.2rem;
-  color: var(--forest-green);
-  margin-bottom: 25px;
-  text-align: center;
-  border-bottom: 3px solid var(--primary-gold);
-  padding-bottom: 10px;
-}
-
-.citizens-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.citizen-card {
-  background: linear-gradient(135deg, white, var(--parchment));
-  padding: 20px;
-  border-radius: 10px;
-  border: 2px solid var(--dark-gold);
-  box-shadow: 0 4px 12px var(--shadow);
-  transition: transform 0.3s ease;
-}
-
-.citizen-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px var(--shadow);
-}
-
-.citizen-card h3 {
-  font-family: 'Cinzel', serif;
-  color: var(--royal-blue);
-  margin-bottom: 8px;
-  font-size: 1.3rem;
-}
-
-.occupation {
-  color: var(--forest-green);
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-
-.age {
-  color: var(--burgundy);
-  font-style: italic;
-}
-
-/* Events Section */
-.events-section {
-  background: linear-gradient(135deg, white, var(--parchment));
-  border-radius: 15px;
-  padding: 30px;
-  border: 2px solid var(--primary-gold);
-  box-shadow: 0 8px 25px var(--shadow);
-}
-
-.events-section h2 {
-  font-family: 'Cinzel', serif;
-  font-size: 2.2rem;
-  color: var(--royal-blue);
-  margin-bottom: 25px;
-  text-align: center;
-  border-bottom: 3px solid var(--primary-gold);
-  padding-bottom: 10px;
-}
-
-.events-feed {
-  max-height: 400px;
-  overflow-y: auto;
-  border: 1px solid var(--dark-gold);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.event-item {
-  padding: 15px 20px;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-  display: flex;
-  gap: 15px;
-  align-items: flex-start;
-  transition: background-color 0.3s ease;
-}
-
-.event-item:hover {
-  background: rgba(212, 175, 55, 0.1);
-}
-
-.event-item:last-child {
-  border-bottom: none;
-}
-
-.event-time {
-  color: var(--royal-blue);
-  font-weight: 600;
-  font-size: 0.9rem;
-  min-width: 80px;
-  text-align: right;
-}
-
-.event-description {
-  flex: 1;
-  color: var(--burgundy);
-  line-height: 1.5;
-  font-weight: 500;
-}
-
-.no-events {
-  text-align: center;
-  color: var(--royal-blue);
-  font-style: italic;
-  padding: 40px;
-}
-
-/* Scrollbar Styling */
-.events-feed::-webkit-scrollbar {
-  width: 8px;
-}
-
-.events-feed::-webkit-scrollbar-track {
-  background: var(--parchment);
-  border-radius: 4px;
-}
-
-.events-feed::-webkit-scrollbar-thumb {
-  background: var(--primary-gold);
-  border-radius: 4px;
-}
-
-.events-feed::-webkit-scrollbar-thumb:hover {
-  background: var(--dark-gold);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .kingdom-title {
-    font-size: 2.5rem;
-  }
-  
-  .city-title {
-    font-size: 2.2rem;
-  }
-  
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .cities-grid, .citizens-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .event-item {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .event-time {
-    text-align: left;
-    min-width: auto;
-  }
 }
 
 /* Modal Styles */
@@ -462,51 +498,6 @@ body {
 
 .modal-body {
   padding: 30px;
-}
-
-/* Map Styles */
-.map-container {
-  margin: 30px 0;
-  text-align: center;
-}
-
-.map-placeholder {
-  position: relative;
-  display: inline-block;
-  border: 3px solid var(--primary-gold);
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 8px 25px var(--shadow);
-  cursor: crosshair;
-}
-
-.map-image {
-  width: 100%;
-  max-width: 800px;
-  height: 500px;
-  object-fit: cover;
-  display: block;
-}
-
-.city-marker {
-  position: absolute;
-  font-size: 24px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  z-index: 10;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-.city-marker:hover {
-  transform: scale(1.3);
-  filter: brightness(1.2);
-}
-
-.map-instructions {
-  margin-top: 15px;
-  color: var(--royal-blue);
-  font-style: italic;
-  font-size: 1.1rem;
 }
 
 /* Form Styles */
@@ -748,23 +739,63 @@ body {
   font-weight: 600;
 }
 
-/* City Management */
-.city-management {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+.status-enslaved {
+  color: #7f1d1d;
+  font-weight: 600;
 }
 
-.city-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin: 30px 0;
+.status-manumitted {
+  color: var(--forest-green);
+  font-weight: 600;
 }
 
-/* Kingdom Overview */
-.kingdom-overview {
-  margin: 30px 0;
+.status-pending {
+  color: #d97706;
+  font-weight: 600;
+}
+
+.status-paid {
+  color: var(--forest-green);
+  font-weight: 600;
+}
+
+.status-overdue {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.status-reported {
+  color: #d97706;
+  font-weight: 600;
+}
+
+.status-investigated {
+  color: var(--royal-blue);
+  font-weight: 600;
+}
+
+.status-resolved {
+  color: var(--forest-green);
+  font-weight: 600;
+}
+
+/* Scrollbar Styling */
+.events-feed::-webkit-scrollbar {
+  width: 8px;
+}
+
+.events-feed::-webkit-scrollbar-track {
+  background: var(--parchment);
+  border-radius: 4px;
+}
+
+.events-feed::-webkit-scrollbar-thumb {
+  background: var(--primary-gold);
+  border-radius: 4px;
+}
+
+.events-feed::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-gold);
 }
 
 /* Animation for new elements */
@@ -783,8 +814,33 @@ body {
   animation: slideInFromTop 0.5s ease-out;
 }
 
-/* Responsive Design Updates */
+/* Responsive Design */
 @media (max-width: 768px) {
+  .kingdom-title {
+    font-size: 2.5rem;
+  }
+  
+  .city-title {
+    font-size: 2.2rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .cities-grid, .registry-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .navigation {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .nav-button {
+    text-align: center;
+  }
+  
   .modal-content {
     width: 95%;
     margin: 20px;
@@ -804,15 +860,22 @@ body {
     border-radius: 15px;
   }
   
-  .registry-grid {
-    grid-template-columns: 1fr;
-  }
-  
   .form-actions {
     flex-direction: column;
   }
   
   .map-image {
     height: 300px;
+  }
+  
+  .events-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .detail-row {
+    flex-direction: column;
+    gap: 4px;
   }
 }
