@@ -233,9 +233,9 @@ def generate_registry_event(event_type, city_name, details):
             f"{details['name']} arrives in {city_name} seeking work as a {details['occupation']}."
         ],
         "slave": [
-            f"New slave {details['name']} acquired in {city_name} ({details['origin']}).",
-            f"{details['name']}, a {details['origin']}, becomes enslaved in {city_name}.",
-            f"Slave {details['name']} assigned to {details['owner']} in {city_name}."
+            f"New slave {details['name']} acquired in {city_name} ({details.get('origin', 'Unknown origin')}).",
+            f"{details['name']}, a {details.get('origin', 'slave')}, becomes enslaved in {city_name}.",
+            f"Slave {details['name']} assigned to {details.get('owner', 'City')} in {city_name}."
         ],
         "livestock": [
             f"New {details['type'].lower()} '{details['name']}' added to {city_name} herds.",
@@ -253,9 +253,9 @@ def generate_registry_event(event_type, city_name, details):
             f"{city_name} authorities investigate {details['criminal_name']} for {details['crime_type']}."
         ],
         "tribute": [
-            f"{details['from_city']} owes {details['amount']} GP tribute for {details['purpose']}.",
-            f"Tribute demand: {details['from_city']} to pay {details['amount']} GP to {details['to_city']}.",
-            f"{details['from_city']} tribute payment of {details['amount']} GP is {details['status'].lower()}."
+            f"{details['from_city']} owes {details['amount']} GP tribute for {details.get('purpose', 'royal decree')}.",
+            f"Tribute demand: {details['from_city']} to pay {details['amount']} GP to {details.get('to_city', 'Royal Treasury')}.",
+            f"{details['from_city']} tribute payment of {details['amount']} GP is {details.get('status', 'pending').lower()}."
         ]
     }
     return random.choice(events.get(event_type, [f"Registry updated in {city_name}."]))
