@@ -238,7 +238,385 @@ const KingdomDashboard = ({ kingdom, events, autoEventsEnabled, onToggleAutoEven
   );
 };
 
-// Faerûn Map Component with Enhanced City Management
+// Kingdom Selection Component for Multi-Kingdom Management
+const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew }) => {
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newKingdomData, setNewKingdomData] = useState({
+    name: '',
+    ruler: '',
+    government_type: 'Monarchy',
+    color: '#1e3a8a'
+  });
+
+  const governmentTypes = [
+    'Monarchy', 'Republic', 'Empire', 'Council', 'Federation', 
+    'Theocracy', 'Magocracy', 'Oligarchy', 'Democracy', 'Confederation'
+  ];
+
+  const kingdomColors = [
+    '#1e3a8a', '#7c2d12', '#166534', '#7c3aed', '#dc2626', 
+    '#ea580c', '#0891b2', '#4338ca', '#059669', '#be123c'
+  ];
+
+  const handleCreateKingdom = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API}/multi-kingdoms`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newKingdomData)
+      });
+      
+      if (response.ok) {
+        const newKingdom = await response.json();
+        setShowCreateForm(false);
+        setNewKingdomData({ name: '', ruler: '', government_type: 'Monarchy', color: '#1e3a8a' });
+        onCreateNew(newKingdom);
+      }
+    } catch (error) {
+      console.error('Error creating kingdom:', error);
+    }
+  };
+
+  return (
+    <div className="kingdom-selector">
+      <div className="selector-header">
+        <h3>Select Kingdom</h3>
+        <button 
+          className="btn-primary create-kingdom-btn"
+          onClick={() => setShowCreateForm(true)}
+        >
+          + Create New Kingdom
+        </button>
+      </div>
+      
+      <div className="kingdoms-grid">
+        {kingdoms?.map(kingdom => (
+          <div 
+            key={kingdom.id}
+            className={`kingdom-card ${activeKingdom?.id === kingdom.id ? 'active' : ''}`}
+            onClick={() => onKingdomChange(kingdom)}
+            style={{ borderColor: kingdom.color }}
+          >
+            <div className="kingdom-color-indicator" style={{ backgroundColor: kingdom.color }}></div>
+            <div className="kingdom-info">
+              <h4>{kingdom.name}</h4>
+              <p>Ruled by {kingdom.ruler}</p>
+              <p className="government-type">{kingdom.government_type}</p>
+              <div className="kingdom-stats">
+                <span>{kingdom.cities?.length || 0} cities</span>
+                <span>{kingdom.total_population || 0} population</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Modal isOpen={showCreateForm} onClose={() => setShowCreateForm(false)} title="Create New Kingdom">
+        <form onSubmit={handleCreateKingdom}>
+          <div className="form-group">
+            <label>Kingdom Name:</label>
+            <input
+              type="text"
+              value={newKingdomData.name}
+              onChange={(e) => setNewKingdomData({...newKingdomData, name: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Ruler:</label>
+            <input
+              type="text"
+              value={newKingdomData.ruler}
+              onChange={(e) => setNewKingdomData({...newKingdomData, ruler: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Government Type:</label>
+            <select
+              value={newKingdomData.government_type}
+              onChange={(e) => setNewKingdomData({...newKingdomData, government_type: e.target.value})}
+            >
+              {governmentTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Kingdom Color:</label>
+            <div className="color-picker">
+              {kingdomColors.map(color => (
+                <div
+                  key={color}
+                  className={`color-option ${newKingdomData.color === color ? 'selected' : ''}`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => setNewKingdomData({...newKingdomData, color})}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">Create Kingdom</button>
+            <button type="button" onClick={() => setShowCreateForm(false)} className="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </Modal>
+    </div>
+  );
+};
+
+// Enhanced Map Component with Kingdom Boundaries
+const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMapClick }) => {
+  const [showAddCityForm, setShowAddCityForm] = useState(false);
+  const [newCityCoords, setNewCityCoords] = useState({ x: 0, y: 0 });
+  const [draggedCity, setDraggedCity] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [boundaryMode, setBoundaryMode] = useState(false);
+  const [currentBoundary, setCurrentBoundary] = useState([]);
+
+  const handleMapClick = (e) => {
+    if (isDragging) return;
+    
+    const rect = e.target.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    if (boundaryMode) {
+      // Add point to current boundary
+      setCurrentBoundary([...currentBoundary, { x, y }]);
+    } else {
+      // Add new city
+      setNewCityCoords({ x, y });
+      setShowAddCityForm(true);
+    }
+  };
+
+  const completeBoundary = async () => {
+    if (currentBoundary.length < 3) {
+      alert('A boundary must have at least 3 points');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API}/kingdom-boundaries`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kingdom_id: activeKingdom.id,
+          boundary_points: currentBoundary,
+          color: activeKingdom.color
+        })
+      });
+      
+      if (response.ok) {
+        setCurrentBoundary([]);
+        setBoundaryMode(false);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error creating boundary:', error);
+    }
+  };
+
+  // ... (keeping existing city drag/drop functionality)
+  const handleCityMouseDown = (e, city) => {
+    e.stopPropagation();
+    setDraggedCity(city);
+    setIsDragging(true);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || !draggedCity) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    const cityMarker = document.querySelector(`[data-city-id="${draggedCity.id}"]`);
+    if (cityMarker) {
+      cityMarker.style.left = `${x}%`;
+      cityMarker.style.top = `${y}%`;
+    }
+  };
+
+  const handleMouseUp = async (e) => {
+    if (!isDragging || !draggedCity) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    try {
+      const response = await fetch(`${API}/city/${draggedCity.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ x_coordinate: x, y_coordinate: y })
+      });
+      
+      if (response.ok) {
+        setTimeout(() => window.location.reload(), 100);
+      }
+    } catch (error) {
+      console.error('Error updating city position:', error);
+    }
+    
+    setDraggedCity(null);
+    setIsDragging(false);
+  };
+
+  const handleDeleteCity = async (e, city) => {
+    e.stopPropagation();
+    if (window.confirm(`Are you sure you want to delete ${city.name}?`)) {
+      try {
+        const response = await fetch(`${API}/city/${city.id}`, { method: 'DELETE' });
+        if (response.ok) window.location.reload();
+      } catch (error) {
+        console.error('Error deleting city:', error);
+      }
+    }
+  };
+
+  const handleCreateCity = async (cityData) => {
+    try {
+      const response = await fetch(`${API}/cities`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...cityData, x_coordinate: newCityCoords.x, y_coordinate: newCityCoords.y })
+      });
+      
+      if (response.ok) {
+        setShowAddCityForm(false);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error creating city:', error);
+    }
+  };
+
+  return (
+    <div className="enhanced-map-container">
+      <div className="map-controls">
+        <button 
+          className={`btn-secondary ${boundaryMode ? 'active' : ''}`}
+          onClick={() => setBoundaryMode(!boundaryMode)}
+        >
+          {boundaryMode ? 'Exit Boundary Mode' : 'Draw Kingdom Boundary'}
+        </button>
+        
+        {boundaryMode && currentBoundary.length > 2 && (
+          <button className="btn-primary" onClick={completeBoundary}>
+            Complete Boundary ({currentBoundary.length} points)
+          </button>
+        )}
+      </div>
+
+      <div className="map-instructions">
+        {boundaryMode 
+          ? `Click on map to add boundary points for ${activeKingdom?.name || 'Selected Kingdom'}`
+          : 'Click anywhere to add a new city • Drag cities to move them • Right-click cities to delete'
+        }
+      </div>
+      
+      <div 
+        className="map-placeholder" 
+        onClick={handleMapClick}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        style={{ cursor: boundaryMode ? 'crosshair' : (isDragging ? 'grabbing' : 'default') }}
+      >
+        <img 
+          src="https://images.unsplash.com/photo-1677295922463-147d7f2f718c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwbWFwfGVufDB8fHx8MTc1MzI0Mzk3OXww&ixlib=rb-4.1.0&q=85"
+          alt="Faerûn Map"
+          className="map-image"
+          draggable={false}
+        />
+        
+        {/* Render Kingdom Boundaries */}
+        {activeKingdom?.boundaries?.map(boundary => (
+          <svg key={boundary.id} className="boundary-overlay">
+            <polygon
+              points={boundary.boundary_points.map(p => `${p.x},${p.y}`).join(' ')}
+              fill={`${boundary.color}20`}
+              stroke={boundary.color}
+              strokeWidth="2"
+              opacity="0.7"
+            />
+          </svg>
+        ))}
+        
+        {/* Current boundary being drawn */}
+        {boundaryMode && currentBoundary.length > 0 && (
+          <svg className="boundary-overlay">
+            <polyline
+              points={currentBoundary.map(p => `${p.x},${p.y}`).join(' ')}
+              fill="none"
+              stroke={activeKingdom?.color || '#1e3a8a'}
+              strokeWidth="2"
+              strokeDasharray="5,5"
+            />
+            {currentBoundary.map((point, index) => (
+              <circle
+                key={index}
+                cx={point.x}
+                cy={point.y}
+                r="3"
+                fill={activeKingdom?.color || '#1e3a8a'}
+              />
+            ))}
+          </svg>
+        )}
+        
+        {/* Render Cities */}
+        {cities?.map(city => (
+          <div
+            key={city.id}
+            data-city-id={city.id}
+            className={`city-marker ${isDragging && draggedCity?.id === city.id ? 'dragging' : ''}`}
+            style={{
+              left: `${city.x_coordinate}%`,
+              top: `${city.y_coordinate}%`,
+              cursor: isDragging ? 'grabbing' : 'grab'
+            }}
+            onMouseDown={(e) => handleCityMouseDown(e, city)}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!isDragging && !boundaryMode) {
+                onCitySelect(city.id);
+              }
+            }}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              handleDeleteCity(e, city);
+            }}
+            title={`${city.name} - Right-click to delete, drag to move`}
+          >
+            <span className="city-icon">🏰</span>
+            <span className="city-name">{city.name}</span>
+            <button 
+              className="city-delete-btn" 
+              onClick={(e) => handleDeleteCity(e, city)}
+              title="Delete city"
+            >
+              ✖
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <Modal 
+        isOpen={showAddCityForm} 
+        onClose={() => setShowAddCityForm(false)} 
+        title="Create New City"
+      >
+        <AddCityForm
+          onSubmit={handleCreateCity}
+          onCancel={() => setShowAddCityForm(false)}
+        />
+      </Modal>
+    </div>
+  );
+};
 const FaerunMap = ({ cities, onCitySelect, onMapClick }) => {
   const [showAddCityForm, setShowAddCityForm] = useState(false);
   const [newCityCoords, setNewCityCoords] = useState({ x: 0, y: 0 });
