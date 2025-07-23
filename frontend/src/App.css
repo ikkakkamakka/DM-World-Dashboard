@@ -348,13 +348,32 @@ body {
   font-style: italic;
 }
 
-/* Enhanced Map Styles */
-.map-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+/* Enhanced Map Controls */
+.map-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: var(--parchment);
+  border: 2px solid var(--primary-gold);
+  border-radius: 8px;
 }
 
+.zoom-indicator {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  color: var(--royal-blue);
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid var(--dark-gold);
+  border-radius: 4px;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Enhanced Map Container */
 .map-placeholder {
   position: relative;
   width: 100%;
@@ -364,6 +383,7 @@ body {
   overflow: hidden;
   cursor: crosshair;
   user-select: none;
+  transform-origin: center center;
 }
 
 .map-image {
