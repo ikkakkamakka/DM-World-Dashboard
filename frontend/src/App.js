@@ -422,8 +422,8 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     if (isDragging) return;
     
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const x = ((e.clientX - rect.left - pan.x) / (rect.width * zoom)) * 100;
+    const y = ((e.clientY - rect.top - pan.y) / (rect.height * zoom)) * 100;
     
     if (boundaryMode === 'draw') {
       // Smart boundary detection - snap to nearby edges or geographical features
@@ -435,7 +435,7 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
       paintBoundaryArea(x, y);
       
     } else if (boundaryMode === 'erase') {
-      // Erase mode - remove boundary area
+      // Enhanced erase mode - remove boundary area from existing boundaries
       eraseBoundaryArea(x, y);
       
     } else {
