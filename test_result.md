@@ -271,10 +271,8 @@ metadata:
 test_plan:
   current_focus:
     - "City Dashboard UI"
-    - "Auto-Generate Functionality for All Registries"
     - "Government Position Management"
-  stuck_tasks:
-    - "Auto-Generate Functionality for All Registries"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
