@@ -57,8 +57,9 @@ class BackendTester:
             'kingdom_boundaries_get': False,
             'kingdom_boundaries_update': False,
             'kingdom_boundaries_delete': False,
-            'multi_kingdom_boundary_display': False,
-            'enhanced_erase_functionality': False
+            'kingdom_boundaries_clear_all': False,
+            'multi_kingdom_boundary_isolation': False,
+            'database_consistency_check': False
         }
         self.errors = []
 
