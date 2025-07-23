@@ -1218,7 +1218,7 @@ const CrimeRegistry = ({ city }) => {
               <p><strong>Crime:</strong> {crime.crime_type}</p>
               <p><strong>Description:</strong> {crime.description}</p>
               <p><strong>Date:</strong> {new Date(crime.date_occurred).toLocaleDateString()}</p>
-              <p><strong>Status:</strong> <span className={`status-${crime.status?.toLowerCase()}`}>{crime.status}</span></p>
+              <p><strong>Status:</strong> <span className={`status-${crime.status?.toLowerCase() || 'reported'}`}>{crime.status}</span></p>
               {crime.punishment && <p><strong>Punishment:</strong> {crime.punishment}</p>}
               {crime.fine_amount > 0 && <p><strong>Fine:</strong> {crime.fine_amount} GP</p>}
               {crime.notes && <p><strong>Notes:</strong> {crime.notes}</p>}
