@@ -641,12 +641,24 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
   // Zoom and Pan handlers
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+  const [isHoveringMap, setIsHoveringMap] = useState(false);
   
   const handleWheel = (e) => {
+    if (!isHoveringMap) return; // Only zoom when hovering over map
     e.preventDefault();
+    e.stopPropagation();
     const delta = e.deltaY > 0 ? -0.1 : 0.1;
     const newZoom = Math.max(0.5, Math.min(3, zoom + delta));
     setZoom(newZoom);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHoveringMap(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHoveringMap(false);
+    setIsPanning(false);
   };
 
   const handlePanStart = (e) => {
