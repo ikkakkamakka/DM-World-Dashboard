@@ -359,13 +359,37 @@ const CitizensRegistry = ({ city }) => {
     }
   };
 
+  const handleAutoGenerate = async () => {
+    try {
+      const response = await fetch(`${API}/auto-generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          registry_type: 'citizens',
+          city_id: city.id,
+          count: Math.floor(Math.random() * 5) + 2 // 2-6 citizens
+        })
+      });
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error auto-generating citizens:', error);
+    }
+  };
+
   return (
     <div className="registry-section">
       <div className="registry-header">
         <h3>Citizens Registry</h3>
-        <button className="btn-primary" onClick={() => setShowAddForm(true)}>
-          Add Citizen
-        </button>
+        <div className="registry-actions">
+          <button className="btn-secondary" onClick={handleAutoGenerate}>
+            Auto Generate
+          </button>
+          <button className="btn-primary" onClick={() => setShowAddForm(true)}>
+            Add Citizen
+          </button>
+        </div>
       </div>
 
       <Modal isOpen={showAddForm} onClose={() => setShowAddForm(false)} title="Add New Citizen">
