@@ -505,33 +505,43 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     }));
     
     // Find and modify existing boundaries that intersect with erase area
+    let hasModifications = false;
+    
     for (const boundary of allBoundaries) {
-      if (boundary.kingdomColor === activeKingdom?.color) {
-        const pointsToRemove = boundary.boundary_points.filter(point => {
+      // Check if any boundary points are within the erase radius
+      const pointsInEraseArea = boundary.boundary_points.filter(point => {
+        const distance = Math.sqrt(
+          Math.pow(point.x - centerX, 2) + Math.pow(point.y - centerY, 2)
+        );
+        return distance <= eraseRadius;
+      });
+      
+      if (pointsInEraseArea.length > 0) {
+        // Calculate remaining points after erasing
+        const remainingPoints = boundary.boundary_points.filter(point => {
           const distance = Math.sqrt(
             Math.pow(point.x - centerX, 2) + Math.pow(point.y - centerY, 2)
           );
-          return distance <= eraseRadius;
+          return distance > eraseRadius;
         });
         
-        if (pointsToRemove.length > 0) {
-          // Delete or modify this boundary
-          const remainingPoints = boundary.boundary_points.filter(point => {
-            const distance = Math.sqrt(
-              Math.pow(point.x - centerX, 2) + Math.pow(point.y - centerY, 2)
-            );
-            return distance > eraseRadius;
-          });
-          
-          if (remainingPoints.length < 3) {
-            // Delete entire boundary if too few points remain
-            await deleteBoundary(boundary.id);
-          } else {
-            // Update boundary with remaining points
-            await updateBoundary(boundary.id, remainingPoints);
-          }
+        hasModifications = true;
+        
+        if (remainingPoints.length < 3) {
+          // Delete entire boundary if too few points remain
+          console.log(`Deleting boundary ${boundary.id} - insufficient points remaining`);
+          await deleteBoundary(boundary.id);
+        } else {
+          // Update boundary with remaining points
+          console.log(`Updating boundary ${boundary.id} - removing ${pointsInEraseArea.length} points`);
+          await updateBoundary(boundary.id, remainingPoints);
         }
       }
+    }
+    
+    if (hasModifications) {
+      // Refresh the page to show updated boundaries
+      setTimeout(() => window.location.reload(), 500);
     }
   };
 
