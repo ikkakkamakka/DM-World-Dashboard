@@ -1185,8 +1185,8 @@ const FaerunMap = ({ cities, onCitySelect, onMapClick }) => {
     if (!isDragging || !draggedCity) return;
     
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left - pan.x) / (rect.width * zoom)) * 100;
-    const y = ((e.clientY - rect.top - pan.y) / (rect.height * zoom)) * 100;
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
     
     try {
       // Update city position in backend
@@ -1198,21 +1198,19 @@ const FaerunMap = ({ cities, onCitySelect, onMapClick }) => {
       
       if (response.ok) {
         console.log(`City ${draggedCity.name} moved to (${x.toFixed(1)}, ${y.toFixed(1)})`);
-        // Update the city position in the local state immediately
-        draggedCity.x_coordinate = x;
-        draggedCity.y_coordinate = y;
         
-        // Update the visual position
+        // Update the visual position immediately
         const cityMarker = document.querySelector(`[data-city-id="${draggedCity.id}"]`);
         if (cityMarker) {
           cityMarker.style.left = `${x}%`;
           cityMarker.style.top = `${y}%`;
         }
         
-        // Refresh data after a short delay
+        // Refresh data after a short delay to ensure consistency
         setTimeout(() => window.location.reload(), 1000);
       } else {
-        console.error('Failed to update city position:', response.status);
+        const errorText = await response.text();
+        console.error('Failed to update city position:', response.status, errorText);
         alert('Failed to move city. Please try again.');
       }
     } catch (error) {
