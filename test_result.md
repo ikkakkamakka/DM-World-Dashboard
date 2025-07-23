@@ -233,8 +233,10 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
+  current_focus:
+    - "City Dashboard UI"
+  stuck_tasks:
+    - "City Dashboard UI"
   test_all: false
   test_priority: "high_first"
 
@@ -243,3 +245,5 @@ agent_communication:
     message: "Completed initial implementation of living fantasy kingdom simulator with real-time simulation engine, WebSocket updates, pre-populated data, and medieval-themed UI. Ready for backend testing to verify API endpoints, simulation engine, and database operations."
   - agent: "testing"
     message: "✅ BACKEND TESTING COMPLETE: All 4 backend tasks tested and working perfectly. Fixed WebSocket dependency issue by installing uvicorn[standard]. Kingdom API returns Cartborne Kingdom with Emberfalls/Stormhaven cities, simulation engine generates fantasy events every 10-30 seconds, WebSocket connections work for real-time updates, and database contains pre-populated fantasy citizens. All API endpoints functional and simulation engine creating proper fantasy content. Backend is fully operational."
+  - agent: "testing"
+    message: "🏰 COMPREHENSIVE FRONTEND TESTING COMPLETED: Tested all major DM tool features. ✅ WORKING: Kingdom Dashboard (perfect stats display, 3 cities, navigation), Real-time Event Feed (15 events, auto/manual indicators, WebSocket connected), Fantasy UI Theme (beautiful medieval styling, responsive design), Faerûn Map (interactive, city markers, creation modal). ❌ CRITICAL ISSUE: City Dashboard has JavaScript runtime errors ('Cannot read properties of undefined reading toLowerCase') preventing city navigation and registry tabs from working. This blocks access to all CRUD operations for Citizens, Slaves, Livestock, Garrison, Tribute, and Crime registries."
