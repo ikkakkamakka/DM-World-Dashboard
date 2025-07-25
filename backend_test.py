@@ -79,7 +79,20 @@ class BackendTester:
             'auth_jwt_tokens': False,
             'auth_duplicate_validation': False,
             'auth_invalid_credentials': False,
-            'auth_separate_database': False
+            'auth_separate_database': False,
+            # Enhanced Harptos Calendar System Tests
+            'harptos_campaign_date_get': False,
+            'harptos_campaign_date_update': False,
+            'harptos_calendar_events_get': False,
+            'harptos_calendar_events_upcoming': False,
+            'harptos_calendar_events_create': False,
+            'harptos_calendar_events_update': False,
+            'harptos_calendar_events_delete': False,
+            'harptos_generate_city_events': False,
+            'harptos_dr_conversion': False,
+            'harptos_date_persistence': False,
+            'harptos_event_filtering': False,
+            'harptos_city_event_titles': False
         }
         self.errors = []
 
