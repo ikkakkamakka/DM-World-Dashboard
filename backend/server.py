@@ -135,20 +135,42 @@ CRIME_TYPES_DETAILED = {
     "Guild Violations": {"severity": "minor", "fine": (10, 50), "punishment": ["Guild suspension", "Fine to guild", "Public apology"]}
 }
 
-# Harptos Calendar months for D&D fantasy setting
+# Enhanced Harptos Calendar System for D&D fantasy setting
 HARPTOS_MONTHS = [
-    {"name": "Hammer", "days": 30},
-    {"name": "Alturiak", "days": 30},
-    {"name": "Ches", "days": 30},
-    {"name": "Tarsakh", "days": 30},
-    {"name": "Mirtul", "days": 30},
-    {"name": "Kythorn", "days": 30},
-    {"name": "Flamerule", "days": 30},
-    {"name": "Eleasis", "days": 30},
-    {"name": "Eleint", "days": 30},
-    {"name": "Marpenoth", "days": 30},
-    {"name": "Uktar", "days": 30},
-    {"name": "Nightal", "days": 30}
+    {"name": "Hammer", "alias": "Deepwinter", "days": 30},
+    {"name": "Alturiak", "alias": "The Claw of Winter", "days": 30},
+    {"name": "Ches", "alias": "The Claw of the Sunsets", "days": 30},
+    {"name": "Tarsakh", "alias": "The Claw of the Storms", "days": 30},
+    {"name": "Mirtul", "alias": "The Melting", "days": 30},
+    {"name": "Kythorn", "alias": "The Time of Flowers", "days": 30},
+    {"name": "Flamerule", "alias": "Summertide", "days": 30},
+    {"name": "Eleasis", "alias": "Highsun", "days": 30},
+    {"name": "Eleint", "alias": "The Fading", "days": 30},
+    {"name": "Marpenoth", "alias": "Leaffall", "days": 30},
+    {"name": "Uktar", "alias": "The Rotting", "days": 30},
+    {"name": "Nightal", "alias": "The Drawing Down", "days": 30}
+]
+
+SPECIAL_DAYS = [
+    {"name": "Midwinter", "after_month": 0, "description": "A festival day of reflection and celebration", "type": "holiday"},
+    {"name": "Greengrass", "after_month": 3, "description": "Celebrates the arrival of spring", "type": "holiday"},
+    {"name": "Midsummer", "after_month": 6, "description": "A day of celebration and festivity", "type": "holiday"},
+    {"name": "Highharvestide", "after_month": 8, "description": "Marks the harvest time", "type": "holiday"},
+    {"name": "The Feast of the Moon", "after_month": 10, "description": "Honors the dead and ancestors", "type": "holiday"}
+]
+
+# City-specific events templates
+CITY_EVENT_TEMPLATES = [
+    {"title": "Market Day", "type": "city", "description": "The monthly market brings traders from across the region"},
+    {"title": "Harvest Festival", "type": "city", "description": "Citizens celebrate the season's harvest"},
+    {"title": "Guard Patrol", "type": "city", "description": "City watch conducts extra patrols"},
+    {"title": "Merchant Caravan Arrival", "type": "city", "description": "A trading caravan has arrived with exotic goods"},
+    {"title": "Temple Festival", "type": "city", "description": "Local temple holds a religious celebration"},
+    {"title": "Craftsmen's Fair", "type": "city", "description": "Artisans display their finest works"},
+    {"title": "Bard's Performance", "type": "city", "description": "Traveling bards perform in the town square"},
+    {"title": "Local Wedding", "type": "city", "description": "Citizens gather to celebrate a wedding"},
+    {"title": "Seasonal Cleaning", "type": "city", "description": "Community effort to clean and maintain the city"},
+    {"title": "Youth Tournament", "type": "city", "description": "Young citizens compete in friendly contests"}
 ]
 
 def generate_fantasy_name():
