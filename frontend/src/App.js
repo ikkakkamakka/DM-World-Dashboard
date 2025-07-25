@@ -3870,8 +3870,8 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
   );
 };
 
-// Main App Component with Multi-Kingdom Support
-function App() {
+// Main App Component with Multi-Kingdom Support and Authentication
+function AuthenticatedApp() {
   const [kingdom, setKingdom] = useState(null);
   const [multiKingdoms, setMultiKingdoms] = useState([]);
   const [activeKingdom, setActiveKingdom] = useState(null);
