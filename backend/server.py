@@ -14,6 +14,9 @@ import uuid
 from datetime import datetime, timedelta
 from contextlib import asynccontextmanager
 
+# Import authentication router
+from auth import auth_router
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
