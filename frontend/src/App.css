@@ -1790,15 +1790,24 @@ body {
 .season-autumn { color: #cd853f; text-shadow: 0 0 5px rgba(205, 133, 63, 0.3); }
 
 .special-day-notice {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: rgba(255, 215, 0, 0.2);
-  padding: 0.75rem;
-  border-radius: 6px;
+  background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+  color: #1a1a2e;
+  padding: 1rem;
+  border-radius: 10px;
   margin-top: 1rem;
-  border: 1px solid #ffd700;
+  font-weight: bold;
+  font-size: 1.1rem;
+  position: relative;
+  z-index: 1;
+  box-shadow: 
+    0 4px 15px rgba(212, 175, 55, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: specialDayGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes specialDayGlow {
+  0% { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+  100% { box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
 }
 
 .special-day-icon {
