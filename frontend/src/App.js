@@ -4025,6 +4025,14 @@ function AuthenticatedApp() {
 
   return (
     <div className="App">
+      {/* App Header with User Profile */}
+      <header className="app-header">
+        <div className="header-content">
+          <h1 className="app-title">⚔️ Faerûn Campaign Manager</h1>
+          <UserProfile />
+        </div>
+      </header>
+
       <div className="status-bar">
         <span className="status-text">{connectionStatus}</span>
         {activeKingdom && (
@@ -4092,6 +4100,38 @@ function AuthenticatedApp() {
       )}
     </div>
   );
+}
+
+// Main App with Authentication Wrapper
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
+
+// App Content with Authentication Check
+function AppContent() {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="loading-screen">
+        <div className="loading-content">
+          <h2>⚔️ Faerûn Campaign Manager</h2>
+          <div className="loading-spinner"></div>
+          <p>Loading your campaign...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <AuthScreen />;
+  }
+
+  return <AuthenticatedApp />;
 }
 
 export default App;
