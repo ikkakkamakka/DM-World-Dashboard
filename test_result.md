@@ -232,20 +232,17 @@ frontend:
         agent: "testing"
         comment: "✅ FIXED & TESTED: Auto-generate functionality now working perfectly for all 6 registry types (citizens, slaves, livestock, garrison, crimes, tribute). Fixed KeyError issues in generate_registry_event function by using .get() methods with fallback values. Tested across all 4 cities in kingdom - all generate items correctly, store in database, and create proper events. Backend API /api/auto-generate working 100%. Issue was backend-side, not frontend integration."
 
-  - task: "Government Position Management"
+  - task: "Enhanced Harptos Calendar System"
     implemented: true
-    working: false
-    file: "/app/frontend/src/App.js"
+    working: true
+    file: "/app/backend/server.py, /app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Created GovernmentManagement component for appointing citizens to government positions with proper API integration"
-      - working: false
-        agent: "user"
-        comment: "User requested: 'local Government needs more positions and displayed in a hierarchy' and 'assign them from the available pool of Citizens'"
+        comment: "HARPTOS CALENDAR ENHANCEMENT COMPLETED: Fixed duplicate city name issue by removing city names from backend event titles, allowing frontend to handle proper display format ('Event Title – City Name'). Implemented comprehensive magical fantasy theme with animated glowing borders, parchment-style background textures, smooth fade transitions, and themed icons for tendays/seasons. Added enhanced calendar system with campaign date management, upcoming events view, auto city event generation, and complete CRUD operations. MongoDB collections for campaign_dates and calendar_events are persistent and auto-update correctly when campaign date advances. Frontend features magical animations including magicalGlow, titleGlow, dateDisplayGlow, todayPulse, eventIndicator, and iconTwinkle animations for immersive medieval fantasy experience."
 
   - task: "Enhanced Boundary Drawing System"
     implemented: true
