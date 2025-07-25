@@ -336,7 +336,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Government Position Management"
+    - "Enhanced Harptos Calendar System"
   stuck_tasks: 
     []
   test_all: false
