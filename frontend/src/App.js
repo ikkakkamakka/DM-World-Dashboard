@@ -6,7 +6,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 const WS_URL = BACKEND_URL.replace('https://', 'wss://').replace('http://', 'ws://');
 
-// Harptos Calendar System
+// Enhanced Harptos Calendar System for D&D
 const HARPTOS_MONTHS = [
   { name: 'Hammer', alias: 'Deepwinter', days: 30 },
   { name: 'Alturiak', alias: 'The Claw of Winter', days: 30 },
@@ -23,37 +23,38 @@ const HARPTOS_MONTHS = [
 ];
 
 const SPECIAL_DAYS = [
-  { name: 'Midwinter', afterMonth: 0, description: 'A festival day of reflection and celebration' },
-  { name: 'Greengrass', afterMonth: 3, description: 'Celebrates the arrival of spring' },
-  { name: 'Midsummer', afterMonth: 6, description: 'A day of celebration and festivity' },
-  { name: 'Highharvestide', afterMonth: 8, description: 'Marks the harvest time' },
-  { name: 'The Feast of the Moon', afterMonth: 10, description: 'Honors the dead and ancestors' }
+  { name: 'Midwinter', after_month: 0, description: 'A festival day of reflection and celebration', type: 'holiday' },
+  { name: 'Greengrass', after_month: 3, description: 'Celebrates the arrival of spring', type: 'holiday' },
+  { name: 'Midsummer', after_month: 6, description: 'A day of celebration and festivity', type: 'holiday' },
+  { name: 'Highharvestide', after_month: 8, description: 'Marks the harvest time', type: 'holiday' },
+  { name: 'The Feast of the Moon', after_month: 10, description: 'Honors the dead and ancestors', type: 'holiday' }
 ];
 
-// Base conversion: 1492 DR = 2020 AD
-const DR_BASE_YEAR = 1492;
-const AD_BASE_YEAR = 2020;
-
+// Fixed DR to real world time conversion
 const convertRealTimeToHarptos = () => {
   const now = new Date();
-  const currentYear = now.getFullYear();
-  const dayOfYear = Math.floor((now - new Date(currentYear, 0, 0)) / (1000 * 60 * 60 * 24));
   
-  // Calculate DR year
-  const drYear = DR_BASE_YEAR + (currentYear - AD_BASE_YEAR);
+  // Base conversion: 1492 DR = 2020 AD (fixed reference point)
+  const DR_BASE_YEAR = 1492;
+  const AD_BASE_YEAR = 2020;
   
-  // Convert day of year to Harptos date
+  // Calculate current DR year
+  const drYear = DR_BASE_YEAR + (now.getFullYear() - AD_BASE_YEAR);
+  
+  // Get day of year (1-365/366)
+  const dayOfYear = now.getDate() + Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+  
+  // Convert day of year to Harptos month and day
   let remainingDays = dayOfYear - 1; // 0-indexed
   let currentMonth = 0;
   let currentDay = 1;
   let specialDay = null;
   
-  // Account for special days and months
   for (let month = 0; month < HARPTOS_MONTHS.length; month++) {
-    // Check for special day before this month
-    const specialBefore = SPECIAL_DAYS.find(sd => sd.afterMonth === month);
+    // Check for special day after this month
+    const specialBefore = SPECIAL_DAYS.find(sd => sd.after_month === month);
     if (specialBefore && remainingDays === 0) {
-      specialDay = specialBefore;
+      specialDay = specialBefore.name;
       break;
     } else if (specialBefore && remainingDays > 0) {
       remainingDays--; // Account for special day
@@ -68,16 +69,27 @@ const convertRealTimeToHarptos = () => {
     remainingDays -= HARPTOS_MONTHS[month].days;
   }
   
+  // Calculate tenday and season
+  const tenday = Math.min(3, Math.floor((currentDay - 1) / 10) + 1);
+  
+  let season;
+  if ([11, 0, 1].includes(currentMonth)) season = 'winter';
+  else if ([2, 3, 4].includes(currentMonth)) season = 'spring';
+  else if ([5, 6, 7].includes(currentMonth)) season = 'summer';
+  else season = 'autumn';
+  
   // Check for Shieldmeet (leap year every 4 years)
   const isShieldmeetYear = drYear % 4 === 0;
   if (isShieldmeetYear && dayOfYear > 180 && dayOfYear < 182) { // Around midsummer
-    specialDay = { name: 'Shieldmeet', description: 'A day of open council and treaty making' };
+    specialDay = 'Shieldmeet';
   }
   
   return {
     drYear,
     month: currentMonth,
     day: currentDay,
+    tenday,
+    season,
     monthName: HARPTOS_MONTHS[currentMonth]?.name || 'Unknown',
     monthAlias: HARPTOS_MONTHS[currentMonth]?.alias || '',
     specialDay,
