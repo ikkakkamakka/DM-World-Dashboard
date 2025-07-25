@@ -1285,18 +1285,138 @@ async def initialize_kingdom():
         await db.kingdoms.insert_one(kingdom.dict())
         logging.info("Sample kingdom data initialized")
 
-# Calendar Events and Voting System
+# Enhanced Harptos Calendar System and Date Management
+class CampaignDate(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    dr_year: int = 1492  # Dale Reckoning year
+    month: int = 0  # 0-11 for months
+    day: int = 1  # 1-30 for days
+    tenday: int = 1  # 1-3 for tendays within month
+    season: str = "winter"  # winter, spring, summer, autumn
+    is_leap_year: bool = False
+    special_day: Optional[str] = None  # Current special day if any
+    last_updated: datetime = Field(default_factory=datetime.utcnow)
+    updated_by: str = "system"
+
 class CalendarEvent(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    kingdom_id: str
     title: str
     description: str
-    event_date: dict  # {year: int, month: int, day: int}
-    event_type: str = "custom"  # custom, voting, holiday, meeting, etc.
-    created_by: str = "DM"
+    event_type: str  # "holiday", "city", "custom"
+    city_name: Optional[str] = None  # For city-specific events
+    kingdom_id: str
+    event_date: dict  # {dr_year: int, month: int, day: int}
     is_recurring: bool = False
     recurrence_pattern: Optional[str] = None  # "yearly", "monthly", etc.
+    created_by: str = "DM"
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    
+class CampaignDateUpdate(BaseModel):
+    dr_year: int
+    month: int
+    day: int
+    updated_by: str = "DM"
+
+class EventCreate(BaseModel):
+    title: str
+    description: str
+    event_type: str = "custom"  # "holiday", "city", "custom"
+    city_name: Optional[str] = None
+    event_date: dict
+    is_recurring: bool = False
+    recurrence_pattern: Optional[str] = None
+
+def calculate_tenday_and_season(month: int, day: int) -> tuple:
+    """Calculate tenday (1-3) and season based on month and day"""
+    tenday = min(3, ((day - 1) // 10) + 1)
+    
+    # Seasons based on Faerûn calendar
+    if month in [11, 0, 1]:  # Nightal, Hammer, Alturiak
+        season = "winter"
+    elif month in [2, 3, 4]:  # Ches, Tarsakh, Mirtul
+        season = "spring"
+    elif month in [5, 6, 7]:  # Kythorn, Flamerule, Eleasis
+        season = "summer"
+    else:  # Eleint, Marpenoth, Uktar
+        season = "autumn"
+        
+    return tenday, season
+
+def is_leap_year(dr_year: int) -> bool:
+    """Check if a DR year is a leap year (Shieldmeet occurs)"""
+    return dr_year % 4 == 0
+
+def convert_real_time_to_harptos() -> dict:
+    """Convert real world time to Harptos calendar with proper DR math"""
+    now = datetime.utcnow()
+    
+    # Base conversion: 1492 DR = 2020 AD (fixed reference point)
+    DR_BASE_YEAR = 1492
+    AD_BASE_YEAR = 2020
+    
+    # Calculate current DR year
+    dr_year = DR_BASE_YEAR + (now.year - AD_BASE_YEAR)
+    
+    # Get day of year (1-365/366)
+    day_of_year = now.timetuple().tm_yday
+    
+    # Account for leap year differences between real world and Harptos
+    # Harptos has Shieldmeet every 4 years after Midsummer
+    is_harptos_leap = is_leap_year(dr_year)
+    
+    # Convert day of year to Harptos month and day
+    remaining_days = day_of_year - 1  # 0-indexed
+    current_month = 0
+    current_day = 1
+    special_day = None
+    
+    for month_idx, month_data in enumerate(HARPTOS_MONTHS):
+        month_days = month_data["days"]
+        
+        # Check for special day after this month
+        special_after = next((sd for sd in SPECIAL_DAYS if sd["after_month"] == month_idx), None)
+        
+        if remaining_days < month_days:
+            current_month = month_idx
+            current_day = remaining_days + 1
+            break
+        
+        remaining_days -= month_days
+        
+        # Account for special day if it exists
+        if special_after:
+            if remaining_days == 0:
+                special_day = special_after["name"]
+                break
+            elif remaining_days > 0:
+                remaining_days -= 1
+    
+    # Check for Shieldmeet (occurs after Midsummer in leap years)
+    if is_harptos_leap and current_month == 6 and current_day == 30:
+        # Check if we should be on Shieldmeet instead
+        if day_of_year > 182:  # After theoretical Midsummer + Shieldmeet
+            special_day = "Shieldmeet"
+    
+    tenday, season = calculate_tenday_and_season(current_month, current_day)
+    
+    return {
+        "dr_year": dr_year,
+        "month": current_month,
+        "day": current_day,
+        "tenday": tenday,
+        "season": season,
+        "month_name": HARPTOS_MONTHS[current_month]["name"],
+        "month_alias": HARPTOS_MONTHS[current_month]["alias"],
+        "special_day": special_day,
+        "is_leap_year": is_harptos_leap,
+        "real_time": now
+    }
+
+def format_harptos_date(date_obj: dict) -> str:
+    """Format Harptos date into readable string"""
+    if date_obj.get("special_day"):
+        return f"{date_obj['special_day']}, {date_obj['dr_year']} DR"
+    return f"{date_obj['day']} {date_obj['month_name']}, {date_obj['dr_year']} DR"
     
 class VotingSession(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
