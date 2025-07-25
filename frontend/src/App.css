@@ -1601,17 +1601,34 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  border-bottom: 2px solid #8b7355;
-  padding-bottom: 1rem;
+  padding: 1rem 0;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.05) 0%, transparent 50%, rgba(212, 175, 55, 0.05) 100%);
+  border-radius: 10px;
+  animation: headerShimmer 3s ease-in-out infinite alternate;
   flex-wrap: wrap;
   gap: 1rem;
+}
+
+@keyframes headerShimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
 .calendar-header h2 {
   color: #d4af37;
   font-family: 'Cinzel', serif;
-  margin: 0;
   font-size: 2rem;
+  text-shadow: 
+    0 0 10px rgba(212, 175, 55, 0.5),
+    0 0 20px rgba(212, 175, 55, 0.3);
+  margin: 0;
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  0% { text-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 0 0 20px rgba(212, 175, 55, 0.3); }
+  100% { text-shadow: 0 0 15px rgba(212, 175, 55, 0.7), 0 0 25px rgba(212, 175, 55, 0.4); }
 }
 
 .calendar-controls {
