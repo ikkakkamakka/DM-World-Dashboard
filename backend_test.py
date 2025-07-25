@@ -68,7 +68,18 @@ class BackendTester:
             'city_update_multi_kingdom': False,
             'city_deletion_multi_kingdom': False,
             'city_retrieval_cross_kingdom': False,
-            'city_multi_kingdom_isolation': False
+            'city_multi_kingdom_isolation': False,
+            # Authentication System Tests
+            'auth_signup': False,
+            'auth_login': False,
+            'auth_me': False,
+            'auth_verify_token': False,
+            'auth_logout': False,
+            'auth_password_hashing': False,
+            'auth_jwt_tokens': False,
+            'auth_duplicate_validation': False,
+            'auth_invalid_credentials': False,
+            'auth_separate_database': False
         }
         self.errors = []
 
