@@ -50,10 +50,13 @@ class AuthTester:
         """Test user registration with valid data"""
         print("\n📝 Testing User Registration...")
         try:
-            # Test data
+            import time
+            timestamp = str(int(time.time()))
+            
+            # Test data with unique username
             test_user = {
-                "username": "testuser_auth_2025",
-                "email": "testuser@faeruncampaign.com",
+                "username": f"testuser_auth_{timestamp}",
+                "email": f"testuser_{timestamp}@faeruncampaign.com",
                 "password": "SecurePassword123!"
             }
             
