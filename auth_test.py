@@ -268,10 +268,13 @@ class AuthTester:
         """Test that passwords are properly hashed with bcrypt"""
         print("\n🔒 Testing Password Hashing Security...")
         try:
+            import time
+            timestamp = str(int(time.time()))
+            
             # Create another test user to verify password hashing
             test_user_2 = {
-                "username": "hashtest_user_2025",
-                "email": "hashtest@faeruncampaign.com", 
+                "username": f"hashtest_user_{timestamp}",
+                "email": f"hashtest_{timestamp}@faeruncampaign.com", 
                 "password": "PlainTextPassword123"
             }
             
