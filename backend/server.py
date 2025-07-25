@@ -1433,14 +1433,6 @@ class VotingSession(BaseModel):
     results: Optional[Dict[str, int]] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-class CalendarEventCreate(BaseModel):
-    title: str
-    description: str
-    event_date: dict
-    event_type: str = "custom"
-    is_recurring: bool = False
-    recurrence_pattern: Optional[str] = None
-
 class VotingSessionCreate(BaseModel):
     city_id: Optional[str] = None
     title: str
