@@ -155,229 +155,238 @@ const getSeasonalEvents = (harptos) => {
   return events;
 };
 
-// Enhanced Harptos Calendar Component with Events and Voting
+// Enhanced Harptos Calendar Component with Full Event Management
 const HarptosCalendar = ({ kingdom, isVisible }) => {
-  const [currentHarptos, setCurrentHarptos] = useState(convertRealTimeToHarptos());
-  const [seasonalEvents, setSeasonalEvents] = useState([]);
-  const [calendarMode, setCalendarMode] = useState('current'); // 'current' or 'manual'
-  const [viewMode, setViewMode] = useState('calendar'); // 'calendar', 'events', 'voting'
-  const [manualDate, setManualDate] = useState({ year: 1492, month: 0, day: 1 });
-  const [customEvents, setCustomEvents] = useState([]);
-  const [votingSessions, setVotingSessions] = useState([]);
-  
-  // Event creation state
+  const [campaignDate, setCampaignDate] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [calendarMode, setCalendarMode] = useState('auto'); // 'auto' or 'manual'
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar', 'events', 'upcoming'
   const [showEventForm, setShowEventForm] = useState(false);
-  const [newEvent, setNewEvent] = useState({
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  
+  // Event form state
+  const [eventForm, setEventForm] = useState({
     title: '',
     description: '',
-    event_date: { year: 1492, month: 0, day: 1 },
     event_type: 'custom',
+    city_name: '',
+    event_date: { dr_year: 1492, month: 0, day: 1 },
     is_recurring: false
   });
 
-  // Voting creation state
-  const [showVotingForm, setShowVotingForm] = useState(false);
-  const [newVoting, setNewVoting] = useState({
-    title: '',
-    description: '',
-    options: ['', ''],
-    start_date: { year: 1492, month: 0, day: 1 },
-    end_date: { year: 1492, month: 0, day: 7 },
-    city_id: null
-  });
+  // Manual date control
+  const [manualDate, setManualDate] = useState({ dr_year: 1492, month: 0, day: 1 });
 
   useEffect(() => {
     if (isVisible && kingdom) {
-      const updateCalendar = () => {
-        const harptos = convertRealTimeToHarptos();
-        setCurrentHarptos(harptos);
-        setSeasonalEvents(getSeasonalEvents(harptos));
-      };
+      fetchCampaignDate();
+      fetchCalendarEvents();
+      fetchUpcomingEvents();
       
-      updateCalendar();
-      fetchCustomEvents();
-      fetchVotingSessions();
-      
-      const interval = setInterval(updateCalendar, 60000); // Update every minute
+      // Update every minute if in auto mode
+      const interval = setInterval(() => {
+        if (calendarMode === 'auto') {
+          fetchCampaignDate();
+        }
+      }, 60000);
       
       return () => clearInterval(interval);
     }
-  }, [isVisible, kingdom]);
+  }, [isVisible, kingdom, calendarMode]);
 
-  const fetchCustomEvents = async () => {
+  const fetchCampaignDate = async () => {
+    if (!kingdom) return;
+    try {
+      const response = await fetch(`${API}/campaign-date/${kingdom.id}`);
+      if (response.ok) {
+        const date = await response.json();
+        setCampaignDate(date);
+        if (calendarMode === 'manual') {
+          setManualDate({
+            dr_year: date.dr_year,
+            month: date.month,
+            day: date.day
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching campaign date:', error);
+    }
+  };
+
+  const fetchCalendarEvents = async () => {
     if (!kingdom) return;
     try {
       const response = await fetch(`${API}/calendar-events/${kingdom.id}`);
       if (response.ok) {
         const events = await response.json();
-        setCustomEvents(events);
+        setEvents(events);
       }
     } catch (error) {
       console.error('Error fetching calendar events:', error);
     }
   };
 
-  const fetchVotingSessions = async () => {
+  const fetchUpcomingEvents = async () => {
     if (!kingdom) return;
     try {
-      const response = await fetch(`${API}/voting-sessions/${kingdom.id}`);
+      const response = await fetch(`${API}/calendar-events/${kingdom.id}/upcoming?days=10`);
       if (response.ok) {
-        const sessions = await response.json();
-        setVotingSessions(sessions);
+        const upcomingEvents = await response.json();
+        setUpcomingEvents(upcomingEvents);
       }
     } catch (error) {
-      console.error('Error fetching voting sessions:', error);
+      console.error('Error fetching upcoming events:', error);
     }
   };
 
-  const handleCreateEvent = async (e) => {
-    e.preventDefault();
+  const handleManualDateUpdate = async () => {
+    if (!kingdom) return;
     try {
-      const response = await fetch(`${API}/calendar-events?kingdom_id=${kingdom.id}`, {
-        method: 'POST',
+      const response = await fetch(`${API}/campaign-date/${kingdom.id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newEvent)
+        body: JSON.stringify(manualDate)
       });
+      
+      if (response.ok) {
+        fetchCampaignDate();
+        fetchUpcomingEvents();
+      }
+    } catch (error) {
+      console.error('Error updating campaign date:', error);
+    }
+  };
 
+  const handleCreateEvent = async () => {
+    if (!kingdom) return;
+    try {
+      const eventData = { ...eventForm };
+      const url = editingEvent 
+        ? `${API}/calendar-events/${editingEvent.id}`
+        : `${API}/calendar-events?kingdom_id=${kingdom.id}`;
+      
+      const method = editingEvent ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventData)
+      });
+      
       if (response.ok) {
         setShowEventForm(false);
-        setNewEvent({
-          title: '',
-          description: '',
-          event_date: { year: 1492, month: 0, day: 1 },
-          event_type: 'custom',
-          is_recurring: false
-        });
-        fetchCustomEvents();
-        alert('Calendar event created successfully!');
-      } else {
-        throw new Error('Failed to create event');
+        setEditingEvent(null);
+        resetEventForm();
+        fetchCalendarEvents();
+        fetchUpcomingEvents();
       }
     } catch (error) {
-      console.error('Error creating event:', error);
-      alert('Failed to create event. Please try again.');
+      console.error('Error creating/updating event:', error);
     }
   };
 
-  const handleCreateVoting = async (e) => {
-    e.preventDefault();
+  const handleDeleteEvent = async (eventId) => {
     try {
-      // Filter out empty options
-      const validOptions = newVoting.options.filter(option => option.trim() !== '');
-      if (validOptions.length < 2) {
-        alert('Please provide at least 2 voting options');
-        return;
-      }
-
-      const response = await fetch(`${API}/voting-sessions?kingdom_id=${kingdom.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...newVoting,
-          options: validOptions
-        })
+      const response = await fetch(`${API}/calendar-events/${eventId}`, {
+        method: 'DELETE'
       });
-
+      
       if (response.ok) {
-        setShowVotingForm(false);
-        setNewVoting({
-          title: '',
-          description: '',
-          options: ['', ''],
-          start_date: { year: 1492, month: 0, day: 1 },
-          end_date: { year: 1492, month: 0, day: 7 },
-          city_id: null
-        });
-        fetchVotingSessions();
-        alert('Voting session created successfully!');
-      } else {
-        throw new Error('Failed to create voting session');
+        fetchCalendarEvents();
+        fetchUpcomingEvents();
       }
     } catch (error) {
-      console.error('Error creating voting session:', error);
-      alert('Failed to create voting session. Please try again.');
+      console.error('Error deleting event:', error);
     }
   };
 
-  const handleCastVote = async (sessionId, citizenId, option) => {
+  const generateCityEvents = async () => {
+    if (!kingdom) return;
     try {
-      const response = await fetch(`${API}/voting-sessions/${sessionId}/vote`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          citizen_id: citizenId,
-          option: option
-        })
+      const response = await fetch(`${API}/calendar-events/generate-city-events?kingdom_id=${kingdom.id}&count=5&date_range_days=30`, {
+        method: 'POST'
       });
-
+      
       if (response.ok) {
-        fetchVotingSessions();
-        alert('Vote cast successfully!');
-      } else {
-        const error = await response.text();
-        throw new Error(error);
+        fetchCalendarEvents();
+        fetchUpcomingEvents();
       }
     } catch (error) {
-      console.error('Error casting vote:', error);
-      alert(`Failed to cast vote: ${error.message}`);
+      console.error('Error generating city events:', error);
     }
   };
 
-  const handleCloseVoting = async (sessionId) => {
-    try {
-      const response = await fetch(`${API}/voting-sessions/${sessionId}/close`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      if (response.ok) {
-        fetchVotingSessions();
-        alert('Voting session closed and results calculated!');
-      } else {
-        throw new Error('Failed to close voting session');
-      }
-    } catch (error) {
-      console.error('Error closing voting session:', error);
-      alert('Failed to close voting session. Please try again.');
-    }
+  const resetEventForm = () => {
+    setEventForm({
+      title: '',
+      description: '',
+      event_type: 'custom',
+      city_name: '',
+      event_date: campaignDate ? 
+        { dr_year: campaignDate.dr_year, month: campaignDate.month, day: campaignDate.day } :
+        { dr_year: 1492, month: 0, day: 1 },
+      is_recurring: false
+    });
   };
 
-  const addVotingOption = () => {
-    setNewVoting(prev => ({
-      ...prev,
-      options: [...prev.options, '']
-    }));
+  const openEditEvent = (event) => {
+    setEditingEvent(event);
+    setEventForm({
+      title: event.title,
+      description: event.description,
+      event_type: event.event_type,
+      city_name: event.city_name || '',
+      event_date: event.event_date,
+      is_recurring: event.is_recurring
+    });
+    setShowEventForm(true);
   };
 
-  const updateVotingOption = (index, value) => {
-    setNewVoting(prev => ({
-      ...prev,
-      options: prev.options.map((option, i) => i === index ? value : option)
-    }));
-  };
-
-  const removeVotingOption = (index) => {
-    if (newVoting.options.length > 2) {
-      setNewVoting(prev => ({
-        ...prev,
-        options: prev.options.filter((_, i) => i !== index)
-      }));
-    }
-  };
-
-  const formatHarptosDate = (dateObj) => {
-    return `${dateObj.day} ${HARPTOS_MONTHS[dateObj.month]?.name || 'Unknown'}, ${dateObj.year} DR`;
-  };
-
-  const getEventForDate = (year, month, day) => {
-    return customEvents.filter(event => 
-      event.event_date.year === year && 
+  const getEventsForDate = (dr_year, month, day) => {
+    return events.filter(event => 
+      event.event_date.dr_year === dr_year && 
       event.event_date.month === month && 
       event.event_date.day === day
     );
   };
 
-  if (!isVisible) return null;
+  const getHolidaysForDate = (month, day) => {
+    return SPECIAL_DAYS.filter(special => 
+      special.after_month === month && day === 30
+    );
+  };
+
+  const formatHarptosDate = (dateObj) => {
+    if (dateObj.special_day) {
+      return `${dateObj.special_day}, ${dateObj.dr_year} DR`;
+    }
+    return `${dateObj.day} ${HARPTOS_MONTHS[dateObj.month]?.name || 'Unknown'}, ${dateObj.dr_year} DR`;
+  };
+
+  const getEventIcon = (eventType) => {
+    switch(eventType) {
+      case 'holiday': return '🎉';
+      case 'city': return '🏘️';
+      case 'custom': return '📝';
+      default: return '📅';
+    }
+  };
+
+  const getEventTypeColor = (eventType) => {
+    switch(eventType) {
+      case 'holiday': return '#d4af37';
+      case 'city': return '#4ade80';
+      case 'custom': return '#8b5cf6';
+      default: return '#6b7280';
+    }
+  };
+
+  if (!isVisible || !kingdom) return null;
+
+  const displayDate = campaignDate || convertRealTimeToHarptos();
 
   return (
     <div className="harptos-calendar">
@@ -386,435 +395,296 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
         <div className="calendar-controls">
           <div className="calendar-mode-selector">
             <button 
-              className={`mode-btn ${calendarMode === 'current' ? 'active' : ''}`}
-              onClick={() => setCalendarMode('current')}
+              className={`mode-btn ${calendarMode === 'auto' ? 'active' : ''}`}
+              onClick={() => setCalendarMode('auto')}
             >
-              Current Time
+              Auto Time
             </button>
             <button 
               className={`mode-btn ${calendarMode === 'manual' ? 'active' : ''}`}
               onClick={() => setCalendarMode('manual')}
             >
-              Campaign Date
+              Manual Control
             </button>
           </div>
-          
           <div className="view-mode-selector">
             <button 
               className={`mode-btn ${viewMode === 'calendar' ? 'active' : ''}`}
               onClick={() => setViewMode('calendar')}
             >
-              📅 Calendar
+              Calendar
+            </button>
+            <button 
+              className={`mode-btn ${viewMode === 'upcoming' ? 'active' : ''}`}
+              onClick={() => setViewMode('upcoming')}
+            >
+              Upcoming
             </button>
             <button 
               className={`mode-btn ${viewMode === 'events' ? 'active' : ''}`}
               onClick={() => setViewMode('events')}
             >
-              🎭 Events
-            </button>
-            <button 
-              className={`mode-btn ${viewMode === 'voting' ? 'active' : ''}`}
-              onClick={() => setViewMode('voting')}
-            >
-              🗳️ Voting
+              All Events
             </button>
           </div>
         </div>
       </div>
 
-      {/* Calendar View */}
+      <div className="current-date-display">
+        <h3>{formatHarptosDate(displayDate)}</h3>
+        <p className="season-info">
+          {displayDate.season && (
+            <span className={`season-${displayDate.season}`}>
+              {displayDate.season.charAt(0).toUpperCase() + displayDate.season.slice(1)} - Tenday {displayDate.tenday || 1}
+            </span>
+          )}
+        </p>
+        {displayDate.special_day && (
+          <div className="special-day-notice">
+            🎉 Today is {displayDate.special_day}!
+          </div>
+        )}
+      </div>
+
+      {calendarMode === 'manual' && (
+        <div className="manual-date-controls">
+          <h4>DM Date Control</h4>
+          <div className="date-inputs">
+            <input
+              type="number"
+              placeholder="Year"
+              value={manualDate.dr_year}
+              onChange={(e) => setManualDate(prev => ({...prev, dr_year: parseInt(e.target.value) || 1492}))}
+            />
+            <select 
+              value={manualDate.month}
+              onChange={(e) => setManualDate(prev => ({...prev, month: parseInt(e.target.value)}))}
+            >
+              {HARPTOS_MONTHS.map((month, index) => (
+                <option key={index} value={index}>
+                  {month.name} ({month.alias})
+                </option>
+              ))}
+            </select>
+            <input
+              type="number"
+              placeholder="Day"
+              min="1"
+              max="30"
+              value={manualDate.day}
+              onChange={(e) => setManualDate(prev => ({...prev, day: parseInt(e.target.value) || 1}))}
+            />
+            <button className="btn-primary" onClick={handleManualDateUpdate}>
+              Update Campaign Date
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="calendar-actions">
+        <button className="btn-primary" onClick={() => {
+          resetEventForm();
+          setShowEventForm(true);
+        }}>
+          Add Custom Event
+        </button>
+        <button className="btn-secondary" onClick={generateCityEvents}>
+          Generate City Events
+        </button>
+      </div>
+
       {viewMode === 'calendar' && (
-        <>
-          {calendarMode === 'current' ? (
-            <div className="current-date-display">
-              <div className="main-date">
-                <h3>{formatHarptosDate(currentHarptos)}</h3>
-                <p className="month-alias">{currentHarptos.monthAlias}</p>
-                {currentHarptos.specialDay && (
-                  <div className="special-day-notice">
-                    <span className="special-day-icon">✨</span>
-                    <span>{currentHarptos.specialDay.description}</span>
-                  </div>
-                )}
-              </div>
+        <div className="calendar-grid">
+          <h4>Month of {HARPTOS_MONTHS[displayDate.month]?.name || 'Unknown'}</h4>
+          <div className="days-grid">
+            {Array.from({ length: 30 }, (_, i) => {
+              const day = i + 1;
+              const dayEvents = getEventsForDate(displayDate.drYear, displayDate.month, day);
+              const holidays = getHolidaysForDate(displayDate.month, day);
+              const isToday = displayDate.day === day;
+              const hasEvents = dayEvents.length > 0 || holidays.length > 0;
               
-              <div className="real-time-reference">
-                <small>Real Time: {currentHarptos.realTime.toLocaleString()}</small>
-                <small>Conversion: 1492 DR = 2020 AD</small>
-                {currentHarptos.isShieldmeetYear && (
-                  <small className="shieldmeet-notice">🛡️ This is a Shieldmeet year!</small>
-                )}
-              </div>
-            </div>
+              return (
+                <div 
+                  key={day} 
+                  className={`calendar-day ${isToday ? 'today' : ''} ${hasEvents ? 'has-events' : ''}`}
+                  onClick={() => setSelectedDate({ dr_year: displayDate.drYear, month: displayDate.month, day })}
+                  title={
+                    hasEvents 
+                      ? `${holidays.map(h => `🎉 ${h.name}`).join(', ')} ${dayEvents.map(e => `${getEventIcon(e.event_type)} ${e.title} ${e.city_name ? `(${e.city_name})` : ''}`).join(', ')}`
+                      : `${day} ${HARPTOS_MONTHS[displayDate.month]?.name}`
+                  }
+                >
+                  <span className="day-number">{day}</span>
+                  {hasEvents && (
+                    <div className="event-indicators">
+                      {holidays.map((holiday, idx) => (
+                        <span key={idx} className="holiday-indicator">🎉</span>
+                      ))}
+                      {dayEvents.map((event, idx) => (
+                        <span 
+                          key={idx} 
+                          className="event-indicator"
+                          style={{ color: getEventTypeColor(event.event_type) }}
+                        >
+                          {getEventIcon(event.event_type)}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {viewMode === 'upcoming' && (
+        <div className="upcoming-events">
+          <h4>Next 10 Days</h4>
+          {upcomingEvents.length === 0 ? (
+            <p>No upcoming events scheduled.</p>
           ) : (
-            <div className="manual-date-selector">
-              <h3>Set Campaign Date</h3>
-              <div className="date-inputs">
-                <div className="input-group">
-                  <label>Year (DR):</label>
-                  <input 
-                    type="number" 
-                    value={manualDate.year}
-                    onChange={(e) => setManualDate(prev => ({...prev, year: parseInt(e.target.value)}))}
-                    min="1"
-                  />
+            <div className="upcoming-list">
+              {upcomingEvents.map((event, index) => (
+                <div key={event.id || index} className="upcoming-event">
+                  <div className="event-date">
+                    {event.days_from_now === 0 ? 'Today' : `In ${event.days_from_now} day${event.days_from_now > 1 ? 's' : ''}`}
+                  </div>
+                  <div className="event-details">
+                    <span className="event-icon" style={{ color: getEventTypeColor(event.event_type) }}>
+                      {getEventIcon(event.event_type)}
+                    </span>
+                    <div>
+                      <div className="event-title">
+                        {event.title}
+                        {event.city_name && <span className="city-badge">{event.city_name}</span>}
+                      </div>
+                      <div className="event-description">{event.description}</div>
+                    </div>
+                  </div>
                 </div>
-                <div className="input-group">
-                  <label>Month:</label>
-                  <select 
-                    value={manualDate.month}
-                    onChange={(e) => setManualDate(prev => ({...prev, month: parseInt(e.target.value)}))}
-                  >
-                    {HARPTOS_MONTHS.map((month, index) => (
-                      <option key={index} value={index}>
-                        {month.name} ({month.alias})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="input-group">
-                  <label>Day:</label>
-                  <input 
-                    type="number" 
-                    value={manualDate.day}
-                    onChange={(e) => setManualDate(prev => ({...prev, day: parseInt(e.target.value)}))}
-                    min="1"
-                    max="30"
-                  />
-                </div>
-              </div>
-              <div className="manual-date-display">
-                <p>Campaign Date: {formatHarptosDate(manualDate)}</p>
-              </div>
+              ))}
             </div>
           )}
-
-          <div className="seasonal-events">
-            <h4>Seasonal Information</h4>
-            <div className="events-list">
-              {seasonalEvents.map((event, index) => (
-                <div key={index} className={`event-item ${event.type}`}>
-                  <span className="event-title">{event.title}</span>
-                  <span className="event-description">{event.description}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="calendar-grid">
-            <h4>Month of {HARPTOS_MONTHS[currentHarptos.month]?.name || 'Unknown'}</h4>
-            <div className="days-grid">
-              {Array.from({ length: 30 }, (_, i) => {
-                const dayEvents = getEventForDate(currentHarptos.drYear, currentHarptos.month, i + 1);
-                return (
-                  <div 
-                    key={i} 
-                    className={`day-cell ${i + 1 === currentHarptos.day ? 'current-day' : ''} ${dayEvents.length > 0 ? 'has-events' : ''}`}
-                    title={dayEvents.length > 0 ? dayEvents.map(e => e.title).join(', ') : ''}
-                  >
-                    {i + 1}
-                    {dayEvents.length > 0 && <span className="event-indicator">•</span>}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </>
+        </div>
       )}
 
-      {/* Events View */}
       {viewMode === 'events' && (
-        <div className="events-management">
-          <div className="events-header">
-            <h3>Calendar Events</h3>
-            <button 
-              className="btn-primary"
-              onClick={() => setShowEventForm(true)}
-            >
-              ➕ Add Event
-            </button>
-          </div>
-
+        <div className="all-events">
+          <h4>All Scheduled Events</h4>
           <div className="events-list">
-            {customEvents.map(event => (
-              <div key={event.id} className="custom-event-item">
-                <div className="event-main">
-                  <h4>{event.title}</h4>
-                  <p className="event-date">{formatHarptosDate(event.event_date)}</p>
-                  <p className="event-description">{event.description}</p>
-                  <span className={`event-type-badge ${event.event_type}`}>
-                    {event.event_type}
+            {events.map(event => (
+              <div key={event.id} className="event-card">
+                <div className="event-header">
+                  <span className="event-icon" style={{ color: getEventTypeColor(event.event_type) }}>
+                    {getEventIcon(event.event_type)}
                   </span>
+                  <div className="event-title">{event.title}</div>
+                  <div className="event-actions">
+                    <button onClick={() => openEditEvent(event)}>Edit</button>
+                    <button onClick={() => handleDeleteEvent(event.id)}>Delete</button>
+                  </div>
                 </div>
+                <div className="event-info">
+                  <div>Date: {event.event_date.day} {HARPTOS_MONTHS[event.event_date.month]?.name}, {event.event_date.dr_year} DR</div>
+                  {event.city_name && <div>City: {event.city_name}</div>}
+                  <div>Type: {event.event_type}</div>
+                </div>
+                <div className="event-description">{event.description}</div>
               </div>
             ))}
-            
-            {customEvents.length === 0 && (
-              <div className="no-events-message">
-                <p>No custom events scheduled. Create your first event!</p>
-              </div>
-            )}
           </div>
         </div>
       )}
 
-      {/* Voting View */}
-      {viewMode === 'voting' && (
-        <div className="voting-management">
-          <div className="voting-header">
-            <h3>Voting Sessions</h3>
-            <button 
-              className="btn-primary"
-              onClick={() => setShowVotingForm(true)}
-            >
-              🗳️ Create Vote
-            </button>
-          </div>
-
-          <div className="voting-sessions-list">
-            {votingSessions.map(session => (
-              <div key={session.id} className={`voting-session-item status-${session.status}`}>
-                <div className="session-header">
-                  <h4>{session.title}</h4>
-                  <span className={`status-badge ${session.status}`}>
-                    {session.status.toUpperCase()}
-                  </span>
-                </div>
-                
-                <p className="session-description">{session.description}</p>
-                
-                <div className="session-dates">
-                  <span>Start: {formatHarptosDate(session.start_date)}</span>
-                  <span>End: {formatHarptosDate(session.end_date)}</span>
-                </div>
-
-                <div className="voting-options">
-                  <h5>Options:</h5>
-                  {session.options.map((option, index) => (
-                    <div key={index} className="voting-option">
-                      <span className="option-text">{option}</span>
-                      {session.status === 'completed' && session.results && (
-                        <span className="vote-count">
-                          {session.results[option] || 0} votes
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {session.status === 'active' && (
-                  <div className="session-actions">
-                    <button 
-                      className="btn-secondary"
-                      onClick={() => handleCloseVoting(session.id)}
-                    >
-                      Close Voting
-                    </button>
-                  </div>
-                )}
-
-                {session.status === 'completed' && session.results && (
-                  <div className="voting-results">
-                    <h5>Results:</h5>
-                    <div className="results-summary">
-                      <span>Total Votes: {Object.values(session.results).reduce((a, b) => a + b, 0)}</span>
-                      <span>Winner: {Object.entries(session.results).reduce((a, b) => a[1] > b[1] ? a : b)[0]}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-            
-            {votingSessions.length === 0 && (
-              <div className="no-voting-message">
-                <p>No voting sessions created. Start your first vote!</p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Event Creation Modal */}
-      <Modal isOpen={showEventForm} onClose={() => setShowEventForm(false)} title="Create Calendar Event">
-        <form onSubmit={handleCreateEvent}>
-          <div className="form-group">
-            <label>Event Title:</label>
+      {/* Event Form Modal */}
+      <Modal isOpen={showEventForm} onClose={() => {
+        setShowEventForm(false);
+        setEditingEvent(null);
+        resetEventForm();
+      }} title={editingEvent ? 'Edit Event' : 'Create New Event'}>
+        <div className="event-form">
+          <input
+            type="text"
+            placeholder="Event Title"
+            value={eventForm.title}
+            onChange={(e) => setEventForm(prev => ({...prev, title: e.target.value}))}
+          />
+          <textarea
+            placeholder="Event Description"
+            value={eventForm.description}
+            onChange={(e) => setEventForm(prev => ({...prev, description: e.target.value}))}
+          />
+          <select 
+            value={eventForm.event_type}
+            onChange={(e) => setEventForm(prev => ({...prev, event_type: e.target.value}))}
+          >
+            <option value="custom">Custom Event</option>
+            <option value="holiday">Holiday/Festival</option>
+            <option value="city">City Event</option>
+          </select>
+          <input
+            type="text"
+            placeholder="City Name (optional)"
+            value={eventForm.city_name}
+            onChange={(e) => setEventForm(prev => ({...prev, city_name: e.target.value}))}
+          />
+          <div className="date-inputs">
             <input
-              type="text"
-              value={newEvent.title}
-              onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
-              required
+              type="number"
+              placeholder="Year"
+              value={eventForm.event_date.dr_year}
+              onChange={(e) => setEventForm(prev => ({
+                ...prev, 
+                event_date: {...prev.event_date, dr_year: parseInt(e.target.value) || 1492}
+              }))}
             />
-          </div>
-          <div className="form-group">
-            <label>Description:</label>
-            <textarea
-              value={newEvent.description}
-              onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
-              rows="3"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Event Date:</label>
-            <div className="date-inputs">
-              <input
-                type="number"
-                placeholder="Year"
-                value={newEvent.event_date.year}
-                onChange={(e) => setNewEvent({
-                  ...newEvent, 
-                  event_date: {...newEvent.event_date, year: parseInt(e.target.value)}
-                })}
-                min="1"
-              />
-              <select
-                value={newEvent.event_date.month}
-                onChange={(e) => setNewEvent({
-                  ...newEvent, 
-                  event_date: {...newEvent.event_date, month: parseInt(e.target.value)}
-                })}
-              >
-                {HARPTOS_MONTHS.map((month, index) => (
-                  <option key={index} value={index}>{month.name}</option>
-                ))}
-              </select>
-              <input
-                type="number"
-                placeholder="Day"
-                value={newEvent.event_date.day}
-                onChange={(e) => setNewEvent({
-                  ...newEvent, 
-                  event_date: {...newEvent.event_date, day: parseInt(e.target.value)}
-                })}
-                min="1"
-                max="30"
-              />
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Event Type:</label>
-            <select
-              value={newEvent.event_type}
-              onChange={(e) => setNewEvent({...newEvent, event_type: e.target.value})}
+            <select 
+              value={eventForm.event_date.month}
+              onChange={(e) => setEventForm(prev => ({
+                ...prev, 
+                event_date: {...prev.event_date, month: parseInt(e.target.value)}
+              }))}
             >
-              <option value="custom">Custom</option>
-              <option value="meeting">Council Meeting</option>
-              <option value="festival">Festival</option>
-              <option value="military">Military Event</option>
-              <option value="trade">Trade Event</option>
-              <option value="diplomatic">Diplomatic Event</option>
-            </select>
-          </div>
-          <div className="form-actions">
-            <button type="submit" className="btn-primary">Create Event</button>
-            <button type="button" onClick={() => setShowEventForm(false)} className="btn-secondary">Cancel</button>
-          </div>
-        </form>
-      </Modal>
-
-      {/* Voting Creation Modal */}
-      <Modal isOpen={showVotingForm} onClose={() => setShowVotingForm(false)} title="Create Voting Session">
-        <form onSubmit={handleCreateVoting}>
-          <div className="form-group">
-            <label>Vote Title:</label>
-            <input
-              type="text"
-              value={newVoting.title}
-              onChange={(e) => setNewVoting({...newVoting, title: e.target.value})}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Description:</label>
-            <textarea
-              value={newVoting.description}
-              onChange={(e) => setNewVoting({...newVoting, description: e.target.value})}
-              rows="3"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Scope:</label>
-            <select
-              value={newVoting.city_id || ''}
-              onChange={(e) => setNewVoting({...newVoting, city_id: e.target.value || null})}
-            >
-              <option value="">Kingdom-wide</option>
-              {kingdom?.cities?.map(city => (
-                <option key={city.id} value={city.id}>{city.name}</option>
+              {HARPTOS_MONTHS.map((month, index) => (
+                <option key={index} value={index}>{month.name}</option>
               ))}
             </select>
-          </div>
-          <div className="form-group">
-            <label>Voting Options:</label>
-            {newVoting.options.map((option, index) => (
-              <div key={index} className="option-input">
-                <input
-                  type="text"
-                  value={option}
-                  onChange={(e) => updateVotingOption(index, e.target.value)}
-                  placeholder={`Option ${index + 1}`}
-                />
-                {newVoting.options.length > 2 && (
-                  <button 
-                    type="button" 
-                    onClick={() => removeVotingOption(index)}
-                    className="btn-remove"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-            ))}
-            <button type="button" onClick={addVotingOption} className="btn-secondary">
-              ➕ Add Option
-            </button>
-          </div>
-          <div className="form-group">
-            <label>Voting Period:</label>
-            <div className="date-range">
-              <div className="date-inputs">
-                <label>Start:</label>
-                <input type="number" placeholder="Year" value={newVoting.start_date.year} 
-                  onChange={(e) => setNewVoting({...newVoting, start_date: {...newVoting.start_date, year: parseInt(e.target.value)}})} />
-                <select value={newVoting.start_date.month} 
-                  onChange={(e) => setNewVoting({...newVoting, start_date: {...newVoting.start_date, month: parseInt(e.target.value)}})}>
-                  {HARPTOS_MONTHS.map((month, index) => (
-                    <option key={index} value={index}>{month.name}</option>
-                  ))}
-                </select>
-                <input type="number" placeholder="Day" value={newVoting.start_date.day} min="1" max="30"
-                  onChange={(e) => setNewVoting({...newVoting, start_date: {...newVoting.start_date, day: parseInt(e.target.value)}})} />
-              </div>
-              <div className="date-inputs">
-                <label>End:</label>
-                <input type="number" placeholder="Year" value={newVoting.end_date.year}
-                  onChange={(e) => setNewVoting({...newVoting, end_date: {...newVoting.end_date, year: parseInt(e.target.value)}})} />
-                <select value={newVoting.end_date.month}
-                  onChange={(e) => setNewVoting({...newVoting, end_date: {...newVoting.end_date, month: parseInt(e.target.value)}})}>
-                  {HARPTOS_MONTHS.map((month, index) => (
-                    <option key={index} value={index}>{month.name}</option>
-                  ))}
-                </select>
-                <input type="number" placeholder="Day" value={newVoting.end_date.day} min="1" max="30"
-                  onChange={(e) => setNewVoting({...newVoting, end_date: {...newVoting.end_date, day: parseInt(e.target.value)}})} />
-              </div>
-            </div>
+            <input
+              type="number"
+              placeholder="Day"
+              min="1"
+              max="30"
+              value={eventForm.event_date.day}
+              onChange={(e) => setEventForm(prev => ({
+                ...prev, 
+                event_date: {...prev.event_date, day: parseInt(e.target.value) || 1}
+              }))}
+            />
           </div>
           <div className="form-actions">
-            <button type="submit" className="btn-primary">Create Vote</button>
-            <button type="button" onClick={() => setShowVotingForm(false)} className="btn-secondary">Cancel</button>
+            <button className="btn-primary" onClick={handleCreateEvent}>
+              {editingEvent ? 'Update Event' : 'Create Event'}
+            </button>
+            <button className="btn-secondary" onClick={() => {
+              setShowEventForm(false);
+              setEditingEvent(null);
+              resetEventForm();
+            }}>
+              Cancel
+            </button>
           </div>
-        </form>
+        </div>
       </Modal>
 
+      {/* Special Days Info */}
       <div className="special-days-info">
-        <h4>Upcoming Special Days</h4>
+        <h4>Faerûnian Holidays</h4>
         <div className="special-days-list">
           {SPECIAL_DAYS.map((specialDay, index) => (
             <div key={index} className="special-day-item">
-              <span className="special-day-name">{specialDay.name}</span>
+              <span className="special-day-name">🎉 {specialDay.name}</span>
               <span className="special-day-desc">{specialDay.description}</span>
             </div>
           ))}
