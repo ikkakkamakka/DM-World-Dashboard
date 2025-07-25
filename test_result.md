@@ -330,8 +330,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Multi-Kingdom Autogenerate Functionality"
-    - "Real-time Dashboard Updates from Events"
     - "Authentication System Implementation"
   stuck_tasks: 
     []
