@@ -557,8 +557,7 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
                     </span>
                     <div>
                       <div className="event-title">
-                        {event.title}
-                        {event.city_name && <span className="city-badge">{event.city_name}</span>}
+                        {event.city_name ? `${event.title} – ${event.city_name}` : event.title}
                       </div>
                       <div className="event-description">{event.description}</div>
                     </div>
