@@ -1615,7 +1615,76 @@ async def clear_all_kingdom_boundaries(kingdom_id: str):
     
     return {"message": f"Cleared {result.deleted_count} boundaries for kingdom {kingdom_id}"}
 
-# Calendar Events Management
+# Enhanced Harptos Calendar Management System
+@api_router.get("/campaign-date/{kingdom_id}")
+async def get_campaign_date(kingdom_id: str):
+    """Get the current campaign date for a kingdom"""
+    campaign_date = await db.campaign_dates.find_one({"kingdom_id": kingdom_id})
+    
+    if not campaign_date:
+        # Initialize with current Harptos time if not exists
+        harptos_now = convert_real_time_to_harptos()
+        new_date = CampaignDate(
+            kingdom_id=kingdom_id,
+            dr_year=harptos_now["dr_year"],
+            month=harptos_now["month"],
+            day=harptos_now["day"],
+            tenday=harptos_now["tenday"],
+            season=harptos_now["season"],
+            is_leap_year=harptos_now["is_leap_year"],
+            special_day=harptos_now.get("special_day")
+        )
+        await db.campaign_dates.insert_one(new_date.dict())
+        campaign_date = new_date.dict()
+    else:
+        campaign_date.pop('_id', None)
+    
+    return campaign_date
+
+@api_router.put("/campaign-date/{kingdom_id}")
+async def update_campaign_date(kingdom_id: str, date_update: CampaignDateUpdate):
+    """Update/advance campaign date manually (DM control)"""
+    tenday, season = calculate_tenday_and_season(date_update.month, date_update.day)
+    is_leap = is_leap_year(date_update.dr_year)
+    
+    # Check for special days
+    special_day = None
+    for special in SPECIAL_DAYS:
+        if special["after_month"] == date_update.month and date_update.day == 30:
+            special_day = special["name"]
+            break
+    
+    update_data = {
+        "dr_year": date_update.dr_year,
+        "month": date_update.month,
+        "day": date_update.day,
+        "tenday": tenday,
+        "season": season,
+        "is_leap_year": is_leap,
+        "special_day": special_day,
+        "last_updated": datetime.utcnow(),
+        "updated_by": date_update.updated_by
+    }
+    
+    result = await db.campaign_dates.update_one(
+        {"kingdom_id": kingdom_id},
+        {"$set": update_data},
+        upsert=True
+    )
+    
+    if result.upserted_id or result.modified_count:
+        # Broadcast time change event
+        formatted_date = f"{date_update.day} {HARPTOS_MONTHS[date_update.month]['name']}, {date_update.dr_year} DR"
+        await create_and_broadcast_event(
+            f"📅 DM advanced campaign time to {formatted_date}", 
+            "Kingdom", 
+            "Time", 
+            "time-advance"
+        )
+        return {"message": "Campaign date updated successfully", "date": update_data}
+    
+    raise HTTPException(status_code=500, detail="Failed to update campaign date")
+
 @api_router.get("/calendar-events/{kingdom_id}")
 async def get_calendar_events(kingdom_id: str):
     """Get all calendar events for a kingdom"""
@@ -1624,18 +1693,114 @@ async def get_calendar_events(kingdom_id: str):
         event.pop('_id', None)
     return events
 
+@api_router.get("/calendar-events/{kingdom_id}/upcoming")
+async def get_upcoming_events(kingdom_id: str, days: int = 10):
+    """Get upcoming events for the next N days"""
+    # Get current campaign date
+    campaign_date = await db.campaign_dates.find_one({"kingdom_id": kingdom_id})
+    if not campaign_date:
+        harptos_now = convert_real_time_to_harptos()
+        current_dr_year = harptos_now["dr_year"]
+        current_month = harptos_now["month"]
+        current_day = harptos_now["day"]
+    else:
+        current_dr_year = campaign_date["dr_year"]
+        current_month = campaign_date["month"]
+        current_day = campaign_date["day"]
+    
+    # Calculate date range for upcoming events
+    upcoming_events = []
+    
+    # Add holidays within range
+    for i in range(days):
+        check_day = current_day + i
+        check_month = current_month
+        check_year = current_dr_year
+        
+        # Handle month/year overflow
+        while check_day > 30:
+            check_day -= 30
+            check_month += 1
+            if check_month > 11:
+                check_month = 0
+                check_year += 1
+        
+        # Check for special days/holidays
+        for special in SPECIAL_DAYS:
+            if special["after_month"] == check_month and check_day == 30:
+                upcoming_events.append({
+                    "title": special["name"],
+                    "description": special["description"],
+                    "event_type": "holiday",
+                    "city_name": None,
+                    "event_date": {"dr_year": check_year, "month": check_month, "day": check_day},
+                    "days_from_now": i
+                })
+    
+    # Get custom events within date range
+    events_query = {
+        "kingdom_id": kingdom_id,
+        "$or": [
+            {
+                "event_date.dr_year": current_dr_year,
+                "event_date.month": current_month,
+                "event_date.day": {"$gte": current_day, "$lte": current_day + days}
+            },
+            {
+                "event_date.dr_year": current_dr_year,
+                "event_date.month": {"$gt": current_month}
+            },
+            {
+                "event_date.dr_year": {"$gt": current_dr_year}
+            }
+        ]
+    }
+    
+    custom_events = await db.calendar_events.find(events_query).to_list(100)
+    for event in custom_events:
+        event.pop('_id', None)
+        # Calculate days from now
+        event_dr_year = event["event_date"]["dr_year"]
+        event_month = event["event_date"]["month"]
+        event_day = event["event_date"]["day"]
+        
+        # Simple calculation (can be enhanced for accuracy)
+        days_diff = (event_dr_year - current_dr_year) * 365 + (event_month - current_month) * 30 + (event_day - current_day)
+        event["days_from_now"] = max(0, days_diff)
+        
+        if event["days_from_now"] <= days:
+            upcoming_events.append(event)
+    
+    return sorted(upcoming_events, key=lambda x: x["days_from_now"])
+
 @api_router.post("/calendar-events")
-async def create_calendar_event(event: CalendarEventCreate, kingdom_id: str):
+async def create_calendar_event(event: EventCreate, kingdom_id: str):
     """Create a new calendar event"""
     new_event = CalendarEvent(**event.dict(), kingdom_id=kingdom_id)
     
     result = await db.calendar_events.insert_one(new_event.dict())
     if result.inserted_id:
         # Create a kingdom event for this calendar event
-        event_desc = f"📅 New calendar event: {new_event.title} scheduled for {new_event.event_date['day']} {HARPTOS_MONTHS[new_event.event_date['month']]['name']}, {new_event.event_date['year']} DR"
-        await create_and_broadcast_event(event_desc, "Kingdom", "Calendar", "calendar-event")
+        formatted_date = f"{new_event.event_date['day']} {HARPTOS_MONTHS[new_event.event_date['month']]['name']}, {new_event.event_date['dr_year']} DR"
+        city_text = f" in {new_event.city_name}" if new_event.city_name else ""
+        event_desc = f"📅 New {new_event.event_type} event: {new_event.title}{city_text} scheduled for {formatted_date}"
+        await create_and_broadcast_event(event_desc, new_event.city_name or "Kingdom", "Calendar", "calendar-event")
         return new_event
     raise HTTPException(status_code=500, detail="Failed to create calendar event")
+
+@api_router.put("/calendar-events/{event_id}")
+async def update_calendar_event(event_id: str, event_update: EventCreate):
+    """Update an existing calendar event"""
+    update_data = event_update.dict()
+    
+    result = await db.calendar_events.update_one(
+        {"id": event_id},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count:
+        return {"message": "Calendar event updated successfully"}
+    raise HTTPException(status_code=404, detail="Calendar event not found")
 
 @api_router.delete("/calendar-events/{event_id}")
 async def delete_calendar_event(event_id: str):
@@ -1644,6 +1809,76 @@ async def delete_calendar_event(event_id: str):
     if result.deleted_count:
         return {"message": "Calendar event deleted successfully"}
     raise HTTPException(status_code=404, detail="Calendar event not found")
+
+@api_router.post("/calendar-events/generate-city-events")
+async def generate_random_city_events(kingdom_id: str, count: int = 5, date_range_days: int = 30):
+    """Generate random city-specific events"""
+    # Get kingdom's cities
+    kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Kingdom not found")
+    
+    cities = kingdom.get("cities", [])
+    if not cities:
+        raise HTTPException(status_code=404, detail="No cities found in kingdom")
+    
+    # Get current campaign date
+    campaign_date = await db.campaign_dates.find_one({"kingdom_id": kingdom_id})
+    if not campaign_date:
+        harptos_now = convert_real_time_to_harptos()
+        base_dr_year = harptos_now["dr_year"]
+        base_month = harptos_now["month"]
+        base_day = harptos_now["day"]
+    else:
+        base_dr_year = campaign_date["dr_year"]
+        base_month = campaign_date["month"]
+        base_day = campaign_date["day"]
+    
+    generated_events = []
+    
+    for _ in range(count):
+        # Select random city and event template
+        city = random.choice(cities)
+        event_template = random.choice(CITY_EVENT_TEMPLATES)
+        
+        # Generate random date within range
+        random_days = random.randint(1, date_range_days)
+        event_day = base_day + random_days
+        event_month = base_month
+        event_year = base_dr_year
+        
+        # Handle month/year overflow
+        while event_day > 30:
+            event_day -= 30
+            event_month += 1
+            if event_month > 11:
+                event_month = 0
+                event_year += 1
+        
+        new_event = CalendarEvent(
+            title=f"{event_template['title']} – {city['name']}",
+            description=event_template['description'],
+            event_type=event_template['type'],
+            city_name=city['name'],
+            kingdom_id=kingdom_id,
+            event_date={"dr_year": event_year, "month": event_month, "day": event_day},
+            created_by="auto_generator"
+        )
+        
+        # Insert into database
+        result = await db.calendar_events.insert_one(new_event.dict())
+        if result.inserted_id:
+            generated_events.append(new_event.dict())
+    
+    # Broadcast notification
+    await create_and_broadcast_event(
+        f"🎲 Generated {len(generated_events)} new city events across the kingdom", 
+        "Kingdom", 
+        "Events", 
+        "events-generated"
+    )
+    
+    return {"message": f"Generated {len(generated_events)} city events", "events": generated_events}
 
 # Voting System Management
 @api_router.get("/voting-sessions/{kingdom_id}")
