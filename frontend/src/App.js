@@ -579,7 +579,7 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
                   <span className="event-icon" style={{ color: getEventTypeColor(event.event_type) }}>
                     {getEventIcon(event.event_type)}
                   </span>
-                  <div className="event-title">{event.title}</div>
+                  <div className="event-title">{event.city_name ? `${event.title} – ${event.city_name}` : event.title}</div>
                   <div className="event-actions">
                     <button onClick={() => openEditEvent(event)}>Edit</button>
                     <button onClick={() => handleDeleteEvent(event.id)}>Delete</button>
