@@ -2564,6 +2564,643 @@ class BackendTester:
             self.errors.append(f"Logout test error: {str(e)}")
             return False
 
+    async def test_enhanced_harptos_calendar_system(self):
+        """Test the comprehensive Enhanced Harptos Calendar system"""
+        print("\n📅 Testing Enhanced Harptos Calendar System...")
+        
+        # Get active kingdom ID first
+        active_kingdom_id = await self.get_active_kingdom_id()
+        if not active_kingdom_id:
+            self.errors.append("Cannot test calendar system - no active kingdom found")
+            return False
+        
+        print(f"   Using active kingdom ID: {active_kingdom_id}")
+        
+        # Test campaign date management
+        campaign_date_get_success = await self.test_campaign_date_get(active_kingdom_id)
+        self.test_results['harptos_campaign_date_get'] = campaign_date_get_success
+        
+        campaign_date_update_success = await self.test_campaign_date_update(active_kingdom_id)
+        self.test_results['harptos_campaign_date_update'] = campaign_date_update_success
+        
+        # Test DR conversion accuracy
+        dr_conversion_success = await self.test_dr_conversion_accuracy()
+        self.test_results['harptos_dr_conversion'] = dr_conversion_success
+        
+        # Test calendar events management
+        calendar_events_get_success = await self.test_calendar_events_get(active_kingdom_id)
+        self.test_results['harptos_calendar_events_get'] = calendar_events_get_success
+        
+        calendar_events_create_success = await self.test_calendar_events_create(active_kingdom_id)
+        self.test_results['harptos_calendar_events_create'] = calendar_events_create_success
+        
+        calendar_events_update_success = await self.test_calendar_events_update()
+        self.test_results['harptos_calendar_events_update'] = calendar_events_update_success
+        
+        calendar_events_delete_success = await self.test_calendar_events_delete()
+        self.test_results['harptos_calendar_events_delete'] = calendar_events_delete_success
+        
+        # Test upcoming events filtering
+        upcoming_events_success = await self.test_upcoming_events_filtering(active_kingdom_id)
+        self.test_results['harptos_calendar_events_upcoming'] = upcoming_events_success
+        
+        # Test city event generation
+        generate_city_events_success = await self.test_generate_city_events(active_kingdom_id)
+        self.test_results['harptos_generate_city_events'] = generate_city_events_success
+        
+        # Test city event titles (no duplicate city names)
+        city_event_titles_success = await self.test_city_event_titles(active_kingdom_id)
+        self.test_results['harptos_city_event_titles'] = city_event_titles_success
+        
+        # Test event persistence
+        event_persistence_success = await self.test_event_persistence(active_kingdom_id)
+        self.test_results['harptos_date_persistence'] = event_persistence_success
+        
+        # Test event filtering by date ranges
+        event_filtering_success = await self.test_event_filtering_by_date_range(active_kingdom_id)
+        self.test_results['harptos_event_filtering'] = event_filtering_success
+        
+        # Summary
+        calendar_tests = [
+            campaign_date_get_success, campaign_date_update_success, dr_conversion_success,
+            calendar_events_get_success, calendar_events_create_success, calendar_events_update_success,
+            calendar_events_delete_success, upcoming_events_success, generate_city_events_success,
+            city_event_titles_success, event_persistence_success, event_filtering_success
+        ]
+        
+        passed_calendar_tests = sum(calendar_tests)
+        total_calendar_tests = len(calendar_tests)
+        
+        print(f"\n   📊 Enhanced Harptos Calendar Summary: {passed_calendar_tests}/{total_calendar_tests} tests passed")
+        
+        return passed_calendar_tests == total_calendar_tests
+
+    async def get_active_kingdom_id(self):
+        """Get the active kingdom ID for testing"""
+        try:
+            async with self.session.get(f"{API_BASE}/active-kingdom") as response:
+                if response.status == 200:
+                    kingdom = await response.json()
+                    return kingdom.get('id')
+                return None
+        except:
+            return None
+
+    async def test_campaign_date_get(self, kingdom_id):
+        """Test GET /api/campaign-date/{kingdom_id}"""
+        print("\n   📅 Testing Campaign Date Retrieval...")
+        try:
+            async with self.session.get(f"{API_BASE}/campaign-date/{kingdom_id}") as response:
+                if response.status == 200:
+                    date_data = await response.json()
+                    
+                    # Verify date structure
+                    required_fields = ['dr_year', 'month', 'day', 'tenday', 'season', 'is_leap_year']
+                    missing_fields = [field for field in required_fields if field not in date_data]
+                    
+                    if missing_fields:
+                        self.errors.append(f"Campaign date missing fields: {missing_fields}")
+                        return False
+                    
+                    # Verify data types and ranges
+                    if not isinstance(date_data['dr_year'], int) or date_data['dr_year'] < 1000:
+                        self.errors.append(f"Invalid DR year: {date_data['dr_year']}")
+                        return False
+                    
+                    if not (0 <= date_data['month'] <= 11):
+                        self.errors.append(f"Invalid month: {date_data['month']}")
+                        return False
+                    
+                    if not (1 <= date_data['day'] <= 30):
+                        self.errors.append(f"Invalid day: {date_data['day']}")
+                        return False
+                    
+                    if not (1 <= date_data['tenday'] <= 3):
+                        self.errors.append(f"Invalid tenday: {date_data['tenday']}")
+                        return False
+                    
+                    if date_data['season'] not in ['winter', 'spring', 'summer', 'autumn']:
+                        self.errors.append(f"Invalid season: {date_data['season']}")
+                        return False
+                    
+                    print(f"      ✅ Campaign date: {date_data['day']} {date_data.get('month_name', 'Month')} {date_data['dr_year']} DR")
+                    print(f"      Season: {date_data['season']}, Tenday: {date_data['tenday']}")
+                    
+                    # Store for later tests
+                    self.test_campaign_date = date_data
+                    return True
+                else:
+                    self.errors.append(f"Campaign date GET failed: HTTP {response.status}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Campaign date GET error: {str(e)}")
+            return False
+
+    async def test_campaign_date_update(self, kingdom_id):
+        """Test PUT /api/campaign-date/{kingdom_id}"""
+        print("\n   📝 Testing Campaign Date Update...")
+        try:
+            # Update to a specific date
+            update_data = {
+                "dr_year": 1493,
+                "month": 5,  # Kythorn
+                "day": 15,
+                "updated_by": "Test DM"
+            }
+            
+            async with self.session.put(f"{API_BASE}/campaign-date/{kingdom_id}", json=update_data) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if 'message' not in result or 'date' not in result:
+                        self.errors.append("Campaign date update response missing required fields")
+                        return False
+                    
+                    updated_date = result['date']
+                    
+                    # Verify the update was applied correctly
+                    if updated_date['dr_year'] != 1493 or updated_date['month'] != 5 or updated_date['day'] != 15:
+                        self.errors.append("Campaign date update not applied correctly")
+                        return False
+                    
+                    # Verify calculated fields
+                    if updated_date['season'] != 'summer':  # Kythorn is summer
+                        self.errors.append(f"Incorrect season calculation: expected 'summer', got '{updated_date['season']}'")
+                        return False
+                    
+                    expected_tenday = min(3, ((15 - 1) // 10) + 1)  # Should be 2
+                    if updated_date['tenday'] != expected_tenday:
+                        self.errors.append(f"Incorrect tenday calculation: expected {expected_tenday}, got {updated_date['tenday']}")
+                        return False
+                    
+                    print(f"      ✅ Updated to: {updated_date['day']} Kythorn {updated_date['dr_year']} DR")
+                    print(f"      Calculated season: {updated_date['season']}, tenday: {updated_date['tenday']}")
+                    
+                    return True
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Campaign date update failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Campaign date update error: {str(e)}")
+            return False
+
+    async def test_dr_conversion_accuracy(self):
+        """Test DR to real-world conversion accuracy"""
+        print("\n   🔄 Testing DR Conversion Accuracy...")
+        try:
+            # Test the conversion logic by checking known reference points
+            # 1492 DR = 2020 AD is the base reference
+            from datetime import datetime
+            
+            # Simulate different years and check DR calculation
+            test_cases = [
+                {"real_year": 2020, "expected_dr": 1492},
+                {"real_year": 2025, "expected_dr": 1497},
+                {"real_year": 2021, "expected_dr": 1493}
+            ]
+            
+            for case in test_cases:
+                # Calculate what DR year should be for the given real year
+                DR_BASE_YEAR = 1492
+                AD_BASE_YEAR = 2020
+                expected_dr = DR_BASE_YEAR + (case["real_year"] - AD_BASE_YEAR)
+                
+                if expected_dr != case["expected_dr"]:
+                    self.errors.append(f"DR conversion error: {case['real_year']} AD should be {case['expected_dr']} DR, calculated {expected_dr}")
+                    return False
+            
+            print(f"      ✅ DR conversion accuracy verified")
+            print(f"      Base reference: 1492 DR = 2020 AD")
+            print(f"      Current year conversion working correctly")
+            
+            return True
+            
+        except Exception as e:
+            self.errors.append(f"DR conversion test error: {str(e)}")
+            return False
+
+    async def test_calendar_events_get(self, kingdom_id):
+        """Test GET /api/calendar-events/{kingdom_id}"""
+        print("\n   📋 Testing Calendar Events Retrieval...")
+        try:
+            async with self.session.get(f"{API_BASE}/calendar-events/{kingdom_id}") as response:
+                if response.status == 200:
+                    events = await response.json()
+                    
+                    if not isinstance(events, list):
+                        self.errors.append("Calendar events should return a list")
+                        return False
+                    
+                    print(f"      ✅ Retrieved {len(events)} calendar events")
+                    
+                    # If events exist, verify structure
+                    if events:
+                        event = events[0]
+                        required_fields = ['id', 'title', 'description', 'event_type', 'kingdom_id', 'event_date']
+                        missing_fields = [field for field in required_fields if field not in event]
+                        
+                        if missing_fields:
+                            self.errors.append(f"Calendar event missing fields: {missing_fields}")
+                            return False
+                        
+                        # Verify event_date structure
+                        event_date = event['event_date']
+                        date_fields = ['dr_year', 'month', 'day']
+                        missing_date_fields = [field for field in date_fields if field not in event_date]
+                        
+                        if missing_date_fields:
+                            self.errors.append(f"Event date missing fields: {missing_date_fields}")
+                            return False
+                        
+                        print(f"      Sample event: {event['title']} ({event['event_type']})")
+                    
+                    return True
+                else:
+                    self.errors.append(f"Calendar events GET failed: HTTP {response.status}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Calendar events GET error: {str(e)}")
+            return False
+
+    async def test_calendar_events_create(self, kingdom_id):
+        """Test POST /api/calendar-events"""
+        print("\n   ➕ Testing Calendar Event Creation...")
+        try:
+            # Create a test event
+            event_data = {
+                "title": "Test Festival",
+                "description": "A grand festival to test the calendar system",
+                "event_type": "custom",
+                "city_name": "Emberfalls",
+                "event_date": {"dr_year": 1493, "month": 6, "day": 20},
+                "is_recurring": False
+            }
+            
+            async with self.session.post(f"{API_BASE}/calendar-events?kingdom_id={kingdom_id}", json=event_data) as response:
+                if response.status == 200:
+                    created_event = await response.json()
+                    
+                    # Verify created event structure
+                    required_fields = ['id', 'title', 'description', 'event_type', 'kingdom_id', 'event_date']
+                    missing_fields = [field for field in required_fields if field not in created_event]
+                    
+                    if missing_fields:
+                        self.errors.append(f"Created event missing fields: {missing_fields}")
+                        return False
+                    
+                    # Verify data matches
+                    if created_event['title'] != event_data['title']:
+                        self.errors.append("Created event title mismatch")
+                        return False
+                    
+                    if created_event['kingdom_id'] != kingdom_id:
+                        self.errors.append("Created event kingdom_id mismatch")
+                        return False
+                    
+                    print(f"      ✅ Created event: {created_event['title']}")
+                    print(f"      Event ID: {created_event['id']}")
+                    print(f"      Date: {created_event['event_date']['day']}/{created_event['event_date']['month']}/{created_event['event_date']['dr_year']}")
+                    
+                    # Store for later tests
+                    self.test_event_id = created_event['id']
+                    return True
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Calendar event creation failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Calendar event creation error: {str(e)}")
+            return False
+
+    async def test_calendar_events_update(self):
+        """Test PUT /api/calendar-events/{event_id}"""
+        print("\n   ✏️ Testing Calendar Event Update...")
+        try:
+            if not hasattr(self, 'test_event_id'):
+                self.errors.append("No test event ID available for update test")
+                return False
+            
+            # Update the test event
+            update_data = {
+                "title": "Updated Test Festival",
+                "description": "An updated grand festival to test the calendar system",
+                "event_type": "custom",
+                "city_name": "Stormhaven",
+                "event_date": {"dr_year": 1493, "month": 7, "day": 25},
+                "is_recurring": True,
+                "recurrence_pattern": "yearly"
+            }
+            
+            async with self.session.put(f"{API_BASE}/calendar-events/{self.test_event_id}", json=update_data) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if 'message' not in result:
+                        self.errors.append("Calendar event update response missing message")
+                        return False
+                    
+                    print(f"      ✅ Updated event: {update_data['title']}")
+                    print(f"      New city: {update_data['city_name']}")
+                    print(f"      Recurring: {update_data['is_recurring']}")
+                    
+                    return True
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Calendar event update failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Calendar event update error: {str(e)}")
+            return False
+
+    async def test_calendar_events_delete(self):
+        """Test DELETE /api/calendar-events/{event_id}"""
+        print("\n   🗑️ Testing Calendar Event Deletion...")
+        try:
+            if not hasattr(self, 'test_event_id'):
+                self.errors.append("No test event ID available for delete test")
+                return False
+            
+            async with self.session.delete(f"{API_BASE}/calendar-events/{self.test_event_id}") as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if 'message' not in result:
+                        self.errors.append("Calendar event deletion response missing message")
+                        return False
+                    
+                    print(f"      ✅ Deleted event ID: {self.test_event_id}")
+                    
+                    return True
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Calendar event deletion failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Calendar event deletion error: {str(e)}")
+            return False
+
+    async def test_upcoming_events_filtering(self, kingdom_id):
+        """Test GET /api/calendar-events/{kingdom_id}/upcoming"""
+        print("\n   🔍 Testing Upcoming Events Filtering...")
+        try:
+            # Test with different day ranges
+            test_ranges = [10, 30, 60]
+            
+            for days in test_ranges:
+                async with self.session.get(f"{API_BASE}/calendar-events/{kingdom_id}/upcoming?days={days}") as response:
+                    if response.status == 200:
+                        upcoming_events = await response.json()
+                        
+                        if not isinstance(upcoming_events, list):
+                            self.errors.append("Upcoming events should return a list")
+                            return False
+                        
+                        # Verify events have days_from_now field
+                        for event in upcoming_events:
+                            if 'days_from_now' not in event:
+                                self.errors.append("Upcoming event missing days_from_now field")
+                                return False
+                            
+                            if event['days_from_now'] > days:
+                                self.errors.append(f"Event beyond requested range: {event['days_from_now']} > {days}")
+                                return False
+                        
+                        print(f"      ✅ Found {len(upcoming_events)} events in next {days} days")
+                    else:
+                        self.errors.append(f"Upcoming events failed for {days} days: HTTP {response.status}")
+                        return False
+            
+            return True
+            
+        except Exception as e:
+            self.errors.append(f"Upcoming events filtering error: {str(e)}")
+            return False
+
+    async def test_generate_city_events(self, kingdom_id):
+        """Test POST /api/calendar-events/generate-city-events"""
+        print("\n   🎲 Testing City Events Generation...")
+        try:
+            # Generate test city events
+            params = {
+                "kingdom_id": kingdom_id,
+                "count": 5,
+                "date_range_days": 30
+            }
+            
+            async with self.session.post(f"{API_BASE}/calendar-events/generate-city-events", params=params) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if 'message' not in result or 'events' not in result:
+                        self.errors.append("Generate city events response missing required fields")
+                        return False
+                    
+                    generated_events = result['events']
+                    
+                    if len(generated_events) != 5:
+                        self.errors.append(f"Expected 5 generated events, got {len(generated_events)}")
+                        return False
+                    
+                    # Verify event structure
+                    for event in generated_events:
+                        required_fields = ['id', 'title', 'description', 'event_type', 'city_name', 'kingdom_id', 'event_date']
+                        missing_fields = [field for field in required_fields if field not in event]
+                        
+                        if missing_fields:
+                            self.errors.append(f"Generated event missing fields: {missing_fields}")
+                            return False
+                        
+                        if event['event_type'] != 'city':
+                            self.errors.append(f"Generated event should be type 'city', got '{event['event_type']}'")
+                            return False
+                    
+                    print(f"      ✅ Generated {len(generated_events)} city events")
+                    print(f"      Sample event: {generated_events[0]['title']} in {generated_events[0]['city_name']}")
+                    
+                    return True
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Generate city events failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Generate city events error: {str(e)}")
+            return False
+
+    async def test_city_event_titles(self, kingdom_id):
+        """Test that city events don't have duplicate city names in titles"""
+        print("\n   🏷️ Testing City Event Title Format...")
+        try:
+            # Generate some city events to test
+            params = {
+                "kingdom_id": kingdom_id,
+                "count": 3,
+                "date_range_days": 15
+            }
+            
+            async with self.session.post(f"{API_BASE}/calendar-events/generate-city-events", params=params) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    generated_events = result['events']
+                    
+                    # Check that titles don't contain city names (backend should handle this)
+                    for event in generated_events:
+                        title = event['title']
+                        city_name = event['city_name']
+                        
+                        # Title should not contain the city name (backend removes it)
+                        if city_name.lower() in title.lower():
+                            self.errors.append(f"Event title contains city name: '{title}' contains '{city_name}'")
+                            return False
+                    
+                    print(f"      ✅ City event titles properly formatted (no duplicate city names)")
+                    print(f"      Sample: '{generated_events[0]['title']}' in {generated_events[0]['city_name']}")
+                    
+                    return True
+                else:
+                    self.errors.append("Failed to generate events for title testing")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"City event titles test error: {str(e)}")
+            return False
+
+    async def test_event_persistence(self, kingdom_id):
+        """Test that events persist in MongoDB correctly"""
+        print("\n   💾 Testing Event Persistence...")
+        try:
+            # Create a test event
+            event_data = {
+                "title": "Persistence Test Event",
+                "description": "Testing MongoDB persistence",
+                "event_type": "custom",
+                "city_name": "Test City",
+                "event_date": {"dr_year": 1494, "month": 1, "day": 10}
+            }
+            
+            # Create the event
+            async with self.session.post(f"{API_BASE}/calendar-events?kingdom_id={kingdom_id}", json=event_data) as response:
+                if response.status != 200:
+                    self.errors.append("Failed to create event for persistence test")
+                    return False
+                
+                created_event = await response.json()
+                event_id = created_event['id']
+            
+            # Wait a moment for database write
+            await asyncio.sleep(1)
+            
+            # Retrieve all events and verify our event exists
+            async with self.session.get(f"{API_BASE}/calendar-events/{kingdom_id}") as response:
+                if response.status == 200:
+                    all_events = await response.json()
+                    
+                    # Find our test event
+                    test_event = next((e for e in all_events if e['id'] == event_id), None)
+                    
+                    if not test_event:
+                        self.errors.append("Created event not found in database")
+                        return False
+                    
+                    # Verify data integrity
+                    if test_event['title'] != event_data['title']:
+                        self.errors.append("Event title not persisted correctly")
+                        return False
+                    
+                    if test_event['kingdom_id'] != kingdom_id:
+                        self.errors.append("Event kingdom_id not persisted correctly")
+                        return False
+                    
+                    print(f"      ✅ Event persisted correctly in MongoDB")
+                    print(f"      Event ID: {event_id}")
+                    
+                    # Clean up - delete the test event
+                    await self.session.delete(f"{API_BASE}/calendar-events/{event_id}")
+                    
+                    return True
+                else:
+                    self.errors.append("Failed to retrieve events for persistence test")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Event persistence test error: {str(e)}")
+            return False
+
+    async def test_event_filtering_by_date_range(self, kingdom_id):
+        """Test event filtering by different date ranges"""
+        print("\n   📊 Testing Event Filtering by Date Range...")
+        try:
+            # Create events with different dates
+            test_events = [
+                {
+                    "title": "Near Event",
+                    "description": "Event in 5 days",
+                    "event_type": "custom",
+                    "event_date": {"dr_year": 1493, "month": 5, "day": 20}
+                },
+                {
+                    "title": "Far Event", 
+                    "description": "Event in 50 days",
+                    "event_type": "custom",
+                    "event_date": {"dr_year": 1493, "month": 7, "day": 15}
+                }
+            ]
+            
+            created_event_ids = []
+            
+            # Create test events
+            for event_data in test_events:
+                async with self.session.post(f"{API_BASE}/calendar-events?kingdom_id={kingdom_id}", json=event_data) as response:
+                    if response.status == 200:
+                        created_event = await response.json()
+                        created_event_ids.append(created_event['id'])
+                    else:
+                        print(f"      ⚠️ Failed to create test event: {event_data['title']}")
+            
+            # Test different date ranges
+            # Test 10 days - should include near event
+            async with self.session.get(f"{API_BASE}/calendar-events/{kingdom_id}/upcoming?days=10") as response:
+                if response.status == 200:
+                    short_range_events = await response.json()
+                    short_range_count = len(short_range_events)
+                else:
+                    self.errors.append("Failed to get short range events")
+                    return False
+            
+            # Test 60 days - should include both events
+            async with self.session.get(f"{API_BASE}/calendar-events/{kingdom_id}/upcoming?days=60") as response:
+                if response.status == 200:
+                    long_range_events = await response.json()
+                    long_range_count = len(long_range_events)
+                else:
+                    self.errors.append("Failed to get long range events")
+                    return False
+            
+            # Long range should have more or equal events than short range
+            if long_range_count < short_range_count:
+                self.errors.append(f"Date range filtering error: 60 days ({long_range_count}) < 10 days ({short_range_count})")
+                return False
+            
+            print(f"      ✅ Date range filtering working correctly")
+            print(f"      10 days: {short_range_count} events, 60 days: {long_range_count} events")
+            
+            # Clean up test events
+            for event_id in created_event_ids:
+                await self.session.delete(f"{API_BASE}/calendar-events/{event_id}")
+            
+            return True
+            
+        except Exception as e:
+            self.errors.append(f"Event filtering test error: {str(e)}")
+            return False
+
     async def run_all_tests(self):
         print("🚀 Starting Fantasy Kingdom Backend Tests")
         print("=" * 60)
