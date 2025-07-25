@@ -511,7 +511,7 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
                   onClick={() => setSelectedDate({ dr_year: displayDate.drYear, month: displayDate.month, day })}
                   title={
                     hasEvents 
-                      ? `${holidays.map(h => `🎉 ${h.name}`).join(', ')} ${dayEvents.map(e => `${getEventIcon(e.event_type)} ${e.title} ${e.city_name ? `(${e.city_name})` : ''}`).join(', ')}`
+                      ? `${holidays.map(h => `🎉 ${h.name}`).join(', ')} ${dayEvents.map(e => `${getEventIcon(e.event_type)} ${e.city_name ? `${e.title} – ${e.city_name}` : e.title}`).join(', ')}`
                       : `${day} ${HARPTOS_MONTHS[displayDate.month]?.name}`
                   }
                 >
