@@ -1775,6 +1775,20 @@ body {
   margin-bottom: 1rem;
 }
 
+.season-info {
+  color: #e8dcc6;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  position: relative;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.season-winter { color: #87ceeb; text-shadow: 0 0 5px rgba(135, 206, 235, 0.3); }
+.season-spring { color: #90ee90; text-shadow: 0 0 5px rgba(144, 238, 144, 0.3); }
+.season-summer { color: #ffa500; text-shadow: 0 0 5px rgba(255, 165, 0, 0.3); }
+.season-autumn { color: #cd853f; text-shadow: 0 0 5px rgba(205, 133, 63, 0.3); }
+
 .special-day-notice {
   display: flex;
   align-items: center;
