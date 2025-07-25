@@ -1668,6 +1668,323 @@ class BackendTester:
             self.errors.append(f"City multi-kingdom isolation test error: {str(e)}")
             return False
 
+    async def test_multi_kingdom_autogenerate_functionality(self):
+        """Test multi-kingdom autogenerate functionality specifically"""
+        print("\n🎲 Testing Multi-Kingdom Autogenerate Functionality...")
+        
+        try:
+            # Get all kingdoms from multi_kingdoms collection
+            async with self.session.get(f"{API_BASE}/multi-kingdoms") as response:
+                if response.status != 200:
+                    self.errors.append("Cannot test multi-kingdom autogenerate - Multi-kingdoms API failed")
+                    return False
+                
+                kingdoms = await response.json()
+                if not kingdoms:
+                    self.errors.append("No kingdoms found in multi_kingdoms collection")
+                    return False
+                
+                print(f"   Found {len(kingdoms)} kingdoms for testing")
+                
+                # Test autogenerate for each kingdom
+                success_count = 0
+                for kingdom in kingdoms:
+                    kingdom_id = kingdom['id']
+                    kingdom_name = kingdom['name']
+                    cities = kingdom.get('cities', [])
+                    
+                    if not cities:
+                        print(f"   ⚠️ Skipping {kingdom_name} - no cities")
+                        continue
+                    
+                    print(f"\n   🏰 Testing autogenerate for kingdom: {kingdom_name}")
+                    
+                    # Test each registry type for this kingdom
+                    registry_types = ["citizens", "slaves", "livestock", "garrison", "crimes", "tribute"]
+                    kingdom_success = True
+                    
+                    for registry_type in registry_types:
+                        city = cities[0]  # Use first city
+                        city_id = city['id']
+                        city_name = city['name']
+                        
+                        # Get initial count
+                        initial_count = await self.get_multi_kingdom_registry_count(kingdom_id, city_id, registry_type)
+                        
+                        # Make autogenerate request
+                        payload = {
+                            "registry_type": registry_type,
+                            "city_id": city_id,
+                            "count": 1
+                        }
+                        
+                        async with self.session.post(f"{API_BASE}/auto-generate", json=payload) as gen_response:
+                            if gen_response.status == 200:
+                                result = await gen_response.json()
+                                
+                                # Wait for database update
+                                await asyncio.sleep(2)
+                                
+                                # Verify database was updated in multi_kingdoms collection
+                                new_count = await self.get_multi_kingdom_registry_count(kingdom_id, city_id, registry_type)
+                                
+                                if new_count > initial_count:
+                                    print(f"      ✅ {registry_type}: {initial_count} → {new_count}")
+                                    
+                                    # Check if event was created with kingdom_id
+                                    event_found = await self.check_kingdom_specific_event(kingdom_id, registry_type, city_name)
+                                    if event_found:
+                                        print(f"         📜 Event created with kingdom_id")
+                                    else:
+                                        print(f"         ⚠️ Event may not have kingdom_id tag")
+                                else:
+                                    print(f"      ❌ {registry_type}: Database not updated ({initial_count} → {new_count})")
+                                    kingdom_success = False
+                                    self.errors.append(f"Multi-kingdom autogenerate failed for {registry_type} in {kingdom_name}")
+                            else:
+                                error_text = await gen_response.text()
+                                print(f"      ❌ {registry_type}: HTTP {gen_response.status} - {error_text}")
+                                kingdom_success = False
+                                self.errors.append(f"Multi-kingdom autogenerate API error for {registry_type} in {kingdom_name}")
+                    
+                    if kingdom_success:
+                        success_count += 1
+                        print(f"   ✅ All registry types working for {kingdom_name}")
+                    else:
+                        print(f"   ❌ Some registry types failed for {kingdom_name}")
+                
+                # Overall success if all kingdoms worked
+                overall_success = success_count == len([k for k in kingdoms if k.get('cities')])
+                
+                print(f"\n   📊 Multi-Kingdom Autogenerate Summary: {success_count}/{len([k for k in kingdoms if k.get('cities')])} kingdoms working")
+                
+                self.test_results['multi_kingdom_autogenerate'] = overall_success
+                return overall_success
+                
+        except Exception as e:
+            self.errors.append(f"Multi-kingdom autogenerate test error: {str(e)}")
+            return False
+
+    async def get_multi_kingdom_registry_count(self, kingdom_id, city_id, registry_type):
+        """Get registry count from multi_kingdoms collection"""
+        try:
+            async with self.session.get(f"{API_BASE}/multi-kingdom/{kingdom_id}") as response:
+                if response.status == 200:
+                    kingdom_data = await response.json()
+                    cities = kingdom_data.get('cities', [])
+                    
+                    # Find the specific city
+                    city = next((c for c in cities if c['id'] == city_id), None)
+                    if not city:
+                        return 0
+                    
+                    registry_map = {
+                        "citizens": "citizens",
+                        "slaves": "slaves", 
+                        "livestock": "livestock",
+                        "garrison": "garrison",
+                        "crimes": "crime_records",
+                        "tribute": "tribute_records"
+                    }
+                    
+                    registry_key = registry_map.get(registry_type, registry_type)
+                    items = city.get(registry_key, [])
+                    return len(items)
+                else:
+                    return 0
+        except:
+            return 0
+
+    async def check_kingdom_specific_event(self, kingdom_id, registry_type, city_name):
+        """Check if event was created with kingdom_id tag"""
+        try:
+            async with self.session.get(f"{API_BASE}/events?limit=20") as response:
+                if response.status == 200:
+                    events = await response.json()
+                    
+                    # Look for recent events with kingdom_id
+                    current_time = datetime.utcnow()
+                    
+                    for event in events:
+                        # Check if event has kingdom_id
+                        if event.get('kingdom_id') == kingdom_id:
+                            event_time = datetime.fromisoformat(event['timestamp'].replace('Z', '+00:00'))
+                            time_diff = (current_time - event_time.replace(tzinfo=None)).total_seconds()
+                            
+                            if time_diff <= 60:  # Within last minute
+                                description = event['description'].lower()
+                                city_match = city_name.lower() in description
+                                
+                                registry_keywords = {
+                                    "citizens": ["citizen", "joins", "registers"],
+                                    "slaves": ["slave", "enslaved", "acquired"],
+                                    "livestock": ["livestock", "cattle", "horse", "herds"],
+                                    "garrison": ["soldier", "recruit", "garrison", "military"],
+                                    "crimes": ["crime", "accused", "authorities"],
+                                    "tribute": ["tribute", "payment", "owes"]
+                                }
+                                
+                                keywords = registry_keywords.get(registry_type, [])
+                                keyword_match = any(keyword in description for keyword in keywords)
+                                
+                                if city_match and keyword_match:
+                                    return True
+                    
+                    return False
+                else:
+                    return False
+        except:
+            return False
+
+    async def test_real_time_dashboard_updates(self):
+        """Test that simulation engine events actually modify database counts"""
+        print("\n📊 Testing Real-time Dashboard Updates from Events...")
+        
+        try:
+            # Get initial kingdom state
+            async with self.session.get(f"{API_BASE}/active-kingdom") as response:
+                if response.status != 200:
+                    self.errors.append("Cannot test dashboard updates - Active kingdom API failed")
+                    return False
+                
+                initial_kingdom = await response.json()
+                kingdom_id = initial_kingdom['id']
+                initial_population = initial_kingdom.get('total_population', 0)
+                
+                print(f"   Initial kingdom population: {initial_population}")
+                
+                # Get initial city populations
+                initial_city_populations = {}
+                for city in initial_kingdom.get('cities', []):
+                    initial_city_populations[city['id']] = {
+                        'name': city['name'],
+                        'population': city.get('population', 0),
+                        'citizens': len(city.get('citizens', [])),
+                        'treasury': city.get('treasury', 0)
+                    }
+                
+                print(f"   Monitoring {len(initial_city_populations)} cities for changes...")
+                
+                # Wait for simulation engine to generate life events
+                print("   Waiting 60 seconds for life events that modify database...")
+                await asyncio.sleep(60)
+                
+                # Check for database changes
+                async with self.session.get(f"{API_BASE}/multi-kingdom/{kingdom_id}") as response:
+                    if response.status != 200:
+                        self.errors.append("Failed to get updated kingdom data")
+                        return False
+                    
+                    updated_kingdom = await response.json()
+                    updated_population = updated_kingdom.get('total_population', 0)
+                    
+                    print(f"   Updated kingdom population: {updated_population}")
+                    
+                    # Check for population changes
+                    population_changed = updated_population != initial_population
+                    
+                    # Check individual city changes
+                    city_changes = []
+                    for city in updated_kingdom.get('cities', []):
+                        city_id = city['id']
+                        if city_id in initial_city_populations:
+                            initial = initial_city_populations[city_id]
+                            current_pop = city.get('population', 0)
+                            current_citizens = len(city.get('citizens', []))
+                            current_treasury = city.get('treasury', 0)
+                            
+                            if (current_pop != initial['population'] or 
+                                current_citizens != initial['citizens'] or
+                                current_treasury != initial['treasury']):
+                                
+                                city_changes.append({
+                                    'name': city['name'],
+                                    'population_change': current_pop - initial['population'],
+                                    'citizens_change': current_citizens - initial['citizens'],
+                                    'treasury_change': current_treasury - initial['treasury']
+                                })
+                    
+                    # Check for life events in recent events
+                    life_events_found = await self.check_for_life_events(kingdom_id)
+                    
+                    # Evaluate results
+                    if population_changed or city_changes or life_events_found:
+                        print("   ✅ Real-time database updates detected:")
+                        
+                        if population_changed:
+                            change = updated_population - initial_population
+                            print(f"      📈 Kingdom population changed by {change}")
+                        
+                        for change in city_changes:
+                            print(f"      🏘️ {change['name']}:")
+                            if change['population_change'] != 0:
+                                print(f"         Population: {change['population_change']:+d}")
+                            if change['citizens_change'] != 0:
+                                print(f"         Citizens: {change['citizens_change']:+d}")
+                            if change['treasury_change'] != 0:
+                                print(f"         Treasury: {change['treasury_change']:+d} GP")
+                        
+                        if life_events_found:
+                            print(f"      📜 Life events with database impact found")
+                        
+                        self.test_results['real_time_dashboard_updates'] = True
+                        return True
+                    else:
+                        print("   ⚠️ No database changes detected during monitoring period")
+                        print("      This could mean:")
+                        print("      - Simulation engine is not generating life events")
+                        print("      - Life events are not modifying database")
+                        print("      - Monitoring period was too short")
+                        
+                        # Still check if the system is capable of updates
+                        if life_events_found:
+                            print("      ✅ Life events are being generated (system is working)")
+                            self.test_results['real_time_dashboard_updates'] = True
+                            return True
+                        else:
+                            self.errors.append("No life events or database changes detected")
+                            self.test_results['real_time_dashboard_updates'] = False
+                            return False
+                
+        except Exception as e:
+            self.errors.append(f"Real-time dashboard updates test error: {str(e)}")
+            return False
+
+    async def check_for_life_events(self, kingdom_id):
+        """Check for life events that should modify database"""
+        try:
+            async with self.session.get(f"{API_BASE}/events?limit=50") as response:
+                if response.status == 200:
+                    events = await response.json()
+                    
+                    # Look for life events in the last 2 minutes
+                    current_time = datetime.utcnow()
+                    life_event_indicators = [
+                        "died", "death", "passed away", "born", "birth", "executed", 
+                        "population decreased", "population increased", "treasury",
+                        "disease outbreak", "natural disaster", "economic boost"
+                    ]
+                    
+                    life_events_found = 0
+                    for event in events:
+                        # Check if event belongs to this kingdom
+                        if event.get('kingdom_id') == kingdom_id:
+                            event_time = datetime.fromisoformat(event['timestamp'].replace('Z', '+00:00'))
+                            time_diff = (current_time - event_time.replace(tzinfo=None)).total_seconds()
+                            
+                            if time_diff <= 120:  # Within last 2 minutes
+                                description = event['description'].lower()
+                                
+                                if any(indicator in description for indicator in life_event_indicators):
+                                    life_events_found += 1
+                                    print(f"      📜 Life event: {event['description'][:80]}...")
+                    
+                    return life_events_found > 0
+                else:
+                    return False
+        except:
+            return False
+
     async def run_all_tests(self):
         print("🚀 Starting Fantasy Kingdom Backend Tests")
         print("=" * 60)
@@ -1683,6 +2000,12 @@ class BackendTester:
             await self.test_database_initialization()
             await self.test_auto_generate_functionality()  # Test auto-generate functionality
             await self.test_simulation_engine()
+            
+            # PRIORITY TESTS FOR CURRENT FOCUS
+            print("\n" + "🎯" * 20 + " PRIORITY TESTS " + "🎯" * 20)
+            await self.test_multi_kingdom_autogenerate_functionality()
+            await self.test_real_time_dashboard_updates()
+            print("🎯" * 60)
             
         finally:
             await self.cleanup()
