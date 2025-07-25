@@ -51,6 +51,9 @@ class BackendTester:
             'auto_generate_garrison': False,
             'auto_generate_crimes': False,
             'auto_generate_tribute': False,
+            # PRIORITY TESTS FOR CURRENT FOCUS
+            'multi_kingdom_autogenerate': False,
+            'real_time_dashboard_updates': False,
             # Enhanced Boundary System Tests
             'multi_kingdoms_api': False,
             'kingdom_boundaries_create': False,
