@@ -336,7 +336,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Authentication System Implementation"
+    - "Government Position Management"
   stuck_tasks: 
     []
   test_all: false
