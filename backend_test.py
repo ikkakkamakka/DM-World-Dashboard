@@ -2569,6 +2569,7 @@ class BackendTester:
             
             # PRIORITY TESTS FOR CURRENT FOCUS
             print("\n" + "🎯" * 20 + " PRIORITY TESTS " + "🎯" * 20)
+            await self.test_authentication_system()  # PRIORITY: Test authentication system
             await self.test_multi_kingdom_autogenerate_functionality()
             await self.test_real_time_dashboard_updates()
             print("🎯" * 60)
