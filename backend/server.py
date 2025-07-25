@@ -1848,7 +1848,7 @@ async def generate_random_city_events(kingdom_id: str, count: int = 5, date_rang
                 event_year += 1
         
         new_event = CalendarEvent(
-            title=f"{event_template['title']} – {city['name']}",
+            title=event_template['title'],  # Remove city name from title
             description=event_template['description'],
             event_type=event_template['type'],
             city_name=city['name'],
