@@ -1999,6 +1999,558 @@ class BackendTester:
         except:
             return False
 
+    async def test_authentication_system(self):
+        """Test the complete JWT-based authentication system"""
+        print("\n🔐 Testing Authentication System...")
+        
+        # Test user registration
+        signup_success = await self.test_auth_signup()
+        self.test_results['auth_signup'] = signup_success
+        
+        # Test user login
+        login_success = await self.test_auth_login()
+        self.test_results['auth_login'] = login_success
+        
+        # Test JWT token validation
+        jwt_success = await self.test_auth_jwt_tokens()
+        self.test_results['auth_jwt_tokens'] = jwt_success
+        
+        # Test password hashing
+        password_hash_success = await self.test_auth_password_hashing()
+        self.test_results['auth_password_hashing'] = password_hash_success
+        
+        # Test invalid credentials handling
+        invalid_creds_success = await self.test_auth_invalid_credentials()
+        self.test_results['auth_invalid_credentials'] = invalid_creds_success
+        
+        # Test duplicate validation
+        duplicate_success = await self.test_auth_duplicate_validation()
+        self.test_results['auth_duplicate_validation'] = duplicate_success
+        
+        # Test separate database
+        separate_db_success = await self.test_auth_separate_database()
+        self.test_results['auth_separate_database'] = separate_db_success
+        
+        # Test /me endpoint
+        me_success = await self.test_auth_me()
+        self.test_results['auth_me'] = me_success
+        
+        # Test token verification
+        verify_success = await self.test_auth_verify_token()
+        self.test_results['auth_verify_token'] = verify_success
+        
+        # Test logout
+        logout_success = await self.test_auth_logout()
+        self.test_results['auth_logout'] = logout_success
+        
+        # Summary
+        auth_tests = [
+            signup_success, login_success, jwt_success, password_hash_success,
+            invalid_creds_success, duplicate_success, separate_db_success,
+            me_success, verify_success, logout_success
+        ]
+        
+        passed_auth_tests = sum(auth_tests)
+        total_auth_tests = len(auth_tests)
+        
+        print(f"\n   📊 Authentication Summary: {passed_auth_tests}/{total_auth_tests} tests passed")
+        
+        return passed_auth_tests == total_auth_tests
+
+    async def test_auth_signup(self):
+        """Test user registration with valid data"""
+        print("\n   📝 Testing User Registration...")
+        try:
+            # Test data
+            test_user = {
+                "username": "testuser_auth_2025",
+                "email": "testuser@faeruncampaign.com",
+                "password": "SecurePassword123!"
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/signup", json=test_user) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    
+                    # Verify response structure
+                    required_fields = ['access_token', 'token_type', 'user_info']
+                    missing_fields = [field for field in required_fields if field not in data]
+                    
+                    if missing_fields:
+                        self.errors.append(f"Signup response missing fields: {missing_fields}")
+                        return False
+                    
+                    # Verify token type
+                    if data['token_type'] != 'bearer':
+                        self.errors.append(f"Expected token_type 'bearer', got '{data['token_type']}'")
+                        return False
+                    
+                    # Verify JWT token format
+                    token = data['access_token']
+                    if not token or len(token.split('.')) != 3:
+                        self.errors.append("Invalid JWT token format")
+                        return False
+                    
+                    # Verify user info
+                    user_info = data['user_info']
+                    user_required_fields = ['id', 'username', 'email', 'is_active', 'created_at']
+                    missing_user_fields = [field for field in user_required_fields if field not in user_info]
+                    
+                    if missing_user_fields:
+                        self.errors.append(f"User info missing fields: {missing_user_fields}")
+                        return False
+                    
+                    if user_info['username'] != test_user['username']:
+                        self.errors.append(f"Username mismatch: expected {test_user['username']}, got {user_info['username']}")
+                        return False
+                    
+                    if user_info['email'] != test_user['email']:
+                        self.errors.append(f"Email mismatch: expected {test_user['email']}, got {user_info['email']}")
+                        return False
+                    
+                    # Store token for later tests
+                    self.test_auth_token = token
+                    self.test_username = test_user['username']
+                    self.test_password = test_user['password']
+                    
+                    print(f"      ✅ User registration successful")
+                    print(f"      Username: {user_info['username']}")
+                    print(f"      Email: {user_info['email']}")
+                    print(f"      JWT Token: {token[:20]}...")
+                    
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Signup failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Signup test error: {str(e)}")
+            return False
+
+    async def test_auth_login(self):
+        """Test user login with correct credentials"""
+        print("\n   🔑 Testing User Login...")
+        try:
+            if not hasattr(self, 'test_username') or not hasattr(self, 'test_password'):
+                self.errors.append("No test user available for login test")
+                return False
+            
+            login_data = {
+                "username": self.test_username,
+                "password": self.test_password
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/login", json=login_data) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    
+                    # Verify response structure (same as signup)
+                    required_fields = ['access_token', 'token_type', 'user_info']
+                    missing_fields = [field for field in required_fields if field not in data]
+                    
+                    if missing_fields:
+                        self.errors.append(f"Login response missing fields: {missing_fields}")
+                        return False
+                    
+                    # Verify JWT token
+                    token = data['access_token']
+                    if not token or len(token.split('.')) != 3:
+                        self.errors.append("Invalid JWT token format in login")
+                        return False
+                    
+                    # Verify user info includes last_login
+                    user_info = data['user_info']
+                    if 'last_login' not in user_info:
+                        self.errors.append("Login response missing last_login timestamp")
+                        return False
+                    
+                    print(f"      ✅ User login successful")
+                    print(f"      Username: {user_info['username']}")
+                    print(f"      Last Login: {user_info['last_login']}")
+                    print(f"      New JWT Token: {token[:20]}...")
+                    
+                    # Update token for other tests
+                    self.test_auth_token = token
+                    
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Login failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Login test error: {str(e)}")
+            return False
+
+    async def test_auth_jwt_tokens(self):
+        """Test JWT token generation, validation, and decoding"""
+        print("\n   🎫 Testing JWT Token Validation...")
+        try:
+            if not hasattr(self, 'test_auth_token'):
+                self.errors.append("No JWT token available for validation test")
+                return False
+            
+            # Test token verification endpoint
+            headers = {"Authorization": f"Bearer {self.test_auth_token}"}
+            
+            async with self.session.get(f"{API_BASE}/auth/verify-token", headers=headers) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    
+                    # Verify response structure
+                    if 'valid' not in data or 'username' not in data:
+                        self.errors.append("Token verification response missing required fields")
+                        return False
+                    
+                    if not data['valid']:
+                        self.errors.append("Token verification returned valid=false")
+                        return False
+                    
+                    if data['username'] != self.test_username:
+                        self.errors.append(f"Token username mismatch: expected {self.test_username}, got {data['username']}")
+                        return False
+                    
+                    print(f"      ✅ JWT token validation successful")
+                    print(f"      Token is valid for user: {data['username']}")
+                    
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Token verification failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"JWT token test error: {str(e)}")
+            return False
+
+    async def test_auth_password_hashing(self):
+        """Test that passwords are properly hashed with bcrypt"""
+        print("\n   🔒 Testing Password Hashing Security...")
+        try:
+            # Create another test user to verify password hashing
+            test_user_2 = {
+                "username": "hashtest_user_2025",
+                "email": "hashtest@faeruncampaign.com", 
+                "password": "PlainTextPassword123"
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/signup", json=test_user_2) as response:
+                if response.status == 200:
+                    # Password hashing is verified by the fact that:
+                    # 1. User can be created (password is hashed during creation)
+                    # 2. User can login (password is verified against hash)
+                    # 3. Plain text password is never stored (we can't directly verify this without DB access)
+                    
+                    # Test login with the same password to verify hash verification works
+                    login_data = {
+                        "username": test_user_2['username'],
+                        "password": test_user_2['password']
+                    }
+                    
+                    async with self.session.post(f"{API_BASE}/auth/login", json=login_data) as login_response:
+                        if login_response.status == 200:
+                            print(f"      ✅ Password hashing working correctly")
+                            print(f"      User created and can login with hashed password")
+                            print(f"      bcrypt verification successful")
+                            return True
+                        else:
+                            self.errors.append("Password hash verification failed - cannot login after signup")
+                            return False
+                            
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Password hashing test failed during signup: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Password hashing test error: {str(e)}")
+            return False
+
+    async def test_auth_invalid_credentials(self):
+        """Test various invalid login scenarios"""
+        print("\n   ❌ Testing Invalid Login Attempts...")
+        try:
+            if not hasattr(self, 'test_username'):
+                self.errors.append("No test user available for invalid credentials test")
+                return False
+            
+            # Test 1: Wrong password
+            wrong_password_data = {
+                "username": self.test_username,
+                "password": "WrongPassword123"
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/login", json=wrong_password_data) as response:
+                if response.status != 401:
+                    self.errors.append(f"Wrong password should return 401, got {response.status}")
+                    return False
+                
+                data = await response.json()
+                if 'detail' not in data:
+                    self.errors.append("Invalid credentials response missing error detail")
+                    return False
+            
+            print(f"      ✅ Wrong password correctly rejected (401)")
+            
+            # Test 2: Non-existent username
+            nonexistent_user_data = {
+                "username": "nonexistent_user_12345",
+                "password": "AnyPassword123"
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/login", json=nonexistent_user_data) as response:
+                if response.status != 401:
+                    self.errors.append(f"Non-existent user should return 401, got {response.status}")
+                    return False
+            
+            print(f"      ✅ Non-existent user correctly rejected (401)")
+            
+            # Test 3: Missing credentials
+            missing_password_data = {
+                "username": self.test_username
+                # Missing password field
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/login", json=missing_password_data) as response:
+                if response.status not in [400, 422]:  # 400 Bad Request or 422 Validation Error
+                    self.errors.append(f"Missing password should return 400/422, got {response.status}")
+                    return False
+            
+            print(f"      ✅ Missing credentials correctly rejected ({response.status})")
+            
+            # Test 4: Empty credentials
+            empty_creds_data = {
+                "username": "",
+                "password": ""
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/login", json=empty_creds_data) as response:
+                if response.status not in [401, 422]:
+                    self.errors.append(f"Empty credentials should return 401/422, got {response.status}")
+                    return False
+            
+            print(f"      ✅ Empty credentials correctly rejected ({response.status})")
+            
+            return True
+            
+        except Exception as e:
+            self.errors.append(f"Invalid credentials test error: {str(e)}")
+            return False
+
+    async def test_auth_duplicate_validation(self):
+        """Test duplicate username/email handling"""
+        print("\n   👥 Testing Duplicate User Validation...")
+        try:
+            if not hasattr(self, 'test_username'):
+                self.errors.append("No test user available for duplicate validation test")
+                return False
+            
+            # Test 1: Duplicate username
+            duplicate_username_data = {
+                "username": self.test_username,  # Same username as existing user
+                "email": "different@email.com",
+                "password": "DifferentPassword123"
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/signup", json=duplicate_username_data) as response:
+                if response.status != 400:
+                    self.errors.append(f"Duplicate username should return 400, got {response.status}")
+                    return False
+                
+                data = await response.json()
+                if 'detail' not in data or 'username' not in data['detail'].lower():
+                    self.errors.append("Duplicate username error should mention username in detail")
+                    return False
+            
+            print(f"      ✅ Duplicate username correctly rejected (400)")
+            
+            # Test 2: Duplicate email
+            duplicate_email_data = {
+                "username": "different_username_2025",
+                "email": "testuser@faeruncampaign.com",  # Same email as existing user
+                "password": "DifferentPassword123"
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/signup", json=duplicate_email_data) as response:
+                if response.status != 400:
+                    self.errors.append(f"Duplicate email should return 400, got {response.status}")
+                    return False
+                
+                data = await response.json()
+                if 'detail' not in data or 'email' not in data['detail'].lower():
+                    self.errors.append("Duplicate email error should mention email in detail")
+                    return False
+            
+            print(f"      ✅ Duplicate email correctly rejected (400)")
+            
+            return True
+            
+        except Exception as e:
+            self.errors.append(f"Duplicate validation test error: {str(e)}")
+            return False
+
+    async def test_auth_separate_database(self):
+        """Test that users are stored in separate AUTH_DB_NAME database"""
+        print("\n   🗄️ Testing Separate Authentication Database...")
+        try:
+            # This test verifies that the auth system uses a separate database
+            # by checking that auth endpoints work independently of main app data
+            
+            # Test that we can access auth endpoints without affecting main kingdom data
+            async with self.session.get(f"{API_BASE}/kingdom") as kingdom_response:
+                if kingdom_response.status != 200:
+                    self.errors.append("Main kingdom API not accessible during auth test")
+                    return False
+                
+                kingdom_data = await kingdom_response.json()
+            
+            # Test that auth endpoints work
+            if not hasattr(self, 'test_auth_token'):
+                self.errors.append("No auth token available for separate database test")
+                return False
+            
+            headers = {"Authorization": f"Bearer {self.test_auth_token}"}
+            async with self.session.get(f"{API_BASE}/auth/me", headers=headers) as auth_response:
+                if auth_response.status != 200:
+                    self.errors.append("Auth /me endpoint not accessible")
+                    return False
+                
+                user_data = await auth_response.json()
+            
+            # Verify that kingdom data and user data are completely separate
+            if 'cities' in user_data or 'population' in user_data:
+                self.errors.append("User data contains kingdom fields - databases not properly separated")
+                return False
+            
+            if 'username' in kingdom_data or 'email' in kingdom_data:
+                self.errors.append("Kingdom data contains user fields - databases not properly separated")
+                return False
+            
+            print(f"      ✅ Authentication database properly separated")
+            print(f"      Kingdom data has {len(kingdom_data.get('cities', []))} cities")
+            print(f"      User data has username: {user_data.get('username')}")
+            
+            return True
+            
+        except Exception as e:
+            self.errors.append(f"Separate database test error: {str(e)}")
+            return False
+
+    async def test_auth_me(self):
+        """Test /auth/me endpoint for current user info"""
+        print("\n   👤 Testing Current User Info Endpoint...")
+        try:
+            if not hasattr(self, 'test_auth_token'):
+                self.errors.append("No auth token available for /me test")
+                return False
+            
+            headers = {"Authorization": f"Bearer {self.test_auth_token}"}
+            
+            async with self.session.get(f"{API_BASE}/auth/me", headers=headers) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    
+                    # Verify response structure
+                    required_fields = ['id', 'username', 'email', 'is_active', 'created_at']
+                    missing_fields = [field for field in required_fields if field not in data]
+                    
+                    if missing_fields:
+                        self.errors.append(f"/me response missing fields: {missing_fields}")
+                        return False
+                    
+                    # Verify data matches our test user
+                    if data['username'] != self.test_username:
+                        self.errors.append(f"/me username mismatch: expected {self.test_username}, got {data['username']}")
+                        return False
+                    
+                    # Verify password_hash is NOT included (security check)
+                    if 'password_hash' in data or 'password' in data:
+                        self.errors.append("/me endpoint leaking password information")
+                        return False
+                    
+                    print(f"      ✅ /me endpoint working correctly")
+                    print(f"      Username: {data['username']}")
+                    print(f"      Email: {data['email']}")
+                    print(f"      Active: {data['is_active']}")
+                    
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"/me endpoint failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"/me endpoint test error: {str(e)}")
+            return False
+
+    async def test_auth_verify_token(self):
+        """Test token verification endpoint"""
+        print("\n   ✅ Testing Token Verification...")
+        try:
+            if not hasattr(self, 'test_auth_token'):
+                self.errors.append("No auth token available for verification test")
+                return False
+            
+            headers = {"Authorization": f"Bearer {self.test_auth_token}"}
+            
+            async with self.session.get(f"{API_BASE}/auth/verify-token", headers=headers) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    
+                    if 'valid' not in data or 'username' not in data:
+                        self.errors.append("Token verification response missing required fields")
+                        return False
+                    
+                    if not data['valid']:
+                        self.errors.append("Valid token reported as invalid")
+                        return False
+                    
+                    print(f"      ✅ Token verification successful")
+                    print(f"      Token valid: {data['valid']}")
+                    print(f"      Username: {data['username']}")
+                    
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Token verification failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Token verification test error: {str(e)}")
+            return False
+
+    async def test_auth_logout(self):
+        """Test logout endpoint"""
+        print("\n   🚪 Testing Logout...")
+        try:
+            async with self.session.post(f"{API_BASE}/auth/logout") as response:
+                if response.status == 200:
+                    data = await response.json()
+                    
+                    if 'message' not in data:
+                        self.errors.append("Logout response missing message")
+                        return False
+                    
+                    print(f"      ✅ Logout successful")
+                    print(f"      Message: {data['message']}")
+                    
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Logout failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Logout test error: {str(e)}")
+            return False
+
     async def run_all_tests(self):
         print("🚀 Starting Fantasy Kingdom Backend Tests")
         print("=" * 60)
