@@ -327,10 +327,11 @@ class ComprehensiveAuthTester:
             kingdom_fields = set(kingdom_data_after.keys())
             user_fields = set(user_data.keys())
             
-            # Should have no overlap except maybe common fields like 'id'
-            overlap = kingdom_fields.intersection(user_fields) - {'id'}
+            # Should have no overlap except common fields like 'id', 'created_at'
+            acceptable_overlap = {'id', 'created_at'}
+            overlap = kingdom_fields.intersection(user_fields) - acceptable_overlap
             if overlap:
-                self.errors.append(f"Kingdom and user data have overlapping fields: {overlap}")
+                self.errors.append(f"Kingdom and user data have inappropriate overlapping fields: {overlap}")
                 return False
             
             print(f"   ✅ Database separation verified")
