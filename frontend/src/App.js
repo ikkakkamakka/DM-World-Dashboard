@@ -207,6 +207,7 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
 
   useEffect(() => {
     if (isVisible && kingdom) {
+      loadDrYearNames(); // Load year names on first render
       fetchCampaignDate();
       fetchCalendarEvents();
       fetchUpcomingEvents();
