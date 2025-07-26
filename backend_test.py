@@ -92,7 +92,13 @@ class BackendTester:
             'harptos_dr_conversion': False,
             'harptos_date_persistence': False,
             'harptos_event_filtering': False,
-            'harptos_city_event_titles': False
+            'harptos_city_event_titles': False,
+            # NEW: Forgotten Realms Year Names Tests
+            'dr_year_names_json_loading': False,
+            'dr_year_names_api_integration': False,
+            'dr_year_names_fallback_handling': False,
+            'dr_year_names_event_display': False,
+            'dr_year_names_calendar_display': False
         }
         self.errors = []
 
