@@ -1,0 +1,9206 @@
+[
+  {
+    "DR Year": -700,
+    "Year Name": "Year of Twelve Gods"
+  },
+  {
+    "DR Year": -699,
+    "Year Name": "Year of Moon Blades Clashing"
+  },
+  {
+    "DR Year": -698,
+    "Year Name": "Year of Plentiful Herds"
+  },
+  {
+    "DR Year": -697,
+    "Year Name": "Year of Furious Giants"
+  },
+  {
+    "DR Year": -696,
+    "Year Name": "Year of Great Rains"
+  },
+  {
+    "DR Year": -695,
+    "Year Name": "Year of Kings Clashing"
+  },
+  {
+    "DR Year": -694,
+    "Year Name": "Year of Embattled Ground"
+  },
+  {
+    "DR Year": -693,
+    "Year Name": "Year of Keening Whales"
+  },
+  {
+    "DR Year": -692,
+    "Year Name": "Year of Shadowed Traveler"
+  },
+  {
+    "DR Year": -691,
+    "Year Name": "Year of Stolen Fire"
+  },
+  {
+    "DR Year": -690,
+    "Year Name": "Year of Fragile Beginnings"
+  },
+  {
+    "DR Year": -689,
+    "Year Name": "Year of Final Fates"
+  },
+  {
+    "DR Year": -688,
+    "Year Name": "Year of Fettered Talons"
+  },
+  {
+    "DR Year": -687,
+    "Year Name": "Year of Eternal Summer"
+  },
+  {
+    "DR Year": -686,
+    "Year Name": "Year of Fireshadows"
+  },
+  {
+    "DR Year": -685,
+    "Year Name": "Year of Ill-timed Truth"
+  },
+  {
+    "DR Year": -684,
+    "Year Name": "Year of Exacted Oaths"
+  },
+  {
+    "DR Year": -683,
+    "Year Name": "Year of Fleeting Courage"
+  },
+  {
+    "DR Year": -682,
+    "Year Name": "Year of Humble Heroes"
+  },
+  {
+    "DR Year": -681,
+    "Year Name": "Year of Nightmares"
+  },
+  {
+    "DR Year": -680,
+    "Year Name": "Year of Creeping Thieves"
+  },
+  {
+    "DR Year": -679,
+    "Year Name": "Year of Ebon Scrimshaw"
+  },
+  {
+    "DR Year": -678,
+    "Year Name": "Year of Hot Springs"
+  },
+  {
+    "DR Year": -677,
+    "Year Name": "Year of Fervent Glances"
+  },
+  {
+    "DR Year": -676,
+    "Year Name": "Year of Frenzied Tempests"
+  },
+  {
+    "DR Year": -675,
+    "Year Name": "Year of Cresting Waves"
+  },
+  {
+    "DR Year": -674,
+    "Year Name": "Year of Dwarves Besieged"
+  },
+  {
+    "DR Year": -673,
+    "Year Name": "Year of Hidden Wisdom"
+  },
+  {
+    "DR Year": -672,
+    "Year Name": "Year of Giant Shoulders"
+  },
+  {
+    "DR Year": -671,
+    "Year Name": "Year of Crawling Carrion"
+  },
+  {
+    "DR Year": -670,
+    "Year Name": "Year of Unfurled Sails"
+  },
+  {
+    "DR Year": -669,
+    "Year Name": "Year of Summer Frosts"
+  },
+  {
+    "DR Year": -668,
+    "Year Name": "Year of Eagles Striking"
+  },
+  {
+    "DR Year": -667,
+    "Year Name": "Year of Harrowing Legends"
+  },
+  {
+    "DR Year": -666,
+    "Year Name": "Year of Hordling Armies"
+  },
+  {
+    "DR Year": -665,
+    "Year Name": "Year of Crumbling Ruins"
+  },
+  {
+    "DR Year": -664,
+    "Year Name": "Year of Turning Tides"
+  },
+  {
+    "DR Year": -663,
+    "Year Name": "Year of Encroaching Weeds"
+  },
+  {
+    "DR Year": -662,
+    "Year Name": "Year of Ravens"
+  },
+  {
+    "DR Year": -661,
+    "Year Name": "Year of Heavy Fogs"
+  },
+  {
+    "DR Year": -660,
+    "Year Name": "Year of Guarding Icon"
+  },
+  {
+    "DR Year": -659,
+    "Year Name": "Year of Slaying Arrows"
+  },
+  {
+    "DR Year": -658,
+    "Year Name": "Year of Friends Rejoicing"
+  },
+  {
+    "DR Year": -657,
+    "Year Name": "Year of Dancing Drakes"
+  },
+  {
+    "DR Year": -656,
+    "Year Name": "Year of Cool Breezes"
+  },
+  {
+    "DR Year": -655,
+    "Year Name": "Year of Troubled Nights"
+  },
+  {
+    "DR Year": -654,
+    "Year Name": "Year of Drifting Sands"
+  },
+  {
+    "DR Year": -653,
+    "Year Name": "Year of Reverent Threnody"
+  },
+  {
+    "DR Year": -652,
+    "Year Name": "Year of Joyful Colors"
+  },
+  {
+    "DR Year": -651,
+    "Year Name": "Year of Stirred Hearts"
+  },
+  {
+    "DR Year": -650,
+    "Year Name": "Year of Flames Rising"
+  },
+  {
+    "DR Year": -649,
+    "Year Name": "Year of Falling Copper"
+  },
+  {
+    "DR Year": -648,
+    "Year Name": "Year of Tribes Reunited"
+  },
+  {
+    "DR Year": -647,
+    "Year Name": "Year of Craven Hungers"
+  },
+  {
+    "DR Year": -646,
+    "Year Name": "Year of False Hopes"
+  },
+  {
+    "DR Year": -645,
+    "Year Name": "Year of Eternal Amber"
+  },
+  {
+    "DR Year": -644,
+    "Year Name": "Year of Vacant Wharves"
+  },
+  {
+    "DR Year": -643,
+    "Year Name": "Year of Melodious Minstrels"
+  },
+  {
+    "DR Year": -642,
+    "Year Name": "Year of Requiem"
+  },
+  {
+    "DR Year": -641,
+    "Year Name": "Year of Mountain Snows"
+  },
+  {
+    "DR Year": -640,
+    "Year Name": "Year of Flashing Daggers"
+  },
+  {
+    "DR Year": -639,
+    "Year Name": "Year of Cruel Rocks"
+  },
+  {
+    "DR Year": -638,
+    "Year Name": "Year of Nimble Fingers"
+  },
+  {
+    "DR Year": -637,
+    "Year Name": "Year of Velvet Tongues"
+  },
+  {
+    "DR Year": -636,
+    "Year Name": "Year of Unending Sorrow"
+  },
+  {
+    "DR Year": -635,
+    "Year Name": "Year of Surrounding Darkness"
+  },
+  {
+    "DR Year": -634,
+    "Year Name": "Year of Dwindling Darkness"
+  },
+  {
+    "DR Year": -633,
+    "Year Name": "Year of Eleven Lords"
+  },
+  {
+    "DR Year": -632,
+    "Year Name": "Year of Brazen Hetaera"
+  },
+  {
+    "DR Year": -631,
+    "Year Name": "Year of Mirthful Gnomes"
+  },
+  {
+    "DR Year": -630,
+    "Year Name": "Year of Orphaned Princes"
+  },
+  {
+    "DR Year": -629,
+    "Year Name": "Year of Dreaded Comings"
+  },
+  {
+    "DR Year": -628,
+    "Year Name": "Year of Empty Crowns"
+  },
+  {
+    "DR Year": -627,
+    "Year Name": "Year of Blinding Lightning"
+  },
+  {
+    "DR Year": -626,
+    "Year Name": "Year of Oaths Forsaken"
+  },
+  {
+    "DR Year": -625,
+    "Year Name": "Year of Molten Fury"
+  },
+  {
+    "DR Year": -624,
+    "Year Name": "Year of Bountiful Harvests"
+  },
+  {
+    "DR Year": -623,
+    "Year Name": "Year of Clipped Wings"
+  },
+  {
+    "DR Year": -622,
+    "Year Name": "Year of Drowning Darkness"
+  },
+  {
+    "DR Year": -621,
+    "Year Name": "Year of Blessed Rulers"
+  },
+  {
+    "DR Year": -620,
+    "Year Name": "Year of Noble Souls"
+  },
+  {
+    "DR Year": -619,
+    "Year Name": "Year of Bright Water"
+  },
+  {
+    "DR Year": -618,
+    "Year Name": "Year of Mired Wagons"
+  },
+  {
+    "DR Year": -617,
+    "Year Name": "Year of Black Teardrops"
+  },
+  {
+    "DR Year": -616,
+    "Year Name": "Year of Newfound Spells"
+  },
+  {
+    "DR Year": -615,
+    "Year Name": "Year of Billowing Dust"
+  },
+  {
+    "DR Year": -614,
+    "Year Name": "Year of Traveling Musicians"
+  },
+  {
+    "DR Year": -613,
+    "Year Name": "Year of Stampeding Hordes"
+  },
+  {
+    "DR Year": -612,
+    "Year Name": "Year of Sudden Mourning"
+  },
+  {
+    "DR Year": -611,
+    "Year Name": "Year of Power Usurped"
+  },
+  {
+    "DR Year": -610,
+    "Year Name": "Year of Reluctant Passion"
+  },
+  {
+    "DR Year": -609,
+    "Year Name": "Year of Six Cats"
+  },
+  {
+    "DR Year": -608,
+    "Year Name": "Year of Turned Knives"
+  },
+  {
+    "DR Year": -607,
+    "Year Name": "Year of No Wars"
+  },
+  {
+    "DR Year": -606,
+    "Year Name": "Year of Valor"
+  },
+  {
+    "DR Year": -605,
+    "Year Name": "Year of Lingering Nightfall"
+  },
+  {
+    "DR Year": -604,
+    "Year Name": "Year of Jade"
+  },
+  {
+    "DR Year": -603,
+    "Year Name": "Year of Held Breaths"
+  },
+  {
+    "DR Year": -602,
+    "Year Name": "Year of Joys Ephemeral"
+  },
+  {
+    "DR Year": -601,
+    "Year Name": "Year of Humble Beginnings"
+  },
+  {
+    "DR Year": -600,
+    "Year Name": "Year of Moonlit Unicorns"
+  },
+  {
+    "DR Year": -599,
+    "Year Name": "Year of Hasty Messengers"
+  },
+  {
+    "DR Year": -598,
+    "Year Name": "Year of Quiet Thunder"
+  },
+  {
+    "DR Year": -597,
+    "Year Name": "Year of Frequent Betrayals"
+  },
+  {
+    "DR Year": -596,
+    "Year Name": "Year of Dancing Ladies"
+  },
+  {
+    "DR Year": -595,
+    "Year Name": "Year of Clever Ettin"
+  },
+  {
+    "DR Year": -594,
+    "Year Name": "Year of Valiant Blades"
+  },
+  {
+    "DR Year": -593,
+    "Year Name": "Year of Summoned Heroes"
+  },
+  {
+    "DR Year": -592,
+    "Year Name": "Year of Deep Questions"
+  },
+  {
+    "DR Year": -591,
+    "Year Name": "Year of Echoing Prayers"
+  },
+  {
+    "DR Year": -590,
+    "Year Name": "Year of Masking Shadows"
+  },
+  {
+    "DR Year": -589,
+    "Year Name": "Year of Neverending Storms"
+  },
+  {
+    "DR Year": -588,
+    "Year Name": "Year of Smiling Infants"
+  },
+  {
+    "DR Year": -587,
+    "Year Name": "Year of Homecoming"
+  },
+  {
+    "DR Year": -586,
+    "Year Name": "Year of Grand Offerings"
+  },
+  {
+    "DR Year": -585,
+    "Year Name": "Year of Rumbling Earth"
+  },
+  {
+    "DR Year": -584,
+    "Year Name": "Year of Pyramids"
+  },
+  {
+    "DR Year": -583,
+    "Year Name": "Year of Lingering Mists"
+  },
+  {
+    "DR Year": -582,
+    "Year Name": "Year of Glittering Coins"
+  },
+  {
+    "DR Year": -581,
+    "Year Name": "Year of Toil Unending"
+  },
+  {
+    "DR Year": -580,
+    "Year Name": "Year of Melodies"
+  },
+  {
+    "DR Year": -579,
+    "Year Name": "Year of Jewels Glittering"
+  },
+  {
+    "DR Year": -578,
+    "Year Name": "Year of Haste"
+  },
+  {
+    "DR Year": -577,
+    "Year Name": "Year of Neverending Carnage"
+  },
+  {
+    "DR Year": -576,
+    "Year Name": "Year of Licentious Behavior"
+  },
+  {
+    "DR Year": -575,
+    "Year Name": "Year of Spectacular Art"
+  },
+  {
+    "DR Year": -574,
+    "Year Name": "Year of Hanged Martyrs"
+  },
+  {
+    "DR Year": -573,
+    "Year Name": "Year of Full Depths"
+  },
+  {
+    "DR Year": -572,
+    "Year Name": "Year of Fateful Handshakes"
+  },
+  {
+    "DR Year": -571,
+    "Year Name": "Year of Meager Portions"
+  },
+  {
+    "DR Year": -570,
+    "Year Name": "Year of Raised Cups"
+  },
+  {
+    "DR Year": -569,
+    "Year Name": "Year of Silken Sabres"
+  },
+  {
+    "DR Year": -568,
+    "Year Name": "Year of Iron Golems"
+  },
+  {
+    "DR Year": -567,
+    "Year Name": "Year of High Harvest"
+  },
+  {
+    "DR Year": -566,
+    "Year Name": "Year of Greed Regretted"
+  },
+  {
+    "DR Year": -565,
+    "Year Name": "Year of Dweomers"
+  },
+  {
+    "DR Year": -564,
+    "Year Name": "Year of Fearful Looks"
+  },
+  {
+    "DR Year": -563,
+    "Year Name": "Year of Earnest Gallantry"
+  },
+  {
+    "DR Year": -562,
+    "Year Name": "Year of Dust"
+  },
+  {
+    "DR Year": -561,
+    "Year Name": "Year of Unknown Fates"
+  },
+  {
+    "DR Year": -560,
+    "Year Name": "Year of Dreams Attained"
+  },
+  {
+    "DR Year": -559,
+    "Year Name": "Year of Hidden Passions"
+  },
+  {
+    "DR Year": -558,
+    "Year Name": "Year of Fading Tides"
+  },
+  {
+    "DR Year": -557,
+    "Year Name": "Year of Life's Bounty"
+  },
+  {
+    "DR Year": -556,
+    "Year Name": "Year of Small Gifts"
+  },
+  {
+    "DR Year": -555,
+    "Year Name": "Year of Furtive Magics"
+  },
+  {
+    "DR Year": -554,
+    "Year Name": "Year of Dwindling Light"
+  },
+  {
+    "DR Year": -553,
+    "Year Name": "Year of Plentiful Wine"
+  },
+  {
+    "DR Year": -552,
+    "Year Name": "Year of Voices Resounding"
+  },
+  {
+    "DR Year": -551,
+    "Year Name": "Year of Kindred Spirits"
+  },
+  {
+    "DR Year": -550,
+    "Year Name": "Year of Glistening Dust"
+  },
+  {
+    "DR Year": -549,
+    "Year Name": "Year of Clammy Tentacles"
+  },
+  {
+    "DR Year": -548,
+    "Year Name": "Year of Venomous Scribes"
+  },
+  {
+    "DR Year": -547,
+    "Year Name": "Year of Toppled Trees"
+  },
+  {
+    "DR Year": -546,
+    "Year Name": "Year of Erstwhile Travelers"
+  },
+  {
+    "DR Year": -545,
+    "Year Name": "Year of Deep Waters"
+  },
+  {
+    "DR Year": -544,
+    "Year Name": "Year of Leaping Fish"
+  },
+  {
+    "DR Year": -543,
+    "Year Name": "Year of Merry Jesters"
+  },
+  {
+    "DR Year": -542,
+    "Year Name": "Year of Peaceful Dawns"
+  },
+  {
+    "DR Year": -541,
+    "Year Name": "Year of Benevolent Lords"
+  },
+  {
+    "DR Year": -540,
+    "Year Name": "Year of Stallions"
+  },
+  {
+    "DR Year": -539,
+    "Year Name": "Year of Harkened Mounts"
+  },
+  {
+    "DR Year": -538,
+    "Year Name": "Year of Twilight Celebrations"
+  },
+  {
+    "DR Year": -537,
+    "Year Name": "Year of Lights Lurking"
+  },
+  {
+    "DR Year": -536,
+    "Year Name": "Year of Mirrored Spirits"
+  },
+  {
+    "DR Year": -535,
+    "Year Name": "Year of Glistening Dew"
+  },
+  {
+    "DR Year": -534,
+    "Year Name": "Year of Long Strides"
+  },
+  {
+    "DR Year": -533,
+    "Year Name": "Year of Runes Abundant"
+  },
+  {
+    "DR Year": -532,
+    "Year Name": "Year of Flowing Gold"
+  },
+  {
+    "DR Year": -531,
+    "Year Name": "Year of Deeds Undreamed"
+  },
+  {
+    "DR Year": -530,
+    "Year Name": "Year of Meager Means"
+  },
+  {
+    "DR Year": -529,
+    "Year Name": "Year of Imps Amuck"
+  },
+  {
+    "DR Year": -528,
+    "Year Name": "Year of Wailing"
+  },
+  {
+    "DR Year": -527,
+    "Year Name": "Year of Hideous Troops"
+  },
+  {
+    "DR Year": -526,
+    "Year Name": "Year of Returning Wonders"
+  },
+  {
+    "DR Year": -525,
+    "Year Name": "Year of Golden Chains"
+  },
+  {
+    "DR Year": -524,
+    "Year Name": "Year of Felled Timber"
+  },
+  {
+    "DR Year": -523,
+    "Year Name": "Year of Calling Wonders"
+  },
+  {
+    "DR Year": -522,
+    "Year Name": "Year of Vengeful Scions"
+  },
+  {
+    "DR Year": -521,
+    "Year Name": "Year of Untethered Yokes"
+  },
+  {
+    "DR Year": -520,
+    "Year Name": "Year of Vast Diversions"
+  },
+  {
+    "DR Year": -519,
+    "Year Name": "Year of Lasting Hate"
+  },
+  {
+    "DR Year": -518,
+    "Year Name": "Year of Defenses Forsaken"
+  },
+  {
+    "DR Year": -517,
+    "Year Name": "Year of Foiled Pursuits"
+  },
+  {
+    "DR Year": -516,
+    "Year Name": "Year of Winds Westward"
+  },
+  {
+    "DR Year": -515,
+    "Year Name": "Year of Masks Divine"
+  },
+  {
+    "DR Year": -514,
+    "Year Name": "Year of Remembered Friendships"
+  },
+  {
+    "DR Year": -513,
+    "Year Name": "Year of Great Misunderstandings"
+  },
+  {
+    "DR Year": -512,
+    "Year Name": "Year of Freedom Granted"
+  },
+  {
+    "DR Year": -511,
+    "Year Name": "Year of Dangerous Icicles"
+  },
+  {
+    "DR Year": -510,
+    "Year Name": "Year of Stirring Beauty"
+  },
+  {
+    "DR Year": -509,
+    "Year Name": "Year of Harrowing Confrontations"
+  },
+  {
+    "DR Year": -508,
+    "Year Name": "Year of Rattling Chains"
+  },
+  {
+    "DR Year": -507,
+    "Year Name": "Year of Frozen Breaths"
+  },
+  {
+    "DR Year": -506,
+    "Year Name": "Year of Deafening Thunder"
+  },
+  {
+    "DR Year": -505,
+    "Year Name": "Year of Burnings"
+  },
+  {
+    "DR Year": -504,
+    "Year Name": "Year of Whispering Winds"
+  },
+  {
+    "DR Year": -503,
+    "Year Name": "Year of Taut Cloths"
+  },
+  {
+    "DR Year": -502,
+    "Year Name": "Year of Nothingness"
+  },
+  {
+    "DR Year": -501,
+    "Year Name": "Year of Light Laughter"
+  },
+  {
+    "DR Year": -500,
+    "Year Name": "Year of Running Unicorns"
+  },
+  {
+    "DR Year": -499,
+    "Year Name": "Year of Misplaced Trust"
+  },
+  {
+    "DR Year": -498,
+    "Year Name": "Year of Bloodied Tears"
+  },
+  {
+    "DR Year": -497,
+    "Year Name": "Year of Shining Beacons"
+  },
+  {
+    "DR Year": -496,
+    "Year Name": "Year of Hidden Ways"
+  },
+  {
+    "DR Year": -495,
+    "Year Name": "Year of Rising Fears"
+  },
+  {
+    "DR Year": -494,
+    "Year Name": "Year of Glowing Raindrops"
+  },
+  {
+    "DR Year": -493,
+    "Year Name": "Year of Deadly Cost"
+  },
+  {
+    "DR Year": -492,
+    "Year Name": "Year of Broken Spirit"
+  },
+  {
+    "DR Year": -491,
+    "Year Name": "Year of Flowering Mint"
+  },
+  {
+    "DR Year": -490,
+    "Year Name": "Year of Three Griffons"
+  },
+  {
+    "DR Year": -489,
+    "Year Name": "Year of Endless Song"
+  },
+  {
+    "DR Year": -488,
+    "Year Name": "Year of Impossible Tasks"
+  },
+  {
+    "DR Year": -487,
+    "Year Name": "Year of Free Will"
+  },
+  {
+    "DR Year": -486,
+    "Year Name": "Year of Ringing Music"
+  },
+  {
+    "DR Year": -485,
+    "Year Name": "Year of Masks"
+  },
+  {
+    "DR Year": -484,
+    "Year Name": "Year of Driving Rain"
+  },
+  {
+    "DR Year": -483,
+    "Year Name": "Year of Closed Gates"
+  },
+  {
+    "DR Year": -482,
+    "Year Name": "Year of Warring Clans"
+  },
+  {
+    "DR Year": -481,
+    "Year Name": "Year of Wilting Vines"
+  },
+  {
+    "DR Year": -480,
+    "Year Name": "Year of Tested Faiths"
+  },
+  {
+    "DR Year": -479,
+    "Year Name": "Year of Enchanted Voyages"
+  },
+  {
+    "DR Year": -478,
+    "Year Name": "Year of Lost Children"
+  },
+  {
+    "DR Year": -477,
+    "Year Name": "Year of Legacy"
+  },
+  {
+    "DR Year": -476,
+    "Year Name": "Year of Tirades"
+  },
+  {
+    "DR Year": -475,
+    "Year Name": "Year of Glowing Embers"
+  },
+  {
+    "DR Year": -474,
+    "Year Name": "Year of Everlasting Slime"
+  },
+  {
+    "DR Year": -473,
+    "Year Name": "Year of Renewed Faith"
+  },
+  {
+    "DR Year": -472,
+    "Year Name": "Year of Wizards' Woe"
+  },
+  {
+    "DR Year": -471,
+    "Year Name": "Year of Scorned Prophets"
+  },
+  {
+    "DR Year": -470,
+    "Year Name": "Year of Perdition's Flame"
+  },
+  {
+    "DR Year": -469,
+    "Year Name": "Year of Imparted Riches"
+  },
+  {
+    "DR Year": -468,
+    "Year Name": "Year of Grace"
+  },
+  {
+    "DR Year": -467,
+    "Year Name": "Year of Emerald Groves"
+  },
+  {
+    "DR Year": -466,
+    "Year Name": "Year of Clashing Swords"
+  },
+  {
+    "DR Year": -465,
+    "Year Name": "Year of Lasting Myth"
+  },
+  {
+    "DR Year": -464,
+    "Year Name": "Year of Merry Wives"
+  },
+  {
+    "DR Year": -463,
+    "Year Name": "Year of Parting Waters"
+  },
+  {
+    "DR Year": -462,
+    "Year Name": "Year of Arcane Prisms"
+  },
+  {
+    "DR Year": -461,
+    "Year Name": "Year of Bold Pioneers"
+  },
+  {
+    "DR Year": -460,
+    "Year Name": "Year of Silver Warhammers"
+  },
+  {
+    "DR Year": -459,
+    "Year Name": "Year of Sparkling Spires"
+  },
+  {
+    "DR Year": -458,
+    "Year Name": "Year of Sea Monsters"
+  },
+  {
+    "DR Year": -457,
+    "Year Name": "Year of Hostile Badgers"
+  },
+  {
+    "DR Year": -456,
+    "Year Name": "Year of Rough Hands"
+  },
+  {
+    "DR Year": -455,
+    "Year Name": "Year of Rebellious Streets"
+  },
+  {
+    "DR Year": -454,
+    "Year Name": "Year of Pounding Drums"
+  },
+  {
+    "DR Year": -453,
+    "Year Name": "Year of Fiends Rising"
+  },
+  {
+    "DR Year": -452,
+    "Year Name": "Year of Gathered Shields"
+  },
+  {
+    "DR Year": -451,
+    "Year Name": "Year of Graceful Surrender"
+  },
+  {
+    "DR Year": -450,
+    "Year Name": "Year of Dwarves' Descent"
+  },
+  {
+    "DR Year": -449,
+    "Year Name": "Year of Dawning Magic"
+  },
+  {
+    "DR Year": -448,
+    "Year Name": "Year of Lost Souls"
+  },
+  {
+    "DR Year": -447,
+    "Year Name": "Year of Queries"
+  },
+  {
+    "DR Year": -446,
+    "Year Name": "Year of Treasured Moments"
+  },
+  {
+    "DR Year": -445,
+    "Year Name": "Year of Heroic Vindication"
+  },
+  {
+    "DR Year": -444,
+    "Year Name": "Year of Favors Withheld"
+  },
+  {
+    "DR Year": -443,
+    "Year Name": "Year of Clamoring"
+  },
+  {
+    "DR Year": -442,
+    "Year Name": "Year of Kings Arising"
+  },
+  {
+    "DR Year": -441,
+    "Year Name": "Year of Paths Unwalked"
+  },
+  {
+    "DR Year": -440,
+    "Year Name": "Year of Scarecrows"
+  },
+  {
+    "DR Year": -439,
+    "Year Name": "Year of Chilling Laughter"
+  },
+  {
+    "DR Year": -438,
+    "Year Name": "Year of Dripping Daggers"
+  },
+  {
+    "DR Year": -437,
+    "Year Name": "Year of Forgotten Passages"
+  },
+  {
+    "DR Year": -436,
+    "Year Name": "Year of Joyous Tears"
+  },
+  {
+    "DR Year": -435,
+    "Year Name": "Year of Passion's Fire"
+  },
+  {
+    "DR Year": -434,
+    "Year Name": "Year of Snowy Beards"
+  },
+  {
+    "DR Year": -433,
+    "Year Name": "Year of Words Regretted"
+  },
+  {
+    "DR Year": -432,
+    "Year Name": "Year of Dryads Calling"
+  },
+  {
+    "DR Year": -431,
+    "Year Name": "Year of Crowded Walks"
+  },
+  {
+    "DR Year": -430,
+    "Year Name": "Year of Choking Cords"
+  },
+  {
+    "DR Year": -429,
+    "Year Name": "Year of Fluttering Wings"
+  },
+  {
+    "DR Year": -428,
+    "Year Name": "Year of Broken Vows"
+  },
+  {
+    "DR Year": -427,
+    "Year Name": "Year of Breaking Storms"
+  },
+  {
+    "DR Year": -426,
+    "Year Name": "Year of Drying Wells"
+  },
+  {
+    "DR Year": -425,
+    "Year Name": "Year of Ancestral Voices"
+  },
+  {
+    "DR Year": -424,
+    "Year Name": "Year of Bold Faces"
+  },
+  {
+    "DR Year": -423,
+    "Year Name": "Year of Forsaken Love"
+  },
+  {
+    "DR Year": -422,
+    "Year Name": "Year of Four Shadows"
+  },
+  {
+    "DR Year": -421,
+    "Year Name": "Year of Mortal Consequences"
+  },
+  {
+    "DR Year": -420,
+    "Year Name": "Year of Manacles"
+  },
+  {
+    "DR Year": -419,
+    "Year Name": "Year of Yellow Musk"
+  },
+  {
+    "DR Year": -418,
+    "Year Name": "Year of Cowardly Choices"
+  },
+  {
+    "DR Year": -417,
+    "Year Name": "Year of Harbor's Lights"
+  },
+  {
+    "DR Year": -416,
+    "Year Name": "Year of Howling Gibbets"
+  },
+  {
+    "DR Year": -415,
+    "Year Name": "Year of the Lost Way"
+  },
+  {
+    "DR Year": -414,
+    "Year Name": "Year of the Saint's Perdition"
+  },
+  {
+    "DR Year": -413,
+    "Year Name": "Year of Seasons Unsettled"
+  },
+  {
+    "DR Year": -412,
+    "Year Name": "Year of Weary Kings"
+  },
+  {
+    "DR Year": -411,
+    "Year Name": "Year of Crimson Marpenoth"
+  },
+  {
+    "DR Year": -410,
+    "Year Name": "Year of the Silver Cestus"
+  },
+  {
+    "DR Year": -409,
+    "Year Name": "Year of Sailing Winds"
+  },
+  {
+    "DR Year": -408,
+    "Year Name": "Year of Sleeping Dragons"
+  },
+  {
+    "DR Year": -407,
+    "Year Name": "Year of Captive Pride"
+  },
+  {
+    "DR Year": -406,
+    "Year Name": "Year of the Insurrection"
+  },
+  {
+    "DR Year": -405,
+    "Year Name": "Year of Lost Chances"
+  },
+  {
+    "DR Year": -404,
+    "Year Name": "Year of Lashing Whips"
+  },
+  {
+    "DR Year": -403,
+    "Year Name": "Year of the Lich's Tears"
+  },
+  {
+    "DR Year": -402,
+    "Year Name": "Year of the Zardazil"
+  },
+  {
+    "DR Year": -401,
+    "Year Name": "Year of Kyrie Arcanaon"
+  },
+  {
+    "DR Year": -400,
+    "Year Name": "Year of Gilded Sky"
+  },
+  {
+    "DR Year": -399,
+    "Year Name": "Year of Risen Myths"
+  },
+  {
+    "DR Year": -398,
+    "Year Name": "Year of Phantoms"
+  },
+  {
+    "DR Year": -397,
+    "Year Name": "Year of Falling Stones"
+  },
+  {
+    "DR Year": -396,
+    "Year Name": "Year of Twilit Leaves"
+  },
+  {
+    "DR Year": -395,
+    "Year Name": "Year of Ashen Faces"
+  },
+  {
+    "DR Year": -394,
+    "Year Name": "Year of Clouded Vision"
+  },
+  {
+    "DR Year": -393,
+    "Year Name": "Year of Burning Winds"
+  },
+  {
+    "DR Year": -392,
+    "Year Name": "Year of Lanterns"
+  },
+  {
+    "DR Year": -391,
+    "Year Name": "Year of Squalid Scarecrows"
+  },
+  {
+    "DR Year": -390,
+    "Year Name": "Year of Enchanters"
+  },
+  {
+    "DR Year": -389,
+    "Year Name": "Year of Steelsong"
+  },
+  {
+    "DR Year": -388,
+    "Year Name": "Year of Glad Roses"
+  },
+  {
+    "DR Year": -387,
+    "Year Name": "Year of Shattered Walls"
+  },
+  {
+    "DR Year": -386,
+    "Year Name": "Year of Smoking Snow"
+  },
+  {
+    "DR Year": -385,
+    "Year Name": "Year of Medyoxes"
+  },
+  {
+    "DR Year": -384,
+    "Year Name": "Year of True Gages"
+  },
+  {
+    "DR Year": -383,
+    "Year Name": "Year of Riven Tankards"
+  },
+  {
+    "DR Year": -382,
+    "Year Name": "Year of Angered Ankhegs"
+  },
+  {
+    "DR Year": -381,
+    "Year Name": "Year of Fallen Goats"
+  },
+  {
+    "DR Year": -380,
+    "Year Name": "Year of Broken Gates"
+  },
+  {
+    "DR Year": -379,
+    "Year Name": "Year of Dancing Idols"
+  },
+  {
+    "DR Year": -378,
+    "Year Name": "Year of Ebon Hawks"
+  },
+  {
+    "DR Year": -377,
+    "Year Name": "Year of Storm Currents"
+  },
+  {
+    "DR Year": -376,
+    "Year Name": "Year of Sanctuary"
+  },
+  {
+    "DR Year": -375,
+    "Year Name": "Year of Clutching Dusk"
+  },
+  {
+    "DR Year": -374,
+    "Year Name": "Year of Shattering"
+  },
+  {
+    "DR Year": -373,
+    "Year Name": "Year of Whispering Stones"
+  },
+  {
+    "DR Year": -372,
+    "Year Name": "Year of Owls' Watching"
+  },
+  {
+    "DR Year": -371,
+    "Year Name": "Year of Bruins"
+  },
+  {
+    "DR Year": -370,
+    "Year Name": "Year of Rent Armor"
+  },
+  {
+    "DR Year": -369,
+    "Year Name": "Year of Falling Gold"
+  },
+  {
+    "DR Year": -368,
+    "Year Name": "Year of Simulacra"
+  },
+  {
+    "DR Year": -367,
+    "Year Name": "Year of Flaming Manes"
+  },
+  {
+    "DR Year": -366,
+    "Year Name": "Year of Arumae"
+  },
+  {
+    "DR Year": -365,
+    "Year Name": "Year of Seven Tines"
+  },
+  {
+    "DR Year": -364,
+    "Year Name": "Year of Creaking Corbels"
+  },
+  {
+    "DR Year": -363,
+    "Year Name": "Year of Paladins' Puissance"
+  },
+  {
+    "DR Year": -362,
+    "Year Name": "Year of Defilers"
+  },
+  {
+    "DR Year": -361,
+    "Year Name": "Year of Mageserpents"
+  },
+  {
+    "DR Year": -360,
+    "Year Name": "Year of Autumnfire"
+  },
+  {
+    "DR Year": -359,
+    "Year Name": "Year of Boiling Moats"
+  },
+  {
+    "DR Year": -358,
+    "Year Name": "Year of Shuddering Mythals"
+  },
+  {
+    "DR Year": -357,
+    "Year Name": "Year of Sycophants"
+  },
+  {
+    "DR Year": -356,
+    "Year Name": "Year of Stale Ale"
+  },
+  {
+    "DR Year": -355,
+    "Year Name": "Year of Lost Regalia"
+  },
+  {
+    "DR Year": -354,
+    "Year Name": "Year of Many Maws"
+  },
+  {
+    "DR Year": -353,
+    "Year Name": "Year of Enchanted Parchment"
+  },
+  {
+    "DR Year": -352,
+    "Year Name": "Year of Delights Unending"
+  },
+  {
+    "DR Year": -351,
+    "Year Name": "Year of Dark Roads"
+  },
+  {
+    "DR Year": -350,
+    "Year Name": "Year of Craven Words"
+  },
+  {
+    "DR Year": -349,
+    "Year Name": "Year of Bold Poachers"
+  },
+  {
+    "DR Year": -348,
+    "Year Name": "Year of Moon Madness"
+  },
+  {
+    "DR Year": -347,
+    "Year Name": "Year of Shivered Staves"
+  },
+  {
+    "DR Year": -346,
+    "Year Name": "Year of Rhymes"
+  },
+  {
+    "DR Year": -345,
+    "Year Name": "Year of Good Courage"
+  },
+  {
+    "DR Year": -344,
+    "Year Name": "Year of Rolling Crowns"
+  },
+  {
+    "DR Year": -343,
+    "Year Name": "Year of Chilled Marrow"
+  },
+  {
+    "DR Year": -342,
+    "Year Name": "Year of Sovereign Truth"
+  },
+  {
+    "DR Year": -341,
+    "Year Name": "Year of Weeping Minstrels"
+  },
+  {
+    "DR Year": -340,
+    "Year Name": "Year of Desire and Despair"
+  },
+  {
+    "DR Year": -339,
+    "Year Name": "Year of Sundered Webs"
+  },
+  {
+    "DR Year": -338,
+    "Year Name": "Year of Guttering Torches"
+  },
+  {
+    "DR Year": -337,
+    "Year Name": "Year of Broken Charges"
+  },
+  {
+    "DR Year": -336,
+    "Year Name": "Year of Dark Sunset"
+  },
+  {
+    "DR Year": -335,
+    "Year Name": "Year of Seven Spirits"
+  },
+  {
+    "DR Year": -334,
+    "Year Name": "Year of Three Seas' Rage"
+  },
+  {
+    "DR Year": -333,
+    "Year Name": "Year of Humbling Havens"
+  },
+  {
+    "DR Year": -332,
+    "Year Name": "Year of Burnished Books"
+  },
+  {
+    "DR Year": -331,
+    "Year Name": "Year of Shadows Fleeting"
+  },
+  {
+    "DR Year": -330,
+    "Year Name": "Year of Empty Quests"
+  },
+  {
+    "DR Year": -329,
+    "Year Name": "Year of Icefire"
+  },
+  {
+    "DR Year": -328,
+    "Year Name": "Year of Drowned Hopes"
+  },
+  {
+    "DR Year": -327,
+    "Year Name": "Year of Opened Graves"
+  },
+  {
+    "DR Year": -326,
+    "Year Name": "Year of Scorched Skulls"
+  },
+  {
+    "DR Year": -325,
+    "Year Name": "Year of Crown Hatred"
+  },
+  {
+    "DR Year": -324,
+    "Year Name": "Year of Windriver's Loss"
+  },
+  {
+    "DR Year": -323,
+    "Year Name": "Year of Unseen Doom"
+  },
+  {
+    "DR Year": -322,
+    "Year Name": "Year of Plunging Hooves"
+  },
+  {
+    "DR Year": -321,
+    "Year Name": "Year of Hollow Hills"
+  },
+  {
+    "DR Year": -320,
+    "Year Name": "Year of Netted Dreams"
+  },
+  {
+    "DR Year": -319,
+    "Year Name": "Year of Rock Roses"
+  },
+  {
+    "DR Year": -318,
+    "Year Name": "Year of Crying Wolves"
+  },
+  {
+    "DR Year": -317,
+    "Year Name": "Year of Vampiric Glee"
+  },
+  {
+    "DR Year": -316,
+    "Year Name": "Year of Drifting Death"
+  },
+  {
+    "DR Year": -315,
+    "Year Name": "Year of Vengeance"
+  },
+  {
+    "DR Year": -314,
+    "Year Name": "Year of Four Princes"
+  },
+  {
+    "DR Year": -313,
+    "Year Name": "Year of Humility"
+  },
+  {
+    "DR Year": -312,
+    "Year Name": "Year of Jade Roses"
+  },
+  {
+    "DR Year": -311,
+    "Year Name": "Year of Patient Traps"
+  },
+  {
+    "DR Year": -310,
+    "Year Name": "Year of Glassharks"
+  },
+  {
+    "DR Year": -309,
+    "Year Name": "Year of Many Anchors"
+  },
+  {
+    "DR Year": -308,
+    "Year Name": "Year of Proud Vixens"
+  },
+  {
+    "DR Year": -307,
+    "Year Name": "Year of Illuminated Vellum"
+  },
+  {
+    "DR Year": -306,
+    "Year Name": "Year of Wan Shades"
+  },
+  {
+    "DR Year": -305,
+    "Year Name": "Year of Bold Bladesmen"
+  },
+  {
+    "DR Year": -304,
+    "Year Name": "Year of Erupting Crypts"
+  },
+  {
+    "DR Year": -303,
+    "Year Name": "Year of Dusky Dwarves"
+  },
+  {
+    "DR Year": -302,
+    "Year Name": "Year of Heirs Adrift"
+  },
+  {
+    "DR Year": -301,
+    "Year Name": "Year of Wafting Sorrows"
+  },
+  {
+    "DR Year": -300,
+    "Year Name": "Year of Cold Anger"
+  },
+  {
+    "DR Year": -299,
+    "Year Name": "Year of Heartsblood"
+  },
+  {
+    "DR Year": -298,
+    "Year Name": "Year of Nine Watchers"
+  },
+  {
+    "DR Year": -297,
+    "Year Name": "Year of Scrying Orbs"
+  },
+  {
+    "DR Year": -296,
+    "Year Name": "Year of Factols"
+  },
+  {
+    "DR Year": -295,
+    "Year Name": "Year of Harsh Words"
+  },
+  {
+    "DR Year": -294,
+    "Year Name": "Year of Sundry Violence"
+  },
+  {
+    "DR Year": -293,
+    "Year Name": "Year of Tyrant Hawks"
+  },
+  {
+    "DR Year": -292,
+    "Year Name": "Year of Envenomed Nectar"
+  },
+  {
+    "DR Year": -291,
+    "Year Name": "Year of Setting Suns"
+  },
+  {
+    "DR Year": -290,
+    "Year Name": "Year of Fiery Slumber"
+  },
+  {
+    "DR Year": -289,
+    "Year Name": "Year of Spiteful Stones"
+  },
+  {
+    "DR Year": -288,
+    "Year Name": "Year of Eight Lightnings"
+  },
+  {
+    "DR Year": -287,
+    "Year Name": "Year of Hard Currency"
+  },
+  {
+    "DR Year": -286,
+    "Year Name": "Year of Foul Awakenings"
+  },
+  {
+    "DR Year": -285,
+    "Year Name": "Year of Early Graves"
+  },
+  {
+    "DR Year": -284,
+    "Year Name": "Year of Lost Faith"
+  },
+  {
+    "DR Year": -283,
+    "Year Name": "Year of Shattered Portals"
+  },
+  {
+    "DR Year": -282,
+    "Year Name": "Year of the Vampire's Cloak"
+  },
+  {
+    "DR Year": -281,
+    "Year Name": "Year of Silvered Thoughts"
+  },
+  {
+    "DR Year": -280,
+    "Year Name": "Year of the Impudent Kin"
+  },
+  {
+    "DR Year": -279,
+    "Year Name": "Year of Gems Aflame"
+  },
+  {
+    "DR Year": -278,
+    "Year Name": "Year of the Ruling Sceptre"
+  },
+  {
+    "DR Year": -277,
+    "Year Name": "Year of the Winking Eye"
+  },
+  {
+    "DR Year": -276,
+    "Year Name": "Year of Overflowing Casks"
+  },
+  {
+    "DR Year": -275,
+    "Year Name": "Year of the Grinning Pack"
+  },
+  {
+    "DR Year": -274,
+    "Year Name": "Year of the Purring Pard"
+  },
+  {
+    "DR Year": -273,
+    "Year Name": "Year of the Dancing Faun"
+  },
+  {
+    "DR Year": -272,
+    "Year Name": "Year of Songstones"
+  },
+  {
+    "DR Year": -271,
+    "Year Name": "Year of the Auburn Beauty"
+  },
+  {
+    "DR Year": -270,
+    "Year Name": "Year of the Winter Wolf"
+  },
+  {
+    "DR Year": -269,
+    "Year Name": "Year of Mournful Monuments"
+  },
+  {
+    "DR Year": -268,
+    "Year Name": "Year of the Sunbright"
+  },
+  {
+    "DR Year": -267,
+    "Year Name": "Year of Crumbling Caverns"
+  },
+  {
+    "DR Year": -266,
+    "Year Name": "Year of Hastening Heralds"
+  },
+  {
+    "DR Year": -265,
+    "Year Name": "Year of Burgeoning Victory"
+  },
+  {
+    "DR Year": -264,
+    "Year Name": "Year of Scriveners"
+  },
+  {
+    "DR Year": -263,
+    "Year Name": "Year of Midwives"
+  },
+  {
+    "DR Year": -262,
+    "Year Name": "Year of the Broken Promise"
+  },
+  {
+    "DR Year": -261,
+    "Year Name": "Year of the Lost Princess"
+  },
+  {
+    "DR Year": -260,
+    "Year Name": "Year of Hunting Hounds"
+  },
+  {
+    "DR Year": -259,
+    "Year Name": "Year of the Pyre"
+  },
+  {
+    "DR Year": -258,
+    "Year Name": "Year of Many Moons"
+  },
+  {
+    "DR Year": -257,
+    "Year Name": "Year of the Stricken"
+  },
+  {
+    "DR Year": -256,
+    "Year Name": "Year of Able Warriors"
+  },
+  {
+    "DR Year": -255,
+    "Year Name": "Year of Furious Waves"
+  },
+  {
+    "DR Year": -254,
+    "Year Name": "Year of Quartered Foes"
+  },
+  {
+    "DR Year": -253,
+    "Year Name": "Year of Whirlwinds"
+  },
+  {
+    "DR Year": -252,
+    "Year Name": "Year of Vindication"
+  },
+  {
+    "DR Year": -251,
+    "Year Name": "Year of Black Apples"
+  },
+  {
+    "DR Year": -250,
+    "Year Name": "Year of Imprisonments"
+  },
+  {
+    "DR Year": -249,
+    "Year Name": "Year of Silver Wings"
+  },
+  {
+    "DR Year": -248,
+    "Year Name": "Year of Last Songs"
+  },
+  {
+    "DR Year": -247,
+    "Year Name": "Year of the Striking Lance"
+  },
+  {
+    "DR Year": -246,
+    "Year Name": "Year of Much Cheer"
+  },
+  {
+    "DR Year": -245,
+    "Year Name": "Year of Entombed Blades"
+  },
+  {
+    "DR Year": -244,
+    "Year Name": "Year of Fleeting Fancy"
+  },
+  {
+    "DR Year": -243,
+    "Year Name": "Year of the Rack"
+  },
+  {
+    "DR Year": -242,
+    "Year Name": "Year of the Game"
+  },
+  {
+    "DR Year": -241,
+    "Year Name": "Year of the Sand Shroud"
+  },
+  {
+    "DR Year": -240,
+    "Year Name": "Year of Enslaved Swords"
+  },
+  {
+    "DR Year": -239,
+    "Year Name": "Year of Whispered Lore"
+  },
+  {
+    "DR Year": -238,
+    "Year Name": "Year of Fortunes Fair"
+  },
+  {
+    "DR Year": -237,
+    "Year Name": "Year of Windragons"
+  },
+  {
+    "DR Year": -236,
+    "Year Name": "Year of Unfriendly Ports"
+  },
+  {
+    "DR Year": -235,
+    "Year Name": "Year of Laughing Crystal"
+  },
+  {
+    "DR Year": -234,
+    "Year Name": "Year of Wizards' Doom"
+  },
+  {
+    "DR Year": -233,
+    "Year Name": "Year of Destinies Foretold"
+  },
+  {
+    "DR Year": -232,
+    "Year Name": "Year of Forsaken Goblets"
+  },
+  {
+    "DR Year": -231,
+    "Year Name": "Year of the Ringed Moon"
+  },
+  {
+    "DR Year": -230,
+    "Year Name": "Year of Loss"
+  },
+  {
+    "DR Year": -229,
+    "Year Name": "Year of the Myrmidon Maid"
+  },
+  {
+    "DR Year": -228,
+    "Year Name": "Year of the Unknown Paraph"
+  },
+  {
+    "DR Year": -227,
+    "Year Name": "Year of Rangers Lost"
+  },
+  {
+    "DR Year": -226,
+    "Year Name": "Year of the Shallows"
+  },
+  {
+    "DR Year": -225,
+    "Year Name": "Year of the Golden Staff"
+  },
+  {
+    "DR Year": -224,
+    "Year Name": "Year of Forked Tongues"
+  },
+  {
+    "DR Year": -223,
+    "Year Name": "Year of Burning Briars"
+  },
+  {
+    "DR Year": -222,
+    "Year Name": "Year of the Desiccated Copse"
+  },
+  {
+    "DR Year": -221,
+    "Year Name": "Year of Shambling Shadows"
+  },
+  {
+    "DR Year": -220,
+    "Year Name": "Year of the Empty Soul"
+  },
+  {
+    "DR Year": -219,
+    "Year Name": "Year of the Sallow Orb"
+  },
+  {
+    "DR Year": -218,
+    "Year Name": "Year of Dread"
+  },
+  {
+    "DR Year": -217,
+    "Year Name": "Year of Sumbril"
+  },
+  {
+    "DR Year": -216,
+    "Year Name": "Year of Bloodied Orphreys"
+  },
+  {
+    "DR Year": -215,
+    "Year Name": "Year of the Oracle"
+  },
+  {
+    "DR Year": -214,
+    "Year Name": "Year of the Vengeful Mitre"
+  },
+  {
+    "DR Year": -213,
+    "Year Name": "Year of the Great Bell"
+  },
+  {
+    "DR Year": -212,
+    "Year Name": "Year of High Thrones"
+  },
+  {
+    "DR Year": -211,
+    "Year Name": "Year of Bound Branches"
+  },
+  {
+    "DR Year": -210,
+    "Year Name": "Year of Holy Hands"
+  },
+  {
+    "DR Year": -209,
+    "Year Name": "Year of Valiant Striving"
+  },
+  {
+    "DR Year": -208,
+    "Year Name": "Year of Shattered Havens"
+  },
+  {
+    "DR Year": -207,
+    "Year Name": "Year of Tolling"
+  },
+  {
+    "DR Year": -206,
+    "Year Name": "Year of Elfsorrows"
+  },
+  {
+    "DR Year": -205,
+    "Year Name": "Year of Good Hunting"
+  },
+  {
+    "DR Year": -204,
+    "Year Name": "Year of the Obsidian Crypt"
+  },
+  {
+    "DR Year": -203,
+    "Year Name": "Year of the Purchased Princess"
+  },
+  {
+    "DR Year": -202,
+    "Year Name": "Year of Returning Heroes"
+  },
+  {
+    "DR Year": -201,
+    "Year Name": "Year of Fiendish Gambols"
+  },
+  {
+    "DR Year": -200,
+    "Year Name": "Year of Stonerising"
+  },
+  {
+    "DR Year": -199,
+    "Year Name": "Year of Flowing Fire"
+  },
+  {
+    "DR Year": -198,
+    "Year Name": "Year of the Beast"
+  },
+  {
+    "DR Year": -197,
+    "Year Name": "Year of Talons Twelve"
+  },
+  {
+    "DR Year": -196,
+    "Year Name": "Year of Gilded Draperies"
+  },
+  {
+    "DR Year": -195,
+    "Year Name": "Year of the Chirurgeons"
+  },
+  {
+    "DR Year": -194,
+    "Year Name": "Year of Torment"
+  },
+  {
+    "DR Year": -193,
+    "Year Name": "Year of Hawkstaff"
+  },
+  {
+    "DR Year": -192,
+    "Year Name": "Year of Tourneys"
+  },
+  {
+    "DR Year": -191,
+    "Year Name": "Year of Dark Villainy"
+  },
+  {
+    "DR Year": -190,
+    "Year Name": "Year of Three Heirs"
+  },
+  {
+    "DR Year": -189,
+    "Year Name": "Year of Sunned Serpents"
+  },
+  {
+    "DR Year": -188,
+    "Year Name": "Year of Wrongful Martyrs"
+  },
+  {
+    "DR Year": -187,
+    "Year Name": "Year of Gilded Burials"
+  },
+  {
+    "DR Year": -186,
+    "Year Name": "Year of the Quiet Horde"
+  },
+  {
+    "DR Year": -185,
+    "Year Name": "Year of Unburdening"
+  },
+  {
+    "DR Year": -184,
+    "Year Name": "Year of the Abandoned Heart"
+  },
+  {
+    "DR Year": -183,
+    "Year Name": "Year of Larks"
+  },
+  {
+    "DR Year": -182,
+    "Year Name": "Year of Sleeping Giants"
+  },
+  {
+    "DR Year": -181,
+    "Year Name": "Year of Rivers Rising"
+  },
+  {
+    "DR Year": -180,
+    "Year Name": "Year of Tragedies"
+  },
+  {
+    "DR Year": -179,
+    "Year Name": "Year of the Huntress"
+  },
+  {
+    "DR Year": -178,
+    "Year Name": "Year of the Cold Quarrel"
+  },
+  {
+    "DR Year": -177,
+    "Year Name": "Year of Leaping Wolves"
+  },
+  {
+    "DR Year": -176,
+    "Year Name": "Year of Travel"
+  },
+  {
+    "DR Year": -175,
+    "Year Name": "Year of Shifting Sands"
+  },
+  {
+    "DR Year": -174,
+    "Year Name": "Year of the Bestiary"
+  },
+  {
+    "DR Year": -173,
+    "Year Name": "Year of Hale Heroes"
+  },
+  {
+    "DR Year": -172,
+    "Year Name": "Year of Sickles"
+  },
+  {
+    "DR Year": -171,
+    "Year Name": "Year of the Ogres' Rage"
+  },
+  {
+    "DR Year": -170,
+    "Year Name": "Year of Many Eyes"
+  },
+  {
+    "DR Year": -169,
+    "Year Name": "Year of the Well Women"
+  },
+  {
+    "DR Year": -168,
+    "Year Name": "Year of Furrowed Brows"
+  },
+  {
+    "DR Year": -167,
+    "Year Name": "Year of Sudden Kinship"
+  },
+  {
+    "DR Year": -166,
+    "Year Name": "Year of Seven Loves Lost"
+  },
+  {
+    "DR Year": -165,
+    "Year Name": "Year of the Abandoned Hope"
+  },
+  {
+    "DR Year": -164,
+    "Year Name": "Year of Passing Dreams"
+  },
+  {
+    "DR Year": -163,
+    "Year Name": "Year of the Yarting"
+  },
+  {
+    "DR Year": -162,
+    "Year Name": "Year of Boneblight"
+  },
+  {
+    "DR Year": -161,
+    "Year Name": "Year of the Emerald Mage"
+  },
+  {
+    "DR Year": -160,
+    "Year Name": "Year of the Stone Giant"
+  },
+  {
+    "DR Year": -159,
+    "Year Name": "Year of the Burning River"
+  },
+  {
+    "DR Year": -158,
+    "Year Name": "Year of the Deathdolor"
+  },
+  {
+    "DR Year": -157,
+    "Year Name": "Year of Many Harvests"
+  },
+  {
+    "DR Year": -156,
+    "Year Name": "Year of the Flickering Sun"
+  },
+  {
+    "DR Year": -155,
+    "Year Name": "Year of Revealed Chants"
+  },
+  {
+    "DR Year": -154,
+    "Year Name": "Year of Bloody Hazard"
+  },
+  {
+    "DR Year": -153,
+    "Year Name": "Year of the Starry Shroud"
+  },
+  {
+    "DR Year": -152,
+    "Year Name": "Year of Wildwine"
+  },
+  {
+    "DR Year": -151,
+    "Year Name": "Year of Roving Bands"
+  },
+  {
+    "DR Year": -150,
+    "Year Name": "Year of Recompense"
+  },
+  {
+    "DR Year": -149,
+    "Year Name": "Year of Adamantite Ore"
+  },
+  {
+    "DR Year": -148,
+    "Year Name": "Year of the Black Marble"
+  },
+  {
+    "DR Year": -147,
+    "Year Name": "Year of the Candlemaker"
+  },
+  {
+    "DR Year": -146,
+    "Year Name": "Year of Cresting Floods"
+  },
+  {
+    "DR Year": -145,
+    "Year Name": "Year of Depths Unknown"
+  },
+  {
+    "DR Year": -144,
+    "Year Name": "Year of the Copper Kettle"
+  },
+  {
+    "DR Year": -143,
+    "Year Name": "Year of Bright Lamplight"
+  },
+  {
+    "DR Year": -142,
+    "Year Name": "Year of Beauty Drowned"
+  },
+  {
+    "DR Year": -141,
+    "Year Name": "Year of Ancient Coins"
+  },
+  {
+    "DR Year": -140,
+    "Year Name": "Year of Blind Justice"
+  },
+  {
+    "DR Year": -139,
+    "Year Name": "Year of Burnt Ambitions"
+  },
+  {
+    "DR Year": -138,
+    "Year Name": "Year of Damsels Dancing"
+  },
+  {
+    "DR Year": -137,
+    "Year Name": "Year of Blooded Sunsets"
+  },
+  {
+    "DR Year": -136,
+    "Year Name": "Year of the Ruling Spectre"
+  },
+  {
+    "DR Year": -135,
+    "Year Name": "Year of Old Beginnings"
+  },
+  {
+    "DR Year": -134,
+    "Year Name": "Year of the Scorpion"
+  },
+  {
+    "DR Year": -133,
+    "Year Name": "Year of Silent Screams"
+  },
+  {
+    "DR Year": -132,
+    "Year Name": "Year of Dragons Diving"
+  },
+  {
+    "DR Year": -131,
+    "Year Name": "Year of Favor"
+  },
+  {
+    "DR Year": -130,
+    "Year Name": "Year of Fleeting Pleasures"
+  },
+  {
+    "DR Year": -129,
+    "Year Name": "Year of Gleaming Shards"
+  },
+  {
+    "DR Year": -128,
+    "Year Name": "Year of Hallowed Hills"
+  },
+  {
+    "DR Year": -127,
+    "Year Name": "Year of Shackles"
+  },
+  {
+    "DR Year": -126,
+    "Year Name": "Year of Rainbows Weeping"
+  },
+  {
+    "DR Year": -125,
+    "Year Name": "Year of Banished Wisdom"
+  },
+  {
+    "DR Year": -124,
+    "Year Name": "Year of Lessons Learned"
+  },
+  {
+    "DR Year": -123,
+    "Year Name": "Year of Rich Rewards"
+  },
+  {
+    "DR Year": -122,
+    "Year Name": "Year of Unleashed Sorrow"
+  },
+  {
+    "DR Year": -121,
+    "Year Name": "Year of Ample Rewards"
+  },
+  {
+    "DR Year": -120,
+    "Year Name": "Year of Confusion"
+  },
+  {
+    "DR Year": -119,
+    "Year Name": "Year of Close Scrutiny"
+  },
+  {
+    "DR Year": -118,
+    "Year Name": "Year of Elven Delights"
+  },
+  {
+    "DR Year": -117,
+    "Year Name": "Year of Endless Bounty"
+  },
+  {
+    "DR Year": -116,
+    "Year Name": "Year of Lost Messengers"
+  },
+  {
+    "DR Year": -115,
+    "Year Name": "Year of Strident Bards"
+  },
+  {
+    "DR Year": -114,
+    "Year Name": "Year of Making Merry"
+  },
+  {
+    "DR Year": -113,
+    "Year Name": "Year of Ill Tidings"
+  },
+  {
+    "DR Year": -112,
+    "Year Name": "Year of Tortured Dreams"
+  },
+  {
+    "DR Year": -111,
+    "Year Name": "Year of Terrible Anger"
+  },
+  {
+    "DR Year": -110,
+    "Year Name": "Year of Shadowed Glances"
+  },
+  {
+    "DR Year": -109,
+    "Year Name": "Year of Pixies Playing Foul"
+  },
+  {
+    "DR Year": -108,
+    "Year Name": "Year of Wands"
+  },
+  {
+    "DR Year": -107,
+    "Year Name": "Year of Tapestries"
+  },
+  {
+    "DR Year": -106,
+    "Year Name": "Year of the Valorous Kobold"
+  },
+  {
+    "DR Year": -105,
+    "Year Name": "Year of the Bloody Goad"
+  },
+  {
+    "DR Year": -104,
+    "Year Name": "Year of the Star Stallion"
+  },
+  {
+    "DR Year": -103,
+    "Year Name": "Year of the Taint"
+  },
+  {
+    "DR Year": -102,
+    "Year Name": "Year of the Spiked Gauntlet"
+  },
+  {
+    "DR Year": -101,
+    "Year Name": "Year of the Flame Noose"
+  },
+  {
+    "DR Year": -100,
+    "Year Name": "Year of the Black Unicorn"
+  },
+  {
+    "DR Year": -99,
+    "Year Name": "Year of Silver Sharks"
+  },
+  {
+    "DR Year": -98,
+    "Year Name": "Year of Hearts Pledged"
+  },
+  {
+    "DR Year": -97,
+    "Year Name": "Year of Amulets"
+  },
+  {
+    "DR Year": -96,
+    "Year Name": "Year of Eyes Afire"
+  },
+  {
+    "DR Year": -95,
+    "Year Name": "Year of Wan Shadows"
+  },
+  {
+    "DR Year": -94,
+    "Year Name": "Year of Many Bats"
+  },
+  {
+    "DR Year": -93,
+    "Year Name": "Year of Forgotten Smiles"
+  },
+  {
+    "DR Year": -92,
+    "Year Name": "Year of Honor Broken"
+  },
+  {
+    "DR Year": -91,
+    "Year Name": "Year of Old Crowns"
+  },
+  {
+    "DR Year": -90,
+    "Year Name": "Year of the Moonlit Mare"
+  },
+  {
+    "DR Year": -89,
+    "Year Name": "Year of Battered Blades"
+  },
+  {
+    "DR Year": -88,
+    "Year Name": "Year of Hostile Hails"
+  },
+  {
+    "DR Year": -87,
+    "Year Name": "Year of Dashed Dreams"
+  },
+  {
+    "DR Year": -86,
+    "Year Name": "Year of Goodfields"
+  },
+  {
+    "DR Year": -85,
+    "Year Name": "Year of Smoke and Lightning"
+  },
+  {
+    "DR Year": -84,
+    "Year Name": "Year of Sloth"
+  },
+  {
+    "DR Year": -83,
+    "Year Name": "Year of Bitter Fruit"
+  },
+  {
+    "DR Year": -82,
+    "Year Name": "Year of Witches"
+  },
+  {
+    "DR Year": -81,
+    "Year Name": "Year of Untaken Paths"
+  },
+  {
+    "DR Year": -80,
+    "Year Name": "Year of Tempered Blades"
+  },
+  {
+    "DR Year": -79,
+    "Year Name": "Year of Scarce Steel"
+  },
+  {
+    "DR Year": -78,
+    "Year Name": "Year of the Gleaming"
+  },
+  {
+    "DR Year": -77,
+    "Year Name": "Year of Flaming Stones"
+  },
+  {
+    "DR Year": -76,
+    "Year Name": "Year of Lasting Scars"
+  },
+  {
+    "DR Year": -75,
+    "Year Name": "Year of Leather Shields"
+  },
+  {
+    "DR Year": -74,
+    "Year Name": "Year of Splendor"
+  },
+  {
+    "DR Year": -73,
+    "Year Name": "Year of Swift Courtships"
+  },
+  {
+    "DR Year": -72,
+    "Year Name": "Year of Enchanted Hearts"
+  },
+  {
+    "DR Year": -71,
+    "Year Name": "Year of Lurking Shadows"
+  },
+  {
+    "DR Year": -70,
+    "Year Name": "Year of Burnished Bronze"
+  },
+  {
+    "DR Year": -69,
+    "Year Name": "Year of No Regrets"
+  },
+  {
+    "DR Year": -68,
+    "Year Name": "Year of Discordant Destinies"
+  },
+  {
+    "DR Year": -67,
+    "Year Name": "Year of Festivals"
+  },
+  {
+    "DR Year": -66,
+    "Year Name": "Year of Hunger"
+  },
+  {
+    "DR Year": -65,
+    "Year Name": "Year of Monstrous Appetites"
+  },
+  {
+    "DR Year": -64,
+    "Year Name": "Year of Gleaming Frost"
+  },
+  {
+    "DR Year": -63,
+    "Year Name": "Year of Quicksilver"
+  },
+  {
+    "DR Year": -62,
+    "Year Name": "Year of Strong Winds"
+  },
+  {
+    "DR Year": -61,
+    "Year Name": "Year of Thwarted Gambits"
+  },
+  {
+    "DR Year": -60,
+    "Year Name": "Year of Vain Questing"
+  },
+  {
+    "DR Year": -59,
+    "Year Name": "Year of Whims"
+  },
+  {
+    "DR Year": -58,
+    "Year Name": "Year of the Smiling Prophet"
+  },
+  {
+    "DR Year": -57,
+    "Year Name": "Year of False Sentiments"
+  },
+  {
+    "DR Year": -56,
+    "Year Name": "Year of Neglected Tasks"
+  },
+  {
+    "DR Year": -55,
+    "Year Name": "Year of Traitorous Thoughts"
+  },
+  {
+    "DR Year": -54,
+    "Year Name": "Year of Tomes"
+  },
+  {
+    "DR Year": -53,
+    "Year Name": "Year of Happy Children"
+  },
+  {
+    "DR Year": -52,
+    "Year Name": "Year of the Choking Spores"
+  },
+  {
+    "DR Year": -51,
+    "Year Name": "Year of the Cluttered Desk"
+  },
+  {
+    "DR Year": -50,
+    "Year Name": "Year of the Phandar"
+  },
+  {
+    "DR Year": -49,
+    "Year Name": "Year of the Irreverent Jest"
+  },
+  {
+    "DR Year": -48,
+    "Year Name": "Year of the Emblazoned Dirk"
+  },
+  {
+    "DR Year": -47,
+    "Year Name": "Year of the Angry Centaur"
+  },
+  {
+    "DR Year": -46,
+    "Year Name": "Year of Pranks and Mischief"
+  },
+  {
+    "DR Year": -45,
+    "Year Name": "Year of the Raging Brook"
+  },
+  {
+    "DR Year": -44,
+    "Year Name": "Year of Giants' Rage"
+  },
+  {
+    "DR Year": -43,
+    "Year Name": "Year of the Open Sphere"
+  },
+  {
+    "DR Year": -42,
+    "Year Name": "Year of the Shattered Goblet"
+  },
+  {
+    "DR Year": -41,
+    "Year Name": "Year of the Sphinx's Riddles"
+  },
+  {
+    "DR Year": -40,
+    "Year Name": "Year of the Forge's Eldritch Sparks"
+  },
+  {
+    "DR Year": -39,
+    "Year Name": "Year of the Fraudulent Truth"
+  },
+  {
+    "DR Year": -38,
+    "Year Name": "Year of the Insidious Smile"
+  },
+  {
+    "DR Year": -37,
+    "Year Name": "Year of Patriots"
+  },
+  {
+    "DR Year": -36,
+    "Year Name": "Year of the Abyssal Choir"
+  },
+  {
+    "DR Year": -35,
+    "Year Name": "Year of the Biting Shards"
+  },
+  {
+    "DR Year": -34,
+    "Year Name": "Year of the Maedar"
+  },
+  {
+    "DR Year": -33,
+    "Year Name": "Year of the Harpist's Delight"
+  },
+  {
+    "DR Year": -32,
+    "Year Name": "Year of the Grinning Skull"
+  },
+  {
+    "DR Year": -31,
+    "Year Name": "Year of the Crimson Embrace"
+  },
+  {
+    "DR Year": -30,
+    "Year Name": "Year of the Dying Fear"
+  },
+  {
+    "DR Year": -29,
+    "Year Name": "Year of the Corpulent Mount"
+  },
+  {
+    "DR Year": -28,
+    "Year Name": "Year of the Laconic Prince"
+  },
+  {
+    "DR Year": -27,
+    "Year Name": "Year of the Masquerade"
+  },
+  {
+    "DR Year": -26,
+    "Year Name": "Year of the Five Mountains"
+  },
+  {
+    "DR Year": -25,
+    "Year Name": "Year of Lost Librams"
+  },
+  {
+    "DR Year": -24,
+    "Year Name": "Year of the Drenched Robe"
+  },
+  {
+    "DR Year": -23,
+    "Year Name": "Year of the Commander's Tent"
+  },
+  {
+    "DR Year": -22,
+    "Year Name": "Year of the Broached Gates"
+  },
+  {
+    "DR Year": -21,
+    "Year Name": "Year of Sorrow and Pain"
+  },
+  {
+    "DR Year": -20,
+    "Year Name": "Year of Peace"
+  },
+  {
+    "DR Year": -19,
+    "Year Name": "Year of Mazes"
+  },
+  {
+    "DR Year": -18,
+    "Year Name": "Year of Honor's Price"
+  },
+  {
+    "DR Year": -17,
+    "Year Name": "Year of Eldath's Hart"
+  },
+  {
+    "DR Year": -16,
+    "Year Name": "Year of the Poisoned Pens"
+  },
+  {
+    "DR Year": -15,
+    "Year Name": "Year of the Embrace"
+  },
+  {
+    "DR Year": -14,
+    "Year Name": "Year of the Cloaker"
+  },
+  {
+    "DR Year": -13,
+    "Year Name": "Year of the Bard's Challenge"
+  },
+  {
+    "DR Year": -12,
+    "Year Name": "Year of Laughing Lovers"
+  },
+  {
+    "DR Year": -11,
+    "Year Name": "Year of Frightening Turmoil"
+  },
+  {
+    "DR Year": -10,
+    "Year Name": "Year of Burning Glades"
+  },
+  {
+    "DR Year": -9,
+    "Year Name": "Year of Fell Traitors"
+  },
+  {
+    "DR Year": -8,
+    "Year Name": "Year of Wraths"
+  },
+  {
+    "DR Year": -7,
+    "Year Name": "Year of Open Eyes"
+  },
+  {
+    "DR Year": -6,
+    "Year Name": "Year of Scarlet Scourges"
+  },
+  {
+    "DR Year": -5,
+    "Year Name": "Year of Feuds"
+  },
+  {
+    "DR Year": -4,
+    "Year Name": "Year of Pacts"
+  },
+  {
+    "DR Year": -3,
+    "Year Name": "Year of Ruins"
+  },
+  {
+    "DR Year": -2,
+    "Year Name": "Year of Gruesome Streams"
+  },
+  {
+    "DR Year": -1,
+    "Year Name": "Year of Shattered Relics"
+  },
+  {
+    "DR Year": 0,
+    "Year Name": "Year of the Rising Flame"
+  },
+  {
+    "DR Year": 1,
+    "Year Name": "Year of Sunrise"
+  },
+  {
+    "DR Year": 2,
+    "Year Name": "Year of the Smiling Hag"
+  },
+  {
+    "DR Year": 3,
+    "Year Name": "Year of the Faded Flower"
+  },
+  {
+    "DR Year": 4,
+    "Year Name": "Year of the Slaked Blade"
+  },
+  {
+    "DR Year": 5,
+    "Year Name": "Year of the Clutched Emerald"
+  },
+  {
+    "DR Year": 6,
+    "Year Name": "Year of the Firestars"
+  },
+  {
+    "DR Year": 7,
+    "Year Name": "Year of the Vampires' Sun"
+  },
+  {
+    "DR Year": 8,
+    "Year Name": "Year of Spellspheres"
+  },
+  {
+    "DR Year": 9,
+    "Year Name": "Year of the Falling Wall"
+  },
+  {
+    "DR Year": 10,
+    "Year Name": "Year of Dreams"
+  },
+  {
+    "DR Year": 11,
+    "Year Name": "Year of the Mellifluent Sphinx"
+  },
+  {
+    "DR Year": 12,
+    "Year Name": "Year of Wistful Looks"
+  },
+  {
+    "DR Year": 13,
+    "Year Name": "Year of the Sweet Songs"
+  },
+  {
+    "DR Year": 14,
+    "Year Name": "Year of the Unknown Beloved"
+  },
+  {
+    "DR Year": 15,
+    "Year Name": "Year of Glittering Glory"
+  },
+  {
+    "DR Year": 16,
+    "Year Name": "Year of Distant Thunder"
+  },
+  {
+    "DR Year": 17,
+    "Year Name": "Year of Crashing Glee"
+  },
+  {
+    "DR Year": 18,
+    "Year Name": "Year of the Lasting Wonders"
+  },
+  {
+    "DR Year": 19,
+    "Year Name": "Year of the Blessed Beast"
+  },
+  {
+    "DR Year": 20,
+    "Year Name": "Year of the Fallen Fury"
+  },
+  {
+    "DR Year": 21,
+    "Year Name": "Year of Lamenting"
+  },
+  {
+    "DR Year": 22,
+    "Year Name": "Year of the Empty Fist"
+  },
+  {
+    "DR Year": 23,
+    "Year Name": "Year of Falling Arrows"
+  },
+  {
+    "DR Year": 24,
+    "Year Name": "Year of the Evasive Hare"
+  },
+  {
+    "DR Year": 25,
+    "Year Name": "Year of Many Runes"
+  },
+  {
+    "DR Year": 26,
+    "Year Name": "Year of Opening Doors"
+  },
+  {
+    "DR Year": 27,
+    "Year Name": "Year of Shadowed Blades"
+  },
+  {
+    "DR Year": 28,
+    "Year Name": "Year of the Barren Fields"
+  },
+  {
+    "DR Year": 29,
+    "Year Name": "Year of the Carved Cliffs"
+  },
+  {
+    "DR Year": 30,
+    "Year Name": "Year of the Crushed Monument"
+  },
+  {
+    "DR Year": 31,
+    "Year Name": "Year of the Garrulous Gargoyle"
+  },
+  {
+    "DR Year": 32,
+    "Year Name": "Year of Errant Arrows"
+  },
+  {
+    "DR Year": 33,
+    "Year Name": "Year of Slowing Sands"
+  },
+  {
+    "DR Year": 34,
+    "Year Name": "Year of Purloined Power"
+  },
+  {
+    "DR Year": 35,
+    "Year Name": "Year of Scaled Lightning"
+  },
+  {
+    "DR Year": 36,
+    "Year Name": "Year of Consuming Ice"
+  },
+  {
+    "DR Year": 37,
+    "Year Name": "Year of Dark Venom"
+  },
+  {
+    "DR Year": 38,
+    "Year Name": "Year of Verdant Pain"
+  },
+  {
+    "DR Year": 39,
+    "Year Name": "Year of Proud Flame"
+  },
+  {
+    "DR Year": 40,
+    "Year Name": "Year of the Gaunt Wolf"
+  },
+  {
+    "DR Year": 41,
+    "Year Name": "Year of the Branded Lily"
+  },
+  {
+    "DR Year": 42,
+    "Year Name": "Year of the Charging Cavalry"
+  },
+  {
+    "DR Year": 43,
+    "Year Name": "Year of Frostbrands"
+  },
+  {
+    "DR Year": 44,
+    "Year Name": "Year of the Vow Manifest"
+  },
+  {
+    "DR Year": 45,
+    "Year Name": "Year of the Torpid Arms"
+  },
+  {
+    "DR Year": 46,
+    "Year Name": "Year of the Hidden Fortress"
+  },
+  {
+    "DR Year": 47,
+    "Year Name": "Year of the Crystal Orb"
+  },
+  {
+    "DR Year": 48,
+    "Year Name": "Year of the Bloodied Pikes"
+  },
+  {
+    "DR Year": 49,
+    "Year Name": "Year of the Deadly Joust"
+  },
+  {
+    "DR Year": 50,
+    "Year Name": "Year of the Barbed Wind"
+  },
+  {
+    "DR Year": 51,
+    "Year Name": "Year of the Red Pearls"
+  },
+  {
+    "DR Year": 52,
+    "Year Name": "Year of the Thundering Horde"
+  },
+  {
+    "DR Year": 53,
+    "Year Name": "Year of the Desert Kingdoms"
+  },
+  {
+    "DR Year": 54,
+    "Year Name": "Year of the Forlorn Prince"
+  },
+  {
+    "DR Year": 55,
+    "Year Name": "Year of the Caustic Blood"
+  },
+  {
+    "DR Year": 56,
+    "Year Name": "Year of the Laughing Nightmare"
+  },
+  {
+    "DR Year": 57,
+    "Year Name": "Year of Lamplit Nights"
+  },
+  {
+    "DR Year": 58,
+    "Year Name": "Year of the Dazzling Dolphins"
+  },
+  {
+    "DR Year": 59,
+    "Year Name": "Year of the Tangled Threads"
+  },
+  {
+    "DR Year": 60,
+    "Year Name": "Year of the Pirate's Lost Eye"
+  },
+  {
+    "DR Year": 61,
+    "Year Name": "Year of the Branded Mage"
+  },
+  {
+    "DR Year": 62,
+    "Year Name": "Year of the Lonely Daughters"
+  },
+  {
+    "DR Year": 63,
+    "Year Name": "Year of the Winsome Trio"
+  },
+  {
+    "DR Year": 64,
+    "Year Name": "Year of the Boisterous Orc"
+  },
+  {
+    "DR Year": 65,
+    "Year Name": "Year of the Foaming Wave"
+  },
+  {
+    "DR Year": 66,
+    "Year Name": "Year of the Spellbound Heir"
+  },
+  {
+    "DR Year": 67,
+    "Year Name": "Year of the Redolent Innkeeper"
+  },
+  {
+    "DR Year": 68,
+    "Year Name": "Year of the Echoing Chasm"
+  },
+  {
+    "DR Year": 69,
+    "Year Name": "Year of the Lit Pathway"
+  },
+  {
+    "DR Year": 70,
+    "Year Name": "Year of the Mournful Dance"
+  },
+  {
+    "DR Year": 71,
+    "Year Name": "Year of the Entwined Sculpture"
+  },
+  {
+    "DR Year": 72,
+    "Year Name": "Year of the Climber's Rest"
+  },
+  {
+    "DR Year": 73,
+    "Year Name": "Year of Wise Counsel"
+  },
+  {
+    "DR Year": 74,
+    "Year Name": "Year of the Fearful Mercenary"
+  },
+  {
+    "DR Year": 75,
+    "Year Name": "Year of Clinging Death"
+  },
+  {
+    "DR Year": 76,
+    "Year Name": "Year of Windsong"
+  },
+  {
+    "DR Year": 77,
+    "Year Name": "Year of the Quivering Mountains"
+  },
+  {
+    "DR Year": 78,
+    "Year Name": "Year of the Closing Darkness"
+  },
+  {
+    "DR Year": 79,
+    "Year Name": "Year of the Whispering Woods"
+  },
+  {
+    "DR Year": 80,
+    "Year Name": "Year of the Mordant Blight"
+  },
+  {
+    "DR Year": 81,
+    "Year Name": "Year of the Vampiric Torch"
+  },
+  {
+    "DR Year": 82,
+    "Year Name": "Year of the Preordained Youth"
+  },
+  {
+    "DR Year": 83,
+    "Year Name": "Year of the Satyr's Adulation"
+  },
+  {
+    "DR Year": 84,
+    "Year Name": "Year of the Monotonous Speech"
+  },
+  {
+    "DR Year": 85,
+    "Year Name": "Year of the Orb Obsidious"
+  },
+  {
+    "DR Year": 86,
+    "Year Name": "Year of the Eyeless Wraith"
+  },
+  {
+    "DR Year": 87,
+    "Year Name": "Year of the Hoar Frost"
+  },
+  {
+    "DR Year": 88,
+    "Year Name": "Year of the Flood"
+  },
+  {
+    "DR Year": 89,
+    "Year Name": "Year of the Faithful Oracle"
+  },
+  {
+    "DR Year": 90,
+    "Year Name": "Year of the Moor Birds"
+  },
+  {
+    "DR Year": 91,
+    "Year Name": "Year of the Scabbard Peace"
+  },
+  {
+    "DR Year": 92,
+    "Year Name": "Year of the Vanished Tattoo"
+  },
+  {
+    "DR Year": 93,
+    "Year Name": "Year of the Quiet Valley"
+  },
+  {
+    "DR Year": 94,
+    "Year Name": "Year of the Multitudes"
+  },
+  {
+    "DR Year": 95,
+    "Year Name": "Year of the Reluctant Hero"
+  },
+  {
+    "DR Year": 96,
+    "Year Name": "Year of the Mournful Harp"
+  },
+  {
+    "DR Year": 97,
+    "Year Name": "Year of Flickering Nyths"
+  },
+  {
+    "DR Year": 98,
+    "Year Name": "Year of Revealed Grimoires"
+  },
+  {
+    "DR Year": 99,
+    "Year Name": "Year of the Dragonstar"
+  },
+  {
+    "DR Year": 100,
+    "Year Name": "Year of Greybeards"
+  },
+  {
+    "DR Year": 101,
+    "Year Name": "Year of the Smiling Moon"
+  },
+  {
+    "DR Year": 102,
+    "Year Name": "Year of the Ormage"
+  },
+  {
+    "DR Year": 103,
+    "Year Name": "Year of the White Hound"
+  },
+  {
+    "DR Year": 104,
+    "Year Name": "Year of the Preying Griffon"
+  },
+  {
+    "DR Year": 105,
+    "Year Name": "Year of the Tattooed Mistress"
+  },
+  {
+    "DR Year": 106,
+    "Year Name": "Year of the Adamantine Spiral"
+  },
+  {
+    "DR Year": 107,
+    "Year Name": "Year of the Fledglings"
+  },
+  {
+    "DR Year": 108,
+    "Year Name": "Year of the Mortified Monk"
+  },
+  {
+    "DR Year": 109,
+    "Year Name": "Year of the False Ghost"
+  },
+  {
+    "DR Year": 110,
+    "Year Name": "Year of the Quirt"
+  },
+  {
+    "DR Year": 111,
+    "Year Name": "Year of Fallen Guards"
+  },
+  {
+    "DR Year": 112,
+    "Year Name": "Year of the Tusk"
+  },
+  {
+    "DR Year": 113,
+    "Year Name": "Year of the Belching Boggle"
+  },
+  {
+    "DR Year": 114,
+    "Year Name": "Year of the Jagged Leaves"
+  },
+  {
+    "DR Year": 115,
+    "Year Name": "Year of the Morning Glory"
+  },
+  {
+    "DR Year": 116,
+    "Year Name": "Year of the Mortal Promise"
+  },
+  {
+    "DR Year": 117,
+    "Year Name": "Year of the Swinging Pendulum"
+  },
+  {
+    "DR Year": 118,
+    "Year Name": "Year of the Monkey"
+  },
+  {
+    "DR Year": 119,
+    "Year Name": "Year of the Mountain's Fire"
+  },
+  {
+    "DR Year": 120,
+    "Year Name": "Year of the Remembered Pain"
+  },
+  {
+    "DR Year": 121,
+    "Year Name": "Year of the Embroidered Button"
+  },
+  {
+    "DR Year": 122,
+    "Year Name": "Year of the Mourning Armsmen"
+  },
+  {
+    "DR Year": 123,
+    "Year Name": "Year of the Icy Axe"
+  },
+  {
+    "DR Year": 124,
+    "Year Name": "Year of the Biting Frost"
+  },
+  {
+    "DR Year": 125,
+    "Year Name": "Year of the Ironwood"
+  },
+  {
+    "DR Year": 126,
+    "Year Name": "Year of the Cinnamon Haze"
+  },
+  {
+    "DR Year": 127,
+    "Year Name": "Year of the Defiant Stone"
+  },
+  {
+    "DR Year": 128,
+    "Year Name": "Year of the Addled Arcanist"
+  },
+  {
+    "DR Year": 129,
+    "Year Name": "Year of the Mummy's Amulet"
+  },
+  {
+    "DR Year": 130,
+    "Year Name": "Year of the Dwarven Twins"
+  },
+  {
+    "DR Year": 131,
+    "Year Name": "Year of the Cockatrice's Stare"
+  },
+  {
+    "DR Year": 132,
+    "Year Name": "Year of Thirteen Prides Lost"
+  },
+  {
+    "DR Year": 133,
+    "Year Name": "Year of the Arduous Journey"
+  },
+  {
+    "DR Year": 134,
+    "Year Name": "Year of the Impassable Chasm"
+  },
+  {
+    "DR Year": 135,
+    "Year Name": "Year of the Halfling's Dale"
+  },
+  {
+    "DR Year": 136,
+    "Year Name": "Year of the Storm Skeleton"
+  },
+  {
+    "DR Year": 137,
+    "Year Name": "Year of the King's Destiny"
+  },
+  {
+    "DR Year": 138,
+    "Year Name": "Year of Sparks Flying"
+  },
+  {
+    "DR Year": 139,
+    "Year Name": "Year of the Resolute Courtesans"
+  },
+  {
+    "DR Year": 140,
+    "Year Name": "Year of the Executioner"
+  },
+  {
+    "DR Year": 141,
+    "Year Name": "Year of the Impenetrable Mystery"
+  },
+  {
+    "DR Year": 142,
+    "Year Name": "Year of the Prowling Naga"
+  },
+  {
+    "DR Year": 143,
+    "Year Name": "Year of the Smiling Princess"
+  },
+  {
+    "DR Year": 144,
+    "Year Name": "Year of the Fear and Flame"
+  },
+  {
+    "DR Year": 145,
+    "Year Name": "Year of the Pirates' Port"
+  },
+  {
+    "DR Year": 146,
+    "Year Name": "Year of the Risen Towers"
+  },
+  {
+    "DR Year": 147,
+    "Year Name": "Year of the Iron Colossus"
+  },
+  {
+    "DR Year": 148,
+    "Year Name": "Year of the Blue Ice"
+  },
+  {
+    "DR Year": 149,
+    "Year Name": "Year of the Dwarf"
+  },
+  {
+    "DR Year": 150,
+    "Year Name": "Year of the Lost Library"
+  },
+  {
+    "DR Year": 151,
+    "Year Name": "Year of the Kraken"
+  },
+  {
+    "DR Year": 152,
+    "Year Name": "Year of the Severed Hand"
+  },
+  {
+    "DR Year": 153,
+    "Year Name": "Year of the Wolfstone"
+  },
+  {
+    "DR Year": 154,
+    "Year Name": "Year of the Jealous Hag"
+  },
+  {
+    "DR Year": 155,
+    "Year Name": "Year of the Mellifluous Heaps"
+  },
+  {
+    "DR Year": 156,
+    "Year Name": "Year of the Imaginary Foe"
+  },
+  {
+    "DR Year": 157,
+    "Year Name": "Year of the Resounding Call"
+  },
+  {
+    "DR Year": 158,
+    "Year Name": "Year of the Imploring Widow"
+  },
+  {
+    "DR Year": 159,
+    "Year Name": "Year of the Lost Profit"
+  },
+  {
+    "DR Year": 160,
+    "Year Name": "Year of the Smirking Knaves"
+  },
+  {
+    "DR Year": 161,
+    "Year Name": "Year of the Hangman's Noose"
+  },
+  {
+    "DR Year": 162,
+    "Year Name": "Year of the Great Dwarven Gate"
+  },
+  {
+    "DR Year": 163,
+    "Year Name": "Year of the Screeching Vole"
+  },
+  {
+    "DR Year": 164,
+    "Year Name": "Year of the Fallen Temple"
+  },
+  {
+    "DR Year": 165,
+    "Year Name": "Year of the Smoking Brazier"
+  },
+  {
+    "DR Year": 166,
+    "Year Name": "Year of the Reremouse"
+  },
+  {
+    "DR Year": 167,
+    "Year Name": "Year of the Deep Wellspring"
+  },
+  {
+    "DR Year": 168,
+    "Year Name": "Year of Scattered Stars"
+  },
+  {
+    "DR Year": 169,
+    "Year Name": "Year of the Weary Warrior"
+  },
+  {
+    "DR Year": 170,
+    "Year Name": "Year of the Bloodties"
+  },
+  {
+    "DR Year": 171,
+    "Year Name": "Year of Unkind Weapons"
+  },
+  {
+    "DR Year": 172,
+    "Year Name": "Year of the Great Debate"
+  },
+  {
+    "DR Year": 173,
+    "Year Name": "Year of Screaming Sharn"
+  },
+  {
+    "DR Year": 174,
+    "Year Name": "Year of the Windswept Plains"
+  },
+  {
+    "DR Year": 175,
+    "Year Name": "Year of the Black Boats"
+  },
+  {
+    "DR Year": 176,
+    "Year Name": "Year of the Wyrmclaws"
+  },
+  {
+    "DR Year": 177,
+    "Year Name": "Year of the Troublesome Vixen"
+  },
+  {
+    "DR Year": 178,
+    "Year Name": "Year of the Jealous Spouse"
+  },
+  {
+    "DR Year": 179,
+    "Year Name": "Year of the Engraved Locket"
+  },
+  {
+    "DR Year": 180,
+    "Year Name": "Year of Leaning Pillars"
+  },
+  {
+    "DR Year": 181,
+    "Year Name": "Year of the Sinking Islands"
+  },
+  {
+    "DR Year": 182,
+    "Year Name": "Year of the Quenched Stirges"
+  },
+  {
+    "DR Year": 183,
+    "Year Name": "Year of the Murmuring Dead"
+  },
+  {
+    "DR Year": 184,
+    "Year Name": "Year of the Leucrotta"
+  },
+  {
+    "DR Year": 185,
+    "Year Name": "Year of the Golden Elephant"
+  },
+  {
+    "DR Year": 186,
+    "Year Name": "Year of Vestigial Wings"
+  },
+  {
+    "DR Year": 187,
+    "Year Name": "Year of the Twisted Tree"
+  },
+  {
+    "DR Year": 188,
+    "Year Name": "Year of Dissolute Drow"
+  },
+  {
+    "DR Year": 189,
+    "Year Name": "Year of the Cowled Defender"
+  },
+  {
+    "DR Year": 190,
+    "Year Name": "Year of the Apparition"
+  },
+  {
+    "DR Year": 191,
+    "Year Name": "Year of the Broken Lands"
+  },
+  {
+    "DR Year": 192,
+    "Year Name": "Year of the Magnificent Equine"
+  },
+  {
+    "DR Year": 193,
+    "Year Name": "Year of the Raised Brow"
+  },
+  {
+    "DR Year": 194,
+    "Year Name": "Year of Coiling Smoke"
+  },
+  {
+    "DR Year": 195,
+    "Year Name": "Year of the Yeti"
+  },
+  {
+    "DR Year": 196,
+    "Year Name": "Year of Yearning Elves"
+  },
+  {
+    "DR Year": 197,
+    "Year Name": "Year of the Unseeing Priest"
+  },
+  {
+    "DR Year": 198,
+    "Year Name": "Year of the Almond Eyes"
+  },
+  {
+    "DR Year": 199,
+    "Year Name": "Year of the Cold Enchanter"
+  },
+  {
+    "DR Year": 200,
+    "Year Name": "Year of Leaping Flames"
+  },
+  {
+    "DR Year": 201,
+    "Year Name": "Year of the Student"
+  },
+  {
+    "DR Year": 202,
+    "Year Name": "Year of the Fanged Gauntlet"
+  },
+  {
+    "DR Year": 203,
+    "Year Name": "Year of Scattered Sands"
+  },
+  {
+    "DR Year": 204,
+    "Year Name": "Year of the Avarice"
+  },
+  {
+    "DR Year": 205,
+    "Year Name": "Year of the Greengrass"
+  },
+  {
+    "DR Year": 206,
+    "Year Name": "Year of the Regal Doppelganger"
+  },
+  {
+    "DR Year": 207,
+    "Year Name": "Year of the Majestic Mace"
+  },
+  {
+    "DR Year": 208,
+    "Year Name": "Year of Riven Realms"
+  },
+  {
+    "DR Year": 209,
+    "Year Name": "Year of the Dying Eye"
+  },
+  {
+    "DR Year": 210,
+    "Year Name": "Year of the Steelfall"
+  },
+  {
+    "DR Year": 211,
+    "Year Name": "Year of Spoiled Splendors"
+  },
+  {
+    "DR Year": 212,
+    "Year Name": "Year of the Awakening Magic"
+  },
+  {
+    "DR Year": 213,
+    "Year Name": "Year of the Waking Wraith"
+  },
+  {
+    "DR Year": 214,
+    "Year Name": "Year of Lost Voices"
+  },
+  {
+    "DR Year": 215,
+    "Year Name": "Year of the Shadowsnare"
+  },
+  {
+    "DR Year": 216,
+    "Year Name": "Year of the Battle Horns"
+  },
+  {
+    "DR Year": 217,
+    "Year Name": "Year of the Giant Skulls"
+  },
+  {
+    "DR Year": 218,
+    "Year Name": "Year of the Dancing Lights"
+  },
+  {
+    "DR Year": 219,
+    "Year Name": "Year of Old Danger"
+  },
+  {
+    "DR Year": 220,
+    "Year Name": "Year of the Sword Violets"
+  },
+  {
+    "DR Year": 221,
+    "Year Name": "Year of the Melting Manscorpion"
+  },
+  {
+    "DR Year": 222,
+    "Year Name": "Year of the Ghosthunt"
+  },
+  {
+    "DR Year": 223,
+    "Year Name": "Year of Dark Dreams"
+  },
+  {
+    "DR Year": 224,
+    "Year Name": "Year of the Flaming Forests"
+  },
+  {
+    "DR Year": 225,
+    "Year Name": "Year of the Shattered Skulls"
+  },
+  {
+    "DR Year": 226,
+    "Year Name": "Year of the Empty Turret"
+  },
+  {
+    "DR Year": 227,
+    "Year Name": "Year of the Raised Banner"
+  },
+  {
+    "DR Year": 228,
+    "Year Name": "Year of the Loremasters"
+  },
+  {
+    "DR Year": 229,
+    "Year Name": "Year of the Black Flame"
+  },
+  {
+    "DR Year": 230,
+    "Year Name": "Year of the Wailing Dryads"
+  },
+  {
+    "DR Year": 231,
+    "Year Name": "Year of the Mist Dragon"
+  },
+  {
+    "DR Year": 232,
+    "Year Name": "Year of the Leaping Centaur"
+  },
+  {
+    "DR Year": 233,
+    "Year Name": "Year of Much Ale"
+  },
+  {
+    "DR Year": 234,
+    "Year Name": "Year of Bloodflowers"
+  },
+  {
+    "DR Year": 235,
+    "Year Name": "Year of Drawn Knives"
+  },
+  {
+    "DR Year": 236,
+    "Year Name": "Year of the Plague Clouds"
+  },
+  {
+    "DR Year": 237,
+    "Year Name": "Year of the Disappearing Dragon"
+  },
+  {
+    "DR Year": 238,
+    "Year Name": "Year of Many Mushrooms"
+  },
+  {
+    "DR Year": 239,
+    "Year Name": "Year of the Wandering Leucrotta"
+  },
+  {
+    "DR Year": 240,
+    "Year Name": "Year of the Chosen"
+  },
+  {
+    "DR Year": 241,
+    "Year Name": "Year of the Hippogriff's Folly"
+  },
+  {
+    "DR Year": 242,
+    "Year Name": "Year of the Hunting Horn"
+  },
+  {
+    "DR Year": 243,
+    "Year Name": "Year of the Sad Orm"
+  },
+  {
+    "DR Year": 244,
+    "Year Name": "Year of the Elfsands"
+  },
+  {
+    "DR Year": 245,
+    "Year Name": "Year of the Dun Dragon"
+  },
+  {
+    "DR Year": 246,
+    "Year Name": "Year of the Sepulchre"
+  },
+  {
+    "DR Year": 247,
+    "Year Name": "Year of the Moaning Maiden"
+  },
+  {
+    "DR Year": 248,
+    "Year Name": "Year of Tumbletowns"
+  },
+  {
+    "DR Year": 249,
+    "Year Name": "Year of the Crystal Casket"
+  },
+  {
+    "DR Year": 250,
+    "Year Name": "Year of the Storm Crown"
+  },
+  {
+    "DR Year": 251,
+    "Year Name": "Year of Strange Seedlings"
+  },
+  {
+    "DR Year": 252,
+    "Year Name": "Year of the Bloody Spider"
+  },
+  {
+    "DR Year": 253,
+    "Year Name": "Year of Somber Smiles"
+  },
+  {
+    "DR Year": 254,
+    "Year Name": "Year of the Ghost Horse"
+  },
+  {
+    "DR Year": 255,
+    "Year Name": "Year of the Magethunder"
+  },
+  {
+    "DR Year": 256,
+    "Year Name": "Year of the Thousand Snows"
+  },
+  {
+    "DR Year": 257,
+    "Year Name": "Year of the Speaking Mountain"
+  },
+  {
+    "DR Year": 258,
+    "Year Name": "Year of the War Wyvern"
+  },
+  {
+    "DR Year": 259,
+    "Year Name": "Year of the Magedirge"
+  },
+  {
+    "DR Year": 260,
+    "Year Name": "Year of Sunless Stones"
+  },
+  {
+    "DR Year": 261,
+    "Year Name": "Year of Soaring Stars"
+  },
+  {
+    "DR Year": 262,
+    "Year Name": "Year of Pages Perilous"
+  },
+  {
+    "DR Year": 263,
+    "Year Name": "Year of the Worn Pages"
+  },
+  {
+    "DR Year": 264,
+    "Year Name": "Year of the Vanishing Cat"
+  },
+  {
+    "DR Year": 265,
+    "Year Name": "Year of the Masterful Plan"
+  },
+  {
+    "DR Year": 266,
+    "Year Name": "Year of the Unspoken Name"
+  },
+  {
+    "DR Year": 267,
+    "Year Name": "Year of Bane's Shadow"
+  },
+  {
+    "DR Year": 268,
+    "Year Name": "Year of the Cruel Storms"
+  },
+  {
+    "DR Year": 269,
+    "Year Name": "Year of the Wild Roses"
+  },
+  {
+    "DR Year": 270,
+    "Year Name": "Year of the Unheeded Warning"
+  },
+  {
+    "DR Year": 271,
+    "Year Name": "Year of the Port Stormed"
+  },
+  {
+    "DR Year": 272,
+    "Year Name": "Year of the Weeping Kingdom"
+  },
+  {
+    "DR Year": 273,
+    "Year Name": "Year of the Delighted Dwarves"
+  },
+  {
+    "DR Year": 274,
+    "Year Name": "Year of the Vested Vigil"
+  },
+  {
+    "DR Year": 275,
+    "Year Name": "Year of the Wrath Sword"
+  },
+  {
+    "DR Year": 276,
+    "Year Name": "Year of the Burnished Blade"
+  },
+  {
+    "DR Year": 277,
+    "Year Name": "Year of Broken Flame"
+  },
+  {
+    "DR Year": 278,
+    "Year Name": "Year of the Fallen Banner"
+  },
+  {
+    "DR Year": 279,
+    "Year Name": "Year of Smiling Nyth"
+  },
+  {
+    "DR Year": 280,
+    "Year Name": "Year of the Secreted Phylactery"
+  },
+  {
+    "DR Year": 281,
+    "Year Name": "Year of the Weeping Flail"
+  },
+  {
+    "DR Year": 282,
+    "Year Name": "Year of the Watchful Hermit"
+  },
+  {
+    "DR Year": 283,
+    "Year Name": "Year of the Skillful Tailor"
+  },
+  {
+    "DR Year": 284,
+    "Year Name": "Year of Fallen Flagons"
+  },
+  {
+    "DR Year": 285,
+    "Year Name": "Year of Wasted Pride"
+  },
+  {
+    "DR Year": 286,
+    "Year Name": "Year of the Jolly Mongrels"
+  },
+  {
+    "DR Year": 287,
+    "Year Name": "Year of the Warped Narthex"
+  },
+  {
+    "DR Year": 288,
+    "Year Name": "Year of the Xorn's Yearning"
+  },
+  {
+    "DR Year": 289,
+    "Year Name": "Year of the Waking Dreams"
+  },
+  {
+    "DR Year": 290,
+    "Year Name": "Year of Full Cribs"
+  },
+  {
+    "DR Year": 291,
+    "Year Name": "Year of the Vintner's Dagger"
+  },
+  {
+    "DR Year": 292,
+    "Year Name": "Year of Frostfires"
+  },
+  {
+    "DR Year": 293,
+    "Year Name": "Year of Hounds"
+  },
+  {
+    "DR Year": 294,
+    "Year Name": "Year of the Yak Men"
+  },
+  {
+    "DR Year": 295,
+    "Year Name": "Year of the Wrathful Revenant"
+  },
+  {
+    "DR Year": 296,
+    "Year Name": "Year of the Two Riders"
+  },
+  {
+    "DR Year": 297,
+    "Year Name": "Year of the Wailing Mothers"
+  },
+  {
+    "DR Year": 298,
+    "Year Name": "Year of the Scarred Wagon"
+  },
+  {
+    "DR Year": 299,
+    "Year Name": "Year of the Vaasan Knot"
+  },
+  {
+    "DR Year": 300,
+    "Year Name": "Year of the Late Sun"
+  },
+  {
+    "DR Year": 301,
+    "Year Name": "Year of Argent Cape"
+  },
+  {
+    "DR Year": 302,
+    "Year Name": "Year of the Deep Bay"
+  },
+  {
+    "DR Year": 303,
+    "Year Name": "Year of the Crimson Tiara"
+  },
+  {
+    "DR Year": 304,
+    "Year Name": "Year of the Questing Raven"
+  },
+  {
+    "DR Year": 305,
+    "Year Name": "Year of the Barrows"
+  },
+  {
+    "DR Year": 306,
+    "Year Name": "Year of the Fanged Horde"
+  },
+  {
+    "DR Year": 307,
+    "Year Name": "Year of Sundered Sails"
+  },
+  {
+    "DR Year": 308,
+    "Year Name": "Year of Promise"
+  },
+  {
+    "DR Year": 309,
+    "Year Name": "Year of the Cascade"
+  },
+  {
+    "DR Year": 310,
+    "Year Name": "Year of the Amber Hulk"
+  },
+  {
+    "DR Year": 311,
+    "Year Name": "Year of the Lupine Embrace"
+  },
+  {
+    "DR Year": 312,
+    "Year Name": "Year of the Aurum Bramble"
+  },
+  {
+    "DR Year": 313,
+    "Year Name": "Year of Regretful Births"
+  },
+  {
+    "DR Year": 314,
+    "Year Name": "Year of the Stammering Apprentice"
+  },
+  {
+    "DR Year": 315,
+    "Year Name": "Year of the Carnivorose"
+  },
+  {
+    "DR Year": 316,
+    "Year Name": "Year of the Vibrant Land"
+  },
+  {
+    "DR Year": 317,
+    "Year Name": "Year of the Riven Shield"
+  },
+  {
+    "DR Year": 318,
+    "Year Name": "Year of the Hero's Lament"
+  },
+  {
+    "DR Year": 319,
+    "Year Name": "Year of the Unforgotten Fire"
+  },
+  {
+    "DR Year": 320,
+    "Year Name": "Year of the Bright Plumage"
+  },
+  {
+    "DR Year": 321,
+    "Year Name": "Year of the Blessed Sleep"
+  },
+  {
+    "DR Year": 322,
+    "Year Name": "Year of Seven Scales"
+  },
+  {
+    "DR Year": 323,
+    "Year Name": "Year of the Miscast Shadow"
+  },
+  {
+    "DR Year": 324,
+    "Year Name": "Year of Freedom's Friends"
+  },
+  {
+    "DR Year": 325,
+    "Year Name": "Year of the Silken Whisper"
+  },
+  {
+    "DR Year": 326,
+    "Year Name": "Year of Secret Slaughters"
+  },
+  {
+    "DR Year": 327,
+    "Year Name": "Year of the Sullen Grimalkin"
+  },
+  {
+    "DR Year": 328,
+    "Year Name": "Year of the Ermine Cloak"
+  },
+  {
+    "DR Year": 329,
+    "Year Name": "Year of the Closed Scroll"
+  },
+  {
+    "DR Year": 330,
+    "Year Name": "Year of Roused Giants"
+  },
+  {
+    "DR Year": 331,
+    "Year Name": "Year of the Cold Clashes"
+  },
+  {
+    "DR Year": 332,
+    "Year Name": "Year of the Crashing Steeple"
+  },
+  {
+    "DR Year": 333,
+    "Year Name": "Year of the Drawstring"
+  },
+  {
+    "DR Year": 334,
+    "Year Name": "Year of the Humbled Fiend"
+  },
+  {
+    "DR Year": 335,
+    "Year Name": "Year of Seven Stones"
+  },
+  {
+    "DR Year": 336,
+    "Year Name": "Year of the Whipped Cur"
+  },
+  {
+    "DR Year": 337,
+    "Year Name": "Year of the Chosen's Blade"
+  },
+  {
+    "DR Year": 338,
+    "Year Name": "Year of the Envenomed Bolt"
+  },
+  {
+    "DR Year": 339,
+    "Year Name": "Year of the Vanished Foe"
+  },
+  {
+    "DR Year": 340,
+    "Year Name": "Year of the Uncrossed Bridge"
+  },
+  {
+    "DR Year": 341,
+    "Year Name": "Year of the Black Wing"
+  },
+  {
+    "DR Year": 342,
+    "Year Name": "Year of the Cantobele Stalking"
+  },
+  {
+    "DR Year": 343,
+    "Year Name": "Year of Fraying Binds"
+  },
+  {
+    "DR Year": 344,
+    "Year Name": "Year of the Loom"
+  },
+  {
+    "DR Year": 345,
+    "Year Name": "Year of Flying Daggers"
+  },
+  {
+    "DR Year": 346,
+    "Year Name": "Year of Blushing Stars"
+  },
+  {
+    "DR Year": 347,
+    "Year Name": "Year of the Sage's Fervor"
+  },
+  {
+    "DR Year": 348,
+    "Year Name": "Year of the Dagger"
+  },
+  {
+    "DR Year": 349,
+    "Year Name": "Year of the Toad"
+  },
+  {
+    "DR Year": 350,
+    "Year Name": "Year of the Hunter"
+  },
+  {
+    "DR Year": 351,
+    "Year Name": "Year of the Dancing Deer"
+  },
+  {
+    "DR Year": 352,
+    "Year Name": "Year of the Dancing Piper"
+  },
+  {
+    "DR Year": 353,
+    "Year Name": "Year of the Gold Band"
+  },
+  {
+    "DR Year": 354,
+    "Year Name": "Year of the Fleeting Pains"
+  },
+  {
+    "DR Year": 355,
+    "Year Name": "Year of Mourning Horns"
+  },
+  {
+    "DR Year": 356,
+    "Year Name": "Year of the Errant Kings"
+  },
+  {
+    "DR Year": 357,
+    "Year Name": "Year of the Pendulum"
+  },
+  {
+    "DR Year": 358,
+    "Year Name": "Year of the Battle Talons"
+  },
+  {
+    "DR Year": 359,
+    "Year Name": "Year of the Awakened Witch"
+  },
+  {
+    "DR Year": 360,
+    "Year Name": "Year of the Dusty Shelf"
+  },
+  {
+    "DR Year": 361,
+    "Year Name": "Year of the Fearless King"
+  },
+  {
+    "DR Year": 362,
+    "Year Name": "Year of the Greedy Altruist"
+  },
+  {
+    "DR Year": 363,
+    "Year Name": "Year of the Opal Key"
+  },
+  {
+    "DR Year": 364,
+    "Year Name": "Year of the Selfless Knave"
+  },
+  {
+    "DR Year": 365,
+    "Year Name": "Year of the Swift Sword"
+  },
+  {
+    "DR Year": 366,
+    "Year Name": "Year of Molten Anvils"
+  },
+  {
+    "DR Year": 367,
+    "Year Name": "Year of Shying Eyes"
+  },
+  {
+    "DR Year": 368,
+    "Year Name": "Year of the Bitter Smile"
+  },
+  {
+    "DR Year": 369,
+    "Year Name": "Year of the Maiden's Fancy"
+  },
+  {
+    "DR Year": 370,
+    "Year Name": "Year of Sleeping Dangers"
+  },
+  {
+    "DR Year": 371,
+    "Year Name": "Year of Emerald Eyes"
+  },
+  {
+    "DR Year": 372,
+    "Year Name": "Year of the Elder"
+  },
+  {
+    "DR Year": 373,
+    "Year Name": "Year of the Pacifist"
+  },
+  {
+    "DR Year": 374,
+    "Year Name": "Year of the Thoughtful Man"
+  },
+  {
+    "DR Year": 375,
+    "Year Name": "Year of the Woeful Resurrection"
+  },
+  {
+    "DR Year": 376,
+    "Year Name": "Year of the Leaping Hare"
+  },
+  {
+    "DR Year": 377,
+    "Year Name": "Year of the Ghoul"
+  },
+  {
+    "DR Year": 378,
+    "Year Name": "Year of Autumn Drums"
+  },
+  {
+    "DR Year": 379,
+    "Year Name": "Year of Seven Stars"
+  },
+  {
+    "DR Year": 380,
+    "Year Name": "Year of the Guarded Stance"
+  },
+  {
+    "DR Year": 381,
+    "Year Name": "Year of the Broken Chalice"
+  },
+  {
+    "DR Year": 382,
+    "Year Name": "Year of Steel Roses"
+  },
+  {
+    "DR Year": 383,
+    "Year Name": "Year of the Quelzarn"
+  },
+  {
+    "DR Year": 384,
+    "Year Name": "Year of Dreaming Dragons"
+  },
+  {
+    "DR Year": 385,
+    "Year Name": "Year of the Lady's Gaze"
+  },
+  {
+    "DR Year": 386,
+    "Year Name": "Year of Dawn Moons"
+  },
+  {
+    "DR Year": 387,
+    "Year Name": "Year of the River Candles"
+  },
+  {
+    "DR Year": 388,
+    "Year Name": "Year of the Simoom"
+  },
+  {
+    "DR Year": 389,
+    "Year Name": "Year of the Wooded Altar"
+  },
+  {
+    "DR Year": 390,
+    "Year Name": "Year of the Half Moon"
+  },
+  {
+    "DR Year": 391,
+    "Year Name": "Year of the Azure Cockatrice"
+  },
+  {
+    "DR Year": 392,
+    "Year Name": "Year of the Firstborn"
+  },
+  {
+    "DR Year": 393,
+    "Year Name": "Year of the Dying Bard"
+  },
+  {
+    "DR Year": 394,
+    "Year Name": "Year of the Herald's Tale"
+  },
+  {
+    "DR Year": 395,
+    "Year Name": "Year of the Narrow Escape"
+  },
+  {
+    "DR Year": 396,
+    "Year Name": "Year of the Purring Tiger"
+  },
+  {
+    "DR Year": 397,
+    "Year Name": "Year of the Swallowing Mists"
+  },
+  {
+    "DR Year": 398,
+    "Year Name": "Year of the Warning Ghost"
+  },
+  {
+    "DR Year": 399,
+    "Year Name": "Year of the Frayed Rope"
+  },
+  {
+    "DR Year": 400,
+    "Year Name": "Year of the Blue Shield"
+  },
+  {
+    "DR Year": 401,
+    "Year Name": "Year of the Serous Fist"
+  },
+  {
+    "DR Year": 402,
+    "Year Name": "Year of the Banished Bard"
+  },
+  {
+    "DR Year": 403,
+    "Year Name": "Year of the Black Dagger"
+  },
+  {
+    "DR Year": 404,
+    "Year Name": "Year of Withered Flowers"
+  },
+  {
+    "DR Year": 405,
+    "Year Name": "Year of the Blinding Locusts"
+  },
+  {
+    "DR Year": 406,
+    "Year Name": "Year of the Catoblepas"
+  },
+  {
+    "DR Year": 407,
+    "Year Name": "Year of the Ebony Cudgel"
+  },
+  {
+    "DR Year": 408,
+    "Year Name": "Year of the Goblin King"
+  },
+  {
+    "DR Year": 409,
+    "Year Name": "Year of High Eyes"
+  },
+  {
+    "DR Year": 410,
+    "Year Name": "Year of the Sun Crystal"
+  },
+  {
+    "DR Year": 411,
+    "Year Name": "Year of the Wavering Shadow"
+  },
+  {
+    "DR Year": 412,
+    "Year Name": "Year of the Burning Blazes"
+  },
+  {
+    "DR Year": 413,
+    "Year Name": "Year of the Beholder's Grin"
+  },
+  {
+    "DR Year": 414,
+    "Year Name": "Year of Omen Stars"
+  },
+  {
+    "DR Year": 415,
+    "Year Name": "Year of the Fiend's Kiss"
+  },
+  {
+    "DR Year": 416,
+    "Year Name": "Year of the Striped Moon"
+  },
+  {
+    "DR Year": 417,
+    "Year Name": "Year of the Brilliant Plan"
+  },
+  {
+    "DR Year": 418,
+    "Year Name": "Year of the Eagle's Flight"
+  },
+  {
+    "DR Year": 419,
+    "Year Name": "Year of the Hale Blacksmith"
+  },
+  {
+    "DR Year": 420,
+    "Year Name": "Year of the Last Breath"
+  },
+  {
+    "DR Year": 421,
+    "Year Name": "Year of the Peerless Foe"
+  },
+  {
+    "DR Year": 422,
+    "Year Name": "Year of the Murderous Mire"
+  },
+  {
+    "DR Year": 423,
+    "Year Name": "Year of the Velvet Night"
+  },
+  {
+    "DR Year": 424,
+    "Year Name": "Year of the Ambitious Sycophant"
+  },
+  {
+    "DR Year": 425,
+    "Year Name": "Year of the Argent Shafts"
+  },
+  {
+    "DR Year": 426,
+    "Year Name": "Year of the Black Dawn"
+  },
+  {
+    "DR Year": 427,
+    "Year Name": "Year of Violet Fungi"
+  },
+  {
+    "DR Year": 428,
+    "Year Name": "Year of the One's Tears"
+  },
+  {
+    "DR Year": 429,
+    "Year Name": "Year of the Cat's Eye"
+  },
+  {
+    "DR Year": 430,
+    "Year Name": "Year of the Floating Rock"
+  },
+  {
+    "DR Year": 431,
+    "Year Name": "Year of the Hearth"
+  },
+  {
+    "DR Year": 432,
+    "Year Name": "Year of the Sea Princes"
+  },
+  {
+    "DR Year": 433,
+    "Year Name": "Year of the Rebellious Youth"
+  },
+  {
+    "DR Year": 434,
+    "Year Name": "Year of the Stallion Triumphant"
+  },
+  {
+    "DR Year": 435,
+    "Year Name": "Year of Willing Sacrifice"
+  },
+  {
+    "DR Year": 436,
+    "Year Name": "Year of Steelscreaming"
+  },
+  {
+    "DR Year": 437,
+    "Year Name": "Year of Silver Holly"
+  },
+  {
+    "DR Year": 438,
+    "Year Name": "Year of the Bitter Root"
+  },
+  {
+    "DR Year": 439,
+    "Year Name": "Year of the Child's Tear"
+  },
+  {
+    "DR Year": 440,
+    "Year Name": "Year of the Festering Heart"
+  },
+  {
+    "DR Year": 441,
+    "Year Name": "Year of the Haggling Merchant"
+  },
+  {
+    "DR Year": 442,
+    "Year Name": "Year of the Relic's Vigil"
+  },
+  {
+    "DR Year": 443,
+    "Year Name": "Year of the Thousand Enemies"
+  },
+  {
+    "DR Year": 444,
+    "Year Name": "Year of the Infamous Wizard"
+  },
+  {
+    "DR Year": 445,
+    "Year Name": "Year of the Beardless Dwarf"
+  },
+  {
+    "DR Year": 446,
+    "Year Name": "Year of the Unblinking Eye"
+  },
+  {
+    "DR Year": 447,
+    "Year Name": "Year of the Awakening Treant"
+  },
+  {
+    "DR Year": 448,
+    "Year Name": "Year of the Haughty Friend"
+  },
+  {
+    "DR Year": 449,
+    "Year Name": "Year of Killing Ice"
+  },
+  {
+    "DR Year": 450,
+    "Year Name": "Year of the Corrie Fist"
+  },
+  {
+    "DR Year": 451,
+    "Year Name": "Year of Unleashed Fears"
+  },
+  {
+    "DR Year": 452,
+    "Year Name": "Year of the Rolling Heads"
+  },
+  {
+    "DR Year": 453,
+    "Year Name": "Year of the Lady's Palace"
+  },
+  {
+    "DR Year": 454,
+    "Year Name": "Year of the Glorious Windfall"
+  },
+  {
+    "DR Year": 455,
+    "Year Name": "Year of the Dryad's Dowry"
+  },
+  {
+    "DR Year": 456,
+    "Year Name": "Year of the Swift Hart"
+  },
+  {
+    "DR Year": 457,
+    "Year Name": "Year of the Unfurled Flag"
+  },
+  {
+    "DR Year": 458,
+    "Year Name": "Year of the Beast's Redemption"
+  },
+  {
+    "DR Year": 459,
+    "Year Name": "Year of the Blooded Dagger"
+  },
+  {
+    "DR Year": 460,
+    "Year Name": "Year of Scorching Suns"
+  },
+  {
+    "DR Year": 461,
+    "Year Name": "Year of the Lissome Apprentice"
+  },
+  {
+    "DR Year": 462,
+    "Year Name": "Year of the Empty Helm"
+  },
+  {
+    "DR Year": 463,
+    "Year Name": "Year of the Burning Sands"
+  },
+  {
+    "DR Year": 464,
+    "Year Name": "Year of True Names"
+  },
+  {
+    "DR Year": 465,
+    "Year Name": "Year of Dawn Blades"
+  },
+  {
+    "DR Year": 466,
+    "Year Name": "Year of the Burnt Spear"
+  },
+  {
+    "DR Year": 467,
+    "Year Name": "Year of Four Winds"
+  },
+  {
+    "DR Year": 468,
+    "Year Name": "Year of the Bared Sword"
+  },
+  {
+    "DR Year": 469,
+    "Year Name": "Year of the Dusty Library"
+  },
+  {
+    "DR Year": 470,
+    "Year Name": "Year of the Merciful Shadow"
+  },
+  {
+    "DR Year": 471,
+    "Year Name": "Year of the Sundered Tower"
+  },
+  {
+    "DR Year": 472,
+    "Year Name": "Year of Full Cellars"
+  },
+  {
+    "DR Year": 473,
+    "Year Name": "Year of the Crowned Knave"
+  },
+  {
+    "DR Year": 474,
+    "Year Name": "Year of the Goblin Battles"
+  },
+  {
+    "DR Year": 475,
+    "Year Name": "Year of the Maiden's Tears"
+  },
+  {
+    "DR Year": 476,
+    "Year Name": "Year of the Raging Hunter"
+  },
+  {
+    "DR Year": 477,
+    "Year Name": "Year of the Owlbear"
+  },
+  {
+    "DR Year": 478,
+    "Year Name": "Year of the Coarse Wool"
+  },
+  {
+    "DR Year": 479,
+    "Year Name": "Year of Forestsfrost"
+  },
+  {
+    "DR Year": 480,
+    "Year Name": "Year of the Winter Sphinx"
+  },
+  {
+    "DR Year": 481,
+    "Year Name": "Year of the Eversharp Axe"
+  },
+  {
+    "DR Year": 482,
+    "Year Name": "Year of the Blighted Vine"
+  },
+  {
+    "DR Year": 483,
+    "Year Name": "Year of the Soaring Galleon"
+  },
+  {
+    "DR Year": 484,
+    "Year Name": "Year of the Lawless Hunt"
+  },
+  {
+    "DR Year": 485,
+    "Year Name": "Year of the Arcane Image"
+  },
+  {
+    "DR Year": 486,
+    "Year Name": "Year of the Bleeding Altar"
+  },
+  {
+    "DR Year": 487,
+    "Year Name": "Year of Hidden Relics"
+  },
+  {
+    "DR Year": 488,
+    "Year Name": "Year of the Empty Hall"
+  },
+  {
+    "DR Year": 489,
+    "Year Name": "Year of the Foaming Tankard"
+  },
+  {
+    "DR Year": 490,
+    "Year Name": "Year of the Crone's Counsel"
+  },
+  {
+    "DR Year": 491,
+    "Year Name": "Year of Faltering Fires"
+  },
+  {
+    "DR Year": 492,
+    "Year Name": "Year of Azure Darkness"
+  },
+  {
+    "DR Year": 493,
+    "Year Name": "Year of the Ecstatic Priest"
+  },
+  {
+    "DR Year": 494,
+    "Year Name": "Year of the Ghost Ship"
+  },
+  {
+    "DR Year": 495,
+    "Year Name": "Year of the Listening Ear"
+  },
+  {
+    "DR Year": 496,
+    "Year Name": "Year of the Ravaging Dragon"
+  },
+  {
+    "DR Year": 497,
+    "Year Name": "Year of the Spear"
+  },
+  {
+    "DR Year": 498,
+    "Year Name": "Year of the Unstrung Bow"
+  },
+  {
+    "DR Year": 499,
+    "Year Name": "Year of the Wager"
+  },
+  {
+    "DR Year": 500,
+    "Year Name": "Year of the Flame Tongue"
+  },
+  {
+    "DR Year": 501,
+    "Year Name": "Year of the Lost Bird"
+  },
+  {
+    "DR Year": 502,
+    "Year Name": "Year of the Crawling Vine"
+  },
+  {
+    "DR Year": 503,
+    "Year Name": "Year of the Galloping Gorgon"
+  },
+  {
+    "DR Year": 504,
+    "Year Name": "Year of the Eclipsed Heart"
+  },
+  {
+    "DR Year": 505,
+    "Year Name": "Year of the Humble Knight"
+  },
+  {
+    "DR Year": 506,
+    "Year Name": "Year of the Opaque Eye"
+  },
+  {
+    "DR Year": 507,
+    "Year Name": "Year of the Rotting Pox"
+  },
+  {
+    "DR Year": 508,
+    "Year Name": "Year of the Stony Terror"
+  },
+  {
+    "DR Year": 509,
+    "Year Name": "Year of the Thunder Lizard"
+  },
+  {
+    "DR Year": 510,
+    "Year Name": "Year of the Unwavering Glare"
+  },
+  {
+    "DR Year": 511,
+    "Year Name": "Year of the Fortress Scoured"
+  },
+  {
+    "DR Year": 512,
+    "Year Name": "Year of the Wyvernfall"
+  },
+  {
+    "DR Year": 513,
+    "Year Name": "Year of the Blood Price"
+  },
+  {
+    "DR Year": 514,
+    "Year Name": "Year of the Elk"
+  },
+  {
+    "DR Year": 515,
+    "Year Name": "Year of the Frivolous Exchange"
+  },
+  {
+    "DR Year": 516,
+    "Year Name": "Year of the Haunting Hawk"
+  },
+  {
+    "DR Year": 517,
+    "Year Name": "Year of the Oaken Glade"
+  },
+  {
+    "DR Year": 518,
+    "Year Name": "Year of the Pendulous Tongues"
+  },
+  {
+    "DR Year": 519,
+    "Year Name": "Year of the Phoenix"
+  },
+  {
+    "DR Year": 520,
+    "Year Name": "Year of the Quiver"
+  },
+  {
+    "DR Year": 521,
+    "Year Name": "Year of the Sea's Beauty"
+  },
+  {
+    "DR Year": 522,
+    "Year Name": "Year of the Unmasked Traitor"
+  },
+  {
+    "DR Year": 523,
+    "Year Name": "Year of Trials Arcane"
+  },
+  {
+    "DR Year": 524,
+    "Year Name": "Year of the Arcane Cabal"
+  },
+  {
+    "DR Year": 525,
+    "Year Name": "Year of the Cracked Bell"
+  },
+  {
+    "DR Year": 526,
+    "Year Name": "Year of the Besieged Keep"
+  },
+  {
+    "DR Year": 527,
+    "Year Name": "Year of Tatters"
+  },
+  {
+    "DR Year": 528,
+    "Year Name": "Year of the Burning Sky"
+  },
+  {
+    "DR Year": 529,
+    "Year Name": "Year of the Evening Tree"
+  },
+  {
+    "DR Year": 530,
+    "Year Name": "Year of the Gluttonous Otyugh"
+  },
+  {
+    "DR Year": 531,
+    "Year Name": "Year of the Lily"
+  },
+  {
+    "DR Year": 532,
+    "Year Name": "Year of the Perceptive Judge"
+  },
+  {
+    "DR Year": 533,
+    "Year Name": "Year of the Shattered Manacles"
+  },
+  {
+    "DR Year": 534,
+    "Year Name": "Year of the Spitting Viper"
+  },
+  {
+    "DR Year": 535,
+    "Year Name": "Year of the Upright Man"
+  },
+  {
+    "DR Year": 536,
+    "Year Name": "Year of the Laughing Lich"
+  },
+  {
+    "DR Year": 537,
+    "Year Name": "Year of the Basilisk"
+  },
+  {
+    "DR Year": 538,
+    "Year Name": "Year of the Amethyst Axe"
+  },
+  {
+    "DR Year": 539,
+    "Year Name": "Year of the Borrowed Crown"
+  },
+  {
+    "DR Year": 540,
+    "Year Name": "Year of the Colorful Costume"
+  },
+  {
+    "DR Year": 541,
+    "Year Name": "Year of the Etched Chevron"
+  },
+  {
+    "DR Year": 542,
+    "Year Name": "Year of the Grasping Claw"
+  },
+  {
+    "DR Year": 543,
+    "Year Name": "Year of the Lyre"
+  },
+  {
+    "DR Year": 544,
+    "Year Name": "Year of the Killing Rose"
+  },
+  {
+    "DR Year": 545,
+    "Year Name": "Year of the Pernicon"
+  },
+  {
+    "DR Year": 546,
+    "Year Name": "Year of the Rusted Sabre"
+  },
+  {
+    "DR Year": 547,
+    "Year Name": "Year of the Simpering Courtier"
+  },
+  {
+    "DR Year": 548,
+    "Year Name": "Year of the Eloene Bride"
+  },
+  {
+    "DR Year": 549,
+    "Year Name": "Year of the Unstoppable Ogre"
+  },
+  {
+    "DR Year": 550,
+    "Year Name": "Year of the Zealous"
+  },
+  {
+    "DR Year": 551,
+    "Year Name": "Year of the Barren Chamber"
+  },
+  {
+    "DR Year": 552,
+    "Year Name": "Year of the Dead"
+  },
+  {
+    "DR Year": 553,
+    "Year Name": "Year of the Gnashing Tooth"
+  },
+  {
+    "DR Year": 554,
+    "Year Name": "Year of Waving Wheat"
+  },
+  {
+    "DR Year": 555,
+    "Year Name": "Year of Dances Perilous"
+  },
+  {
+    "DR Year": 556,
+    "Year Name": "Year of the Green Man"
+  },
+  {
+    "DR Year": 557,
+    "Year Name": "Year of the Melding"
+  },
+  {
+    "DR Year": 558,
+    "Year Name": "Year of the Mithral Eagle"
+  },
+  {
+    "DR Year": 559,
+    "Year Name": "Year of the Scarlet Dagger"
+  },
+  {
+    "DR Year": 560,
+    "Year Name": "Year of the Unknown Truth"
+  },
+  {
+    "DR Year": 561,
+    "Year Name": "Year of the Three Setting Suns"
+  },
+  {
+    "DR Year": 562,
+    "Year Name": "Year of the Waking Feyr"
+  },
+  {
+    "DR Year": 563,
+    "Year Name": "Year of the Sable Basilisk"
+  },
+  {
+    "DR Year": 564,
+    "Year Name": "Year of the Brandished Axe"
+  },
+  {
+    "DR Year": 565,
+    "Year Name": "Year of the Encrusted Pendant"
+  },
+  {
+    "DR Year": 566,
+    "Year Name": "Year of the Ghasts"
+  },
+  {
+    "DR Year": 567,
+    "Year Name": "Year of the Martyr"
+  },
+  {
+    "DR Year": 568,
+    "Year Name": "Year of the Pernicious Hauberk"
+  },
+  {
+    "DR Year": 569,
+    "Year Name": "Year of Tumbled Bones"
+  },
+  {
+    "DR Year": 570,
+    "Year Name": "Year of Bright Fangs"
+  },
+  {
+    "DR Year": 571,
+    "Year Name": "Year of the Scholar"
+  },
+  {
+    "DR Year": 572,
+    "Year Name": "Year of Writhing Darkness"
+  },
+  {
+    "DR Year": 573,
+    "Year Name": "Year of the Sable Spider"
+  },
+  {
+    "DR Year": 574,
+    "Year Name": "Year of the Gored Griffon"
+  },
+  {
+    "DR Year": 575,
+    "Year Name": "Year of the Breaching Bulette"
+  },
+  {
+    "DR Year": 576,
+    "Year Name": "Year of the Sunless Passage"
+  },
+  {
+    "DR Year": 577,
+    "Year Name": "Year of the Alabaster Mounds"
+  },
+  {
+    "DR Year": 578,
+    "Year Name": "Year of the Floating Fish"
+  },
+  {
+    "DR Year": 579,
+    "Year Name": "Year of the Cultured Rake"
+  },
+  {
+    "DR Year": 580,
+    "Year Name": "Year of Loose Coins"
+  },
+  {
+    "DR Year": 581,
+    "Year Name": "Year of the Harried Harpies"
+  },
+  {
+    "DR Year": 582,
+    "Year Name": "Year of the Deep Wound"
+  },
+  {
+    "DR Year": 583,
+    "Year Name": "Year of the Furled Sail"
+  },
+  {
+    "DR Year": 584,
+    "Year Name": "Year of the Juggernaut"
+  },
+  {
+    "DR Year": 585,
+    "Year Name": "Year of the Ogling Beholder"
+  },
+  {
+    "DR Year": 586,
+    "Year Name": "Year of the Night's Dying"
+  },
+  {
+    "DR Year": 587,
+    "Year Name": "Year of Radiant Rods"
+  },
+  {
+    "DR Year": 588,
+    "Year Name": "Year of Dragons Dawning"
+  },
+  {
+    "DR Year": 589,
+    "Year Name": "Year of the Splintered Oak"
+  },
+  {
+    "DR Year": 590,
+    "Year Name": "Year of the Turning Leaf"
+  },
+  {
+    "DR Year": 591,
+    "Year Name": "Year of Silver Streams"
+  },
+  {
+    "DR Year": 592,
+    "Year Name": "Year of the Supreme Duelist"
+  },
+  {
+    "DR Year": 593,
+    "Year Name": "Year of the Yellow Locus"
+  },
+  {
+    "DR Year": 594,
+    "Year Name": "Year of the Couched Spear"
+  },
+  {
+    "DR Year": 595,
+    "Year Name": "Year of the Coven"
+  },
+  {
+    "DR Year": 596,
+    "Year Name": "Year of the Flightless Eagle"
+  },
+  {
+    "DR Year": 597,
+    "Year Name": "Year of the Hungry Anelace"
+  },
+  {
+    "DR Year": 598,
+    "Year Name": "Year of the Pauper"
+  },
+  {
+    "DR Year": 599,
+    "Year Name": "Year of the Scourged Fool"
+  },
+  {
+    "DR Year": 600,
+    "Year Name": "Year of Fire and Frost"
+  },
+  {
+    "DR Year": 601,
+    "Year Name": "Year of the Desolate Warrior"
+  },
+  {
+    "DR Year": 602,
+    "Year Name": "Year of the Glimmering Sea"
+  },
+  {
+    "DR Year": 603,
+    "Year Name": "Year of Frigid Ghosts"
+  },
+  {
+    "DR Year": 604,
+    "Year Name": "Year of the Immured Imp"
+  },
+  {
+    "DR Year": 605,
+    "Year Name": "Year of Many Serpents"
+  },
+  {
+    "DR Year": 606,
+    "Year Name": "Year of the Kindly Lich"
+  },
+  {
+    "DR Year": 607,
+    "Year Name": "Year of the Crystal Vambrace"
+  },
+  {
+    "DR Year": 608,
+    "Year Name": "Year of Failed Daggers"
+  },
+  {
+    "DR Year": 609,
+    "Year Name": "Year of Old Bones"
+  },
+  {
+    "DR Year": 610,
+    "Year Name": "Year of the Spellfire"
+  },
+  {
+    "DR Year": 611,
+    "Year Name": "Year of the Normiir"
+  },
+  {
+    "DR Year": 612,
+    "Year Name": "Year of the Jester's Smile"
+  },
+  {
+    "DR Year": 613,
+    "Year Name": "Year of the Glaring Eye"
+  },
+  {
+    "DR Year": 614,
+    "Year Name": "Year of the Shattered Scepter"
+  },
+  {
+    "DR Year": 615,
+    "Year Name": "Year of the Lamia's Kiss"
+  },
+  {
+    "DR Year": 616,
+    "Year Name": "Year of the Ensorceled Kings"
+  },
+  {
+    "DR Year": 617,
+    "Year Name": "Year of the Needless Slaughter"
+  },
+  {
+    "DR Year": 618,
+    "Year Name": "Year of the Siege Tower"
+  },
+  {
+    "DR Year": 619,
+    "Year Name": "Year of Orcsfall"
+  },
+  {
+    "DR Year": 620,
+    "Year Name": "Year of the Mountain Crypts"
+  },
+  {
+    "DR Year": 621,
+    "Year Name": "Year of Nineteen Swords"
+  },
+  {
+    "DR Year": 622,
+    "Year Name": "Year of Soaring Shadows"
+  },
+  {
+    "DR Year": 623,
+    "Year Name": "Year of Nightsilver"
+  },
+  {
+    "DR Year": 624,
+    "Year Name": "Year of the Journey Home"
+  },
+  {
+    "DR Year": 625,
+    "Year Name": "Year of the Torrents"
+  },
+  {
+    "DR Year": 626,
+    "Year Name": "Year of the Eagle and Falcon"
+  },
+  {
+    "DR Year": 627,
+    "Year Name": "Year of the Bloodcrystals"
+  },
+  {
+    "DR Year": 628,
+    "Year Name": "Year of the Kobold Hordes"
+  },
+  {
+    "DR Year": 629,
+    "Year Name": "Year of the Empty Hearth"
+  },
+  {
+    "DR Year": 630,
+    "Year Name": "Year of the Winking Jester"
+  },
+  {
+    "DR Year": 631,
+    "Year Name": "Year of the Lone Lark"
+  },
+  {
+    "DR Year": 632,
+    "Year Name": "Year of Burning Skies"
+  },
+  {
+    "DR Year": 633,
+    "Year Name": "Year of Chasms"
+  },
+  {
+    "DR Year": 634,
+    "Year Name": "Year of the Darkspawn"
+  },
+  {
+    "DR Year": 635,
+    "Year Name": "Year of the Soldier's Forfeit"
+  },
+  {
+    "DR Year": 636,
+    "Year Name": "Year of the Luminous Tabard"
+  },
+  {
+    "DR Year": 637,
+    "Year Name": "Year of the Silver Sun"
+  },
+  {
+    "DR Year": 638,
+    "Year Name": "Year of the Menial Phrases"
+  },
+  {
+    "DR Year": 639,
+    "Year Name": "Year of Ire's Immolation"
+  },
+  {
+    "DR Year": 640,
+    "Year Name": "Year of the Fanged Beast"
+  },
+  {
+    "DR Year": 641,
+    "Year Name": "Year of the Necropolis"
+  },
+  {
+    "DR Year": 642,
+    "Year Name": "Year of the Sifting Sands"
+  },
+  {
+    "DR Year": 643,
+    "Year Name": "Year of the Nesting Harpy"
+  },
+  {
+    "DR Year": 644,
+    "Year Name": "Year of the Gleaming Gates"
+  },
+  {
+    "DR Year": 645,
+    "Year Name": "Year of the Costly Gift"
+  },
+  {
+    "DR Year": 646,
+    "Year Name": "Year of the Tormented Souls"
+  },
+  {
+    "DR Year": 647,
+    "Year Name": "Year of the Wayward Heart"
+  },
+  {
+    "DR Year": 648,
+    "Year Name": "Year of the Dancing Daggers"
+  },
+  {
+    "DR Year": 649,
+    "Year Name": "Year of the Bloody Crown"
+  },
+  {
+    "DR Year": 650,
+    "Year Name": "Year of the Falling Tower"
+  },
+  {
+    "DR Year": 651,
+    "Year Name": "Year of the Waning Sun"
+  },
+  {
+    "DR Year": 652,
+    "Year Name": "Year of the Viper"
+  },
+  {
+    "DR Year": 653,
+    "Year Name": "Year of the Killing Blow"
+  },
+  {
+    "DR Year": 654,
+    "Year Name": "Year of the Coveted Briars"
+  },
+  {
+    "DR Year": 655,
+    "Year Name": "Year of the Volanth"
+  },
+  {
+    "DR Year": 656,
+    "Year Name": "Year of Peaceful Seas"
+  },
+  {
+    "DR Year": 657,
+    "Year Name": "Year of the Nine Stars"
+  },
+  {
+    "DR Year": 658,
+    "Year Name": "Year of the Dangerous Game"
+  },
+  {
+    "DR Year": 659,
+    "Year Name": "Year of the Hunting Ghosts"
+  },
+  {
+    "DR Year": 660,
+    "Year Name": "Year of the Morning Horn"
+  },
+  {
+    "DR Year": 661,
+    "Year Name": "Year of the Bloody Tusk"
+  },
+  {
+    "DR Year": 662,
+    "Year Name": "Year of the Peoples' Mourning"
+  },
+  {
+    "DR Year": 663,
+    "Year Name": "Year of the Baleful Song"
+  },
+  {
+    "DR Year": 664,
+    "Year Name": "Year of the Falling Petals"
+  },
+  {
+    "DR Year": 665,
+    "Year Name": "Year of the Ashen Tears"
+  },
+  {
+    "DR Year": 666,
+    "Year Name": "Year of Stern Judgment"
+  },
+  {
+    "DR Year": 667,
+    "Year Name": "Year of Austere Ceremonies"
+  },
+  {
+    "DR Year": 668,
+    "Year Name": "Year of the Telling Tome"
+  },
+  {
+    "DR Year": 669,
+    "Year Name": "Year of the Brutal Beast"
+  },
+  {
+    "DR Year": 670,
+    "Year Name": "Year of the Many Floods"
+  },
+  {
+    "DR Year": 671,
+    "Year Name": "Year of the Shrouded Slayer"
+  },
+  {
+    "DR Year": 672,
+    "Year Name": "Year of the Angry Caverns"
+  },
+  {
+    "DR Year": 673,
+    "Year Name": "Year of the Covenant"
+  },
+  {
+    "DR Year": 674,
+    "Year Name": "Year of the Nomad"
+  },
+  {
+    "DR Year": 675,
+    "Year Name": "Year of the Bloodfeud"
+  },
+  {
+    "DR Year": 676,
+    "Year Name": "Year of Gruesome Grimoires"
+  },
+  {
+    "DR Year": 677,
+    "Year Name": "Year of Resonant Silence"
+  },
+  {
+    "DR Year": 678,
+    "Year Name": "Year of the Poignant Poniard"
+  },
+  {
+    "DR Year": 679,
+    "Year Name": "Year of the Scarlet Sash"
+  },
+  {
+    "DR Year": 680,
+    "Year Name": "Year of the Long March"
+  },
+  {
+    "DR Year": 681,
+    "Year Name": "Year of the Zombie Lords"
+  },
+  {
+    "DR Year": 682,
+    "Year Name": "Year of the Howling"
+  },
+  {
+    "DR Year": 683,
+    "Year Name": "Year of the Tainted Troll"
+  },
+  {
+    "DR Year": 684,
+    "Year Name": "Year of the Sundered Crypt"
+  },
+  {
+    "DR Year": 685,
+    "Year Name": "Year of the Wraithwinds"
+  },
+  {
+    "DR Year": 686,
+    "Year Name": "Year of the Unshriven"
+  },
+  {
+    "DR Year": 687,
+    "Year Name": "Year of the Wandering Sylph"
+  },
+  {
+    "DR Year": 688,
+    "Year Name": "Year of the Zephyr"
+  },
+  {
+    "DR Year": 689,
+    "Year Name": "Year of the Eager Executioner"
+  },
+  {
+    "DR Year": 690,
+    "Year Name": "Year of the Clashing Blades"
+  },
+  {
+    "DR Year": 691,
+    "Year Name": "Year of the Stricken Sun"
+  },
+  {
+    "DR Year": 692,
+    "Year Name": "Year of the Crawling Crags"
+  },
+  {
+    "DR Year": 693,
+    "Year Name": "Year of the Enigmatic Smile"
+  },
+  {
+    "DR Year": 694,
+    "Year Name": "Year of the Ominous Oracle"
+  },
+  {
+    "DR Year": 695,
+    "Year Name": "Year of Fanciful Feasts"
+  },
+  {
+    "DR Year": 696,
+    "Year Name": "Year of the Great Escape"
+  },
+  {
+    "DR Year": 697,
+    "Year Name": "Year of the Triton's Horn"
+  },
+  {
+    "DR Year": 698,
+    "Year Name": "Year of the Voracious Vole"
+  },
+  {
+    "DR Year": 699,
+    "Year Name": "Year of Rampaging Raaserpents"
+  },
+  {
+    "DR Year": 700,
+    "Year Name": "Year of the Slain Raven"
+  },
+  {
+    "DR Year": 701,
+    "Year Name": "Year of the White Jonquil"
+  },
+  {
+    "DR Year": 702,
+    "Year Name": "Year of the Clutching Death"
+  },
+  {
+    "DR Year": 703,
+    "Year Name": "Year of the Shambling Ice"
+  },
+  {
+    "DR Year": 704,
+    "Year Name": "Year of the Emerald Citadel"
+  },
+  {
+    "DR Year": 705,
+    "Year Name": "Year of Watchful Eyes"
+  },
+  {
+    "DR Year": 706,
+    "Year Name": "Year of the Realmsrage"
+  },
+  {
+    "DR Year": 707,
+    "Year Name": "Year of Portents Perilous"
+  },
+  {
+    "DR Year": 708,
+    "Year Name": "Year of Bound Evils"
+  },
+  {
+    "DR Year": 709,
+    "Year Name": "Year of the Earnest Oaths"
+  },
+  {
+    "DR Year": 710,
+    "Year Name": "Year of the Toppled Throne"
+  },
+  {
+    "DR Year": 711,
+    "Year Name": "Year of Despairing Elves"
+  },
+  {
+    "DR Year": 712,
+    "Year Name": "Year of the Lost Lance"
+  },
+  {
+    "DR Year": 713,
+    "Year Name": "Year of the Firedrake"
+  },
+  {
+    "DR Year": 714,
+    "Year Name": "Year of Doom"
+  },
+  {
+    "DR Year": 715,
+    "Year Name": "Year of Hungry Jaws"
+  },
+  {
+    "DR Year": 716,
+    "Year Name": "Year of Reaching Regret"
+  },
+  {
+    "DR Year": 717,
+    "Year Name": "Year of the Druid's Wrath"
+  },
+  {
+    "DR Year": 718,
+    "Year Name": "Year of the Painful Price"
+  },
+  {
+    "DR Year": 719,
+    "Year Name": "Year of the Lost Lord"
+  },
+  {
+    "DR Year": 720,
+    "Year Name": "Year of the Dawn Rose"
+  },
+  {
+    "DR Year": 721,
+    "Year Name": "Year of the Hungry Pool"
+  },
+  {
+    "DR Year": 722,
+    "Year Name": "Year of the Last Hunt"
+  },
+  {
+    "DR Year": 723,
+    "Year Name": "Year of the Underdark Afire"
+  },
+  {
+    "DR Year": 724,
+    "Year Name": "Year of the Prisoner Unfettered"
+  },
+  {
+    "DR Year": 725,
+    "Year Name": "Year of the Shorn Beard"
+  },
+  {
+    "DR Year": 726,
+    "Year Name": "Year of the Dowager Lady"
+  },
+  {
+    "DR Year": 727,
+    "Year Name": "Year of the Purloined Throne"
+  },
+  {
+    "DR Year": 728,
+    "Year Name": "Year of the Sleeping Princess"
+  },
+  {
+    "DR Year": 729,
+    "Year Name": "Year of the Twisted Horn"
+  },
+  {
+    "DR Year": 730,
+    "Year Name": "Year of the Jovial Mage"
+  },
+  {
+    "DR Year": 731,
+    "Year Name": "Year of the Visions"
+  },
+  {
+    "DR Year": 732,
+    "Year Name": "Year of the Proud Father"
+  },
+  {
+    "DR Year": 733,
+    "Year Name": "Year of the Sad Refrains"
+  },
+  {
+    "DR Year": 734,
+    "Year Name": "Year of the Splendid Stag"
+  },
+  {
+    "DR Year": 735,
+    "Year Name": "Year of the Prophet's Child"
+  },
+  {
+    "DR Year": 736,
+    "Year Name": "Year of the Gleeful Noise"
+  },
+  {
+    "DR Year": 737,
+    "Year Name": "Year of the Purple Wyrm"
+  },
+  {
+    "DR Year": 738,
+    "Year Name": "Year of the Gliding Man"
+  },
+  {
+    "DR Year": 739,
+    "Year Name": "Year of the Staggered Minotaur"
+  },
+  {
+    "DR Year": 740,
+    "Year Name": "Year of the Netherese Lai"
+  },
+  {
+    "DR Year": 741,
+    "Year Name": "Year of the Shandon Eyes"
+  },
+  {
+    "DR Year": 742,
+    "Year Name": "Year of the Wavering Voice"
+  },
+  {
+    "DR Year": 743,
+    "Year Name": "Year of the Snowy Addax"
+  },
+  {
+    "DR Year": 744,
+    "Year Name": "Year of the Jeweled Aerie"
+  },
+  {
+    "DR Year": 745,
+    "Year Name": "Year of the Proud Menhir"
+  },
+  {
+    "DR Year": 746,
+    "Year Name": "Year of the Somber Dancers"
+  },
+  {
+    "DR Year": 747,
+    "Year Name": "Year of Stagnant Water"
+  },
+  {
+    "DR Year": 748,
+    "Year Name": "Year of the Coin"
+  },
+  {
+    "DR Year": 749,
+    "Year Name": "Year of the Glass Eye"
+  },
+  {
+    "DR Year": 750,
+    "Year Name": "Year of the Dying Dwarf"
+  },
+  {
+    "DR Year": 751,
+    "Year Name": "Year of Good Tidings"
+  },
+  {
+    "DR Year": 752,
+    "Year Name": "Year of High Treachery"
+  },
+  {
+    "DR Year": 753,
+    "Year Name": "Year of Strife"
+  },
+  {
+    "DR Year": 754,
+    "Year Name": "Year of Midsummer's Dreams"
+  },
+  {
+    "DR Year": 755,
+    "Year Name": "Year of the Enigma"
+  },
+  {
+    "DR Year": 756,
+    "Year Name": "Year of the Leaning Post"
+  },
+  {
+    "DR Year": 757,
+    "Year Name": "Year of Lost Wayfarers"
+  },
+  {
+    "DR Year": 758,
+    "Year Name": "Year of the Scorched Sea"
+  },
+  {
+    "DR Year": 759,
+    "Year Name": "Year of the Missing Blade"
+  },
+  {
+    "DR Year": 760,
+    "Year Name": "Year of Drifting Stars"
+  },
+  {
+    "DR Year": 761,
+    "Year Name": "Year of Laughter"
+  },
+  {
+    "DR Year": 762,
+    "Year Name": "Year of the Snow Sword"
+  },
+  {
+    "DR Year": 763,
+    "Year Name": "Year of the Sharp Edge"
+  },
+  {
+    "DR Year": 764,
+    "Year Name": "Year of Mistmaidens"
+  },
+  {
+    "DR Year": 765,
+    "Year Name": "Year of the Cowl"
+  },
+  {
+    "DR Year": 766,
+    "Year Name": "Year of Yearning"
+  },
+  {
+    "DR Year": 767,
+    "Year Name": "Year of the Awakening Wyrm"
+  },
+  {
+    "DR Year": 768,
+    "Year Name": "Year of the Prying Gods"
+  },
+  {
+    "DR Year": 769,
+    "Year Name": "Year of the Torm Cloak"
+  },
+  {
+    "DR Year": 770,
+    "Year Name": "Year of the Diamond Sword"
+  },
+  {
+    "DR Year": 771,
+    "Year Name": "Year of the Stalking Knight"
+  },
+  {
+    "DR Year": 772,
+    "Year Name": "Year of the Giggling Ogre"
+  },
+  {
+    "DR Year": 773,
+    "Year Name": "Year of the Aurumvorax"
+  },
+  {
+    "DR Year": 774,
+    "Year Name": "Year of the Scowling Duchess"
+  },
+  {
+    "DR Year": 775,
+    "Year Name": "Year of the Bloody Stone"
+  },
+  {
+    "DR Year": 776,
+    "Year Name": "Year of the Crystal Ball"
+  },
+  {
+    "DR Year": 777,
+    "Year Name": "Year of the Fortified Mind"
+  },
+  {
+    "DR Year": 778,
+    "Year Name": "Year of Awaiting Webs"
+  },
+  {
+    "DR Year": 779,
+    "Year Name": "Year of the Crying Sphinx"
+  },
+  {
+    "DR Year": 780,
+    "Year Name": "Year of the Broken Crossbow"
+  },
+  {
+    "DR Year": 781,
+    "Year Name": "Year of the Elven Fortress"
+  },
+  {
+    "DR Year": 782,
+    "Year Name": "Year of the Gentle Hand"
+  },
+  {
+    "DR Year": 783,
+    "Year Name": "Year of the Lizard King"
+  },
+  {
+    "DR Year": 784,
+    "Year Name": "Year of the Shattered Tome"
+  },
+  {
+    "DR Year": 785,
+    "Year Name": "Year of the Manticore Rampant"
+  },
+  {
+    "DR Year": 786,
+    "Year Name": "Year of the Moaning Gorge"
+  },
+  {
+    "DR Year": 787,
+    "Year Name": "Year of the Rotting Orchard"
+  },
+  {
+    "DR Year": 788,
+    "Year Name": "Year of the True Believer"
+  },
+  {
+    "DR Year": 789,
+    "Year Name": "Year of the Flourishing Forests"
+  },
+  {
+    "DR Year": 790,
+    "Year Name": "Year of Bend Sinister"
+  },
+  {
+    "DR Year": 791,
+    "Year Name": "Year of the Sisters' Battles"
+  },
+  {
+    "DR Year": 792,
+    "Year Name": "Year of the Crimson Thorn"
+  },
+  {
+    "DR Year": 793,
+    "Year Name": "Year of the Furious Horse"
+  },
+  {
+    "DR Year": 794,
+    "Year Name": "Year of the Grimacing Elf"
+  },
+  {
+    "DR Year": 795,
+    "Year Name": "Year of the Firehawk"
+  },
+  {
+    "DR Year": 796,
+    "Year Name": "Year of the Gray Mists"
+  },
+  {
+    "DR Year": 797,
+    "Year Name": "Year of the Hearthstone"
+  },
+  {
+    "DR Year": 798,
+    "Year Name": "Year of the Holy Aspergill"
+  },
+  {
+    "DR Year": 799,
+    "Year Name": "Year of the Laughing Gull"
+  },
+  {
+    "DR Year": 800,
+    "Year Name": "Year of the Black Fist"
+  },
+  {
+    "DR Year": 801,
+    "Year Name": "Year of the Star Rose"
+  },
+  {
+    "DR Year": 802,
+    "Year Name": "Year of the Patchworked Peace"
+  },
+  {
+    "DR Year": 803,
+    "Year Name": "Year of the Reaching Hand"
+  },
+  {
+    "DR Year": 804,
+    "Year Name": "Year of the Spreading Scourge"
+  },
+  {
+    "DR Year": 805,
+    "Year Name": "Year of the Unsung Bard"
+  },
+  {
+    "DR Year": 806,
+    "Year Name": "Year of the Warrior's Rest"
+  },
+  {
+    "DR Year": 807,
+    "Year Name": "Year of the Bearded Maiden"
+  },
+  {
+    "DR Year": 808,
+    "Year Name": "Year of the Crescent Moon"
+  },
+  {
+    "DR Year": 809,
+    "Year Name": "Year of the Boastful Noble"
+  },
+  {
+    "DR Year": 810,
+    "Year Name": "Year of the Dark Mystery"
+  },
+  {
+    "DR Year": 811,
+    "Year Name": "Year of Many Tears"
+  },
+  {
+    "DR Year": 812,
+    "Year Name": "Year of the Gem Dragons"
+  },
+  {
+    "DR Year": 813,
+    "Year Name": "Year of Widows"
+  },
+  {
+    "DR Year": 814,
+    "Year Name": "Year of the Harper's Apprentice"
+  },
+  {
+    "DR Year": 815,
+    "Year Name": "Year of the Heavy Heart"
+  },
+  {
+    "DR Year": 816,
+    "Year Name": "Year of the Laughing Swan"
+  },
+  {
+    "DR Year": 817,
+    "Year Name": "Year of the Deadly Torch"
+  },
+  {
+    "DR Year": 818,
+    "Year Name": "Year of Broken Locks"
+  },
+  {
+    "DR Year": 819,
+    "Year Name": "Year of the Mendacious Page"
+  },
+  {
+    "DR Year": 820,
+    "Year Name": "Year of the Roving Tyrant"
+  },
+  {
+    "DR Year": 821,
+    "Year Name": "Year of the Firewall"
+  },
+  {
+    "DR Year": 822,
+    "Year Name": "Year of the Wizard's Chalice"
+  },
+  {
+    "DR Year": 823,
+    "Year Name": "Year of the Floating Petals"
+  },
+  {
+    "DR Year": 824,
+    "Year Name": "Year of the Copper Coil"
+  },
+  {
+    "DR Year": 825,
+    "Year Name": "Year of the Silver Flagon"
+  },
+  {
+    "DR Year": 826,
+    "Year Name": "Year of Wolfpacks"
+  },
+  {
+    "DR Year": 827,
+    "Year Name": "Year of the Sacrificed Fortune"
+  },
+  {
+    "DR Year": 828,
+    "Year Name": "Year of Alarmed Merchants"
+  },
+  {
+    "DR Year": 829,
+    "Year Name": "Year of the Thessalhydra"
+  },
+  {
+    "DR Year": 830,
+    "Year Name": "Year of the Ambitious Proposal"
+  },
+  {
+    "DR Year": 831,
+    "Year Name": "Year of the Deceptive Tongue"
+  },
+  {
+    "DR Year": 832,
+    "Year Name": "Year of the Slow Herald"
+  },
+  {
+    "DR Year": 833,
+    "Year Name": "Year of the Flying Serpent"
+  },
+  {
+    "DR Year": 834,
+    "Year Name": "Year of the Leaping Lion"
+  },
+  {
+    "DR Year": 835,
+    "Year Name": "Year of the Billowed Sail"
+  },
+  {
+    "DR Year": 836,
+    "Year Name": "Year of Twelve Bells"
+  },
+  {
+    "DR Year": 837,
+    "Year Name": "Year of the Darkened Sundial"
+  },
+  {
+    "DR Year": 838,
+    "Year Name": "Year of the Unfettered Genie"
+  },
+  {
+    "DR Year": 839,
+    "Year Name": "Year of Ten Atonements"
+  },
+  {
+    "DR Year": 840,
+    "Year Name": "Year of the Fighting Sage"
+  },
+  {
+    "DR Year": 841,
+    "Year Name": "Year of the Hunted Elk"
+  },
+  {
+    "DR Year": 842,
+    "Year Name": "Year of the Maverick"
+  },
+  {
+    "DR Year": 843,
+    "Year Name": "Year of Amber"
+  },
+  {
+    "DR Year": 844,
+    "Year Name": "Year of the Midnight Sun"
+  },
+  {
+    "DR Year": 845,
+    "Year Name": "Year of the Ruby Pendant"
+  },
+  {
+    "DR Year": 846,
+    "Year Name": "Year of the Steadfast Dwarf"
+  },
+  {
+    "DR Year": 847,
+    "Year Name": "Year of the Unmarked Path"
+  },
+  {
+    "DR Year": 848,
+    "Year Name": "Year of the Vigilant Familiar"
+  },
+  {
+    "DR Year": 849,
+    "Year Name": "Year of the Black Book"
+  },
+  {
+    "DR Year": 850,
+    "Year Name": "Year of the Empty Throne"
+  },
+  {
+    "DR Year": 851,
+    "Year Name": "Year of the Jasmal Blade"
+  },
+  {
+    "DR Year": 852,
+    "Year Name": "Year of the False Smile"
+  },
+  {
+    "DR Year": 853,
+    "Year Name": "Year of the Hungry Box"
+  },
+  {
+    "DR Year": 854,
+    "Year Name": "Year of the Indigo Inferno"
+  },
+  {
+    "DR Year": 855,
+    "Year Name": "Year of Cornerstones"
+  },
+  {
+    "DR Year": 856,
+    "Year Name": "Year of Thorns"
+  },
+  {
+    "DR Year": 857,
+    "Year Name": "Year of Forgotten Fame"
+  },
+  {
+    "DR Year": 858,
+    "Year Name": "Year of the Saffron Orb"
+  },
+  {
+    "DR Year": 859,
+    "Year Name": "Year of the Sea Crossing"
+  },
+  {
+    "DR Year": 860,
+    "Year Name": "Year of the Tired Horsemen"
+  },
+  {
+    "DR Year": 861,
+    "Year Name": "Year of the Exploding Orl"
+  },
+  {
+    "DR Year": 862,
+    "Year Name": "Year of the Snow Rose"
+  },
+  {
+    "DR Year": 863,
+    "Year Name": "Year of the Wondrous Sea"
+  },
+  {
+    "DR Year": 864,
+    "Year Name": "Year of the Broken Branch"
+  },
+  {
+    "DR Year": 865,
+    "Year Name": "Year of Flamedance"
+  },
+  {
+    "DR Year": 866,
+    "Year Name": "Year of the Blessed Morning"
+  },
+  {
+    "DR Year": 867,
+    "Year Name": "Year of the Cryptic Recipe"
+  },
+  {
+    "DR Year": 868,
+    "Year Name": "Year of the Endless Scroll"
+  },
+  {
+    "DR Year": 869,
+    "Year Name": "Year of the Final Price"
+  },
+  {
+    "DR Year": 870,
+    "Year Name": "Year of the Hooded Tracker"
+  },
+  {
+    "DR Year": 871,
+    "Year Name": "Year of the Marching Golem"
+  },
+  {
+    "DR Year": 872,
+    "Year Name": "Year of the Moonbar Crest"
+  },
+  {
+    "DR Year": 873,
+    "Year Name": "Year of the Opening Flower"
+  },
+  {
+    "DR Year": 874,
+    "Year Name": "Year of the Roiling Cauldron"
+  },
+  {
+    "DR Year": 875,
+    "Year Name": "Year of the Stricken Star"
+  },
+  {
+    "DR Year": 876,
+    "Year Name": "Year of the Toothless Skulls"
+  },
+  {
+    "DR Year": 877,
+    "Year Name": "Year of the Scratching Claw"
+  },
+  {
+    "DR Year": 878,
+    "Year Name": "Year of the Two-edged Axe"
+  },
+  {
+    "DR Year": 879,
+    "Year Name": "Year of the Winter's Warmth"
+  },
+  {
+    "DR Year": 880,
+    "Year Name": "Year of Unfettered Secrets"
+  },
+  {
+    "DR Year": 881,
+    "Year Name": "Year of the Brazen Vizier"
+  },
+  {
+    "DR Year": 882,
+    "Year Name": "Year of the Curse"
+  },
+  {
+    "DR Year": 883,
+    "Year Name": "Year of the Giant's Oath"
+  },
+  {
+    "DR Year": 884,
+    "Year Name": "Year of the Singing Arrows"
+  },
+  {
+    "DR Year": 885,
+    "Year Name": "Year of the Thistle"
+  },
+  {
+    "DR Year": 886,
+    "Year Name": "Year of the Fell Firebreak"
+  },
+  {
+    "DR Year": 887,
+    "Year Name": "Year of Fell Pearls"
+  },
+  {
+    "DR Year": 888,
+    "Year Name": "Year of Twelve Teeth"
+  },
+  {
+    "DR Year": 889,
+    "Year Name": "Year of the Shining Shield"
+  },
+  {
+    "DR Year": 890,
+    "Year Name": "Year of the Burning Tree"
+  },
+  {
+    "DR Year": 891,
+    "Year Name": "Year of the Leaning Keep"
+  },
+  {
+    "DR Year": 892,
+    "Year Name": "Year of the Open Tome"
+  },
+  {
+    "DR Year": 893,
+    "Year Name": "Year of the Raised Sword"
+  },
+  {
+    "DR Year": 894,
+    "Year Name": "Year of Cold Flame"
+  },
+  {
+    "DR Year": 895,
+    "Year Name": "Year of the Spitting Cat"
+  },
+  {
+    "DR Year": 896,
+    "Year Name": "Year of the Empty Hand"
+  },
+  {
+    "DR Year": 897,
+    "Year Name": "Year of the Calling Shrike"
+  },
+  {
+    "DR Year": 898,
+    "Year Name": "Year of the Common Corpse"
+  },
+  {
+    "DR Year": 899,
+    "Year Name": "Year of the Tolling Bell"
+  },
+  {
+    "DR Year": 900,
+    "Year Name": "Year of the Thirsty Sword"
+  },
+  {
+    "DR Year": 901,
+    "Year Name": "Year of the August Armathor"
+  },
+  {
+    "DR Year": 902,
+    "Year Name": "Year of the Queen's Tears"
+  },
+  {
+    "DR Year": 903,
+    "Year Name": "Year of the Trial"
+  },
+  {
+    "DR Year": 904,
+    "Year Name": "Year of the Rising Maeran"
+  },
+  {
+    "DR Year": 905,
+    "Year Name": "Year of the Rotting Word"
+  },
+  {
+    "DR Year": 906,
+    "Year Name": "Year of the Plough"
+  },
+  {
+    "DR Year": 907,
+    "Year Name": "Year of Waiting"
+  },
+  {
+    "DR Year": 908,
+    "Year Name": "Year of the Lone Tribe"
+  },
+  {
+    "DR Year": 909,
+    "Year Name": "Year of the Ogre"
+  },
+  {
+    "DR Year": 910,
+    "Year Name": "Year of Deathblows Denied"
+  },
+  {
+    "DR Year": 911,
+    "Year Name": "Year of Ruins Reborn"
+  },
+  {
+    "DR Year": 912,
+    "Year Name": "Year of the Sudden Journey"
+  },
+  {
+    "DR Year": 913,
+    "Year Name": "Year of the Watching Raven"
+  },
+  {
+    "DR Year": 914,
+    "Year Name": "Year of the Book"
+  },
+  {
+    "DR Year": 915,
+    "Year Name": "Year of the Bats"
+  },
+  {
+    "DR Year": 916,
+    "Year Name": "Year of the Sinhala"
+  },
+  {
+    "DR Year": 917,
+    "Year Name": "Year of the Winding Road"
+  },
+  {
+    "DR Year": 918,
+    "Year Name": "Year of the Palace"
+  },
+  {
+    "DR Year": 919,
+    "Year Name": "Year of the Chase"
+  },
+  {
+    "DR Year": 920,
+    "Year Name": "Year of Great Riches"
+  },
+  {
+    "DR Year": 921,
+    "Year Name": "Year of the Falling Maeran"
+  },
+  {
+    "DR Year": 922,
+    "Year Name": "Year of the Spouting Fish"
+  },
+  {
+    "DR Year": 923,
+    "Year Name": "Year of the Bloodied Soldier"
+  },
+  {
+    "DR Year": 924,
+    "Year Name": "Year of the Cracked Turtle"
+  },
+  {
+    "DR Year": 925,
+    "Year Name": "Year of the Enchanted Trail"
+  },
+  {
+    "DR Year": 926,
+    "Year Name": "Year of the Fearless Peasant"
+  },
+  {
+    "DR Year": 927,
+    "Year Name": "Year of the Red Rain"
+  },
+  {
+    "DR Year": 928,
+    "Year Name": "Year of the Hurled Axe"
+  },
+  {
+    "DR Year": 929,
+    "Year Name": "Year of Flashing Eyes"
+  },
+  {
+    "DR Year": 930,
+    "Year Name": "Year of the Liberty Crest"
+  },
+  {
+    "DR Year": 931,
+    "Year Name": "Year of the Penitent Rogue"
+  },
+  {
+    "DR Year": 932,
+    "Year Name": "Year of Fireslaughter"
+  },
+  {
+    "DR Year": 933,
+    "Year Name": "Year of the Five Jugs"
+  },
+  {
+    "DR Year": 934,
+    "Year Name": "Year of Fell Wizardry"
+  },
+  {
+    "DR Year": 935,
+    "Year Name": "Year of the Rearing Lion"
+  },
+  {
+    "DR Year": 936,
+    "Year Name": "Year of the Sky Riders"
+  },
+  {
+    "DR Year": 937,
+    "Year Name": "Year of the Turning Wheel"
+  },
+  {
+    "DR Year": 938,
+    "Year Name": "Year of the Unhanged Man"
+  },
+  {
+    "DR Year": 939,
+    "Year Name": "Year of the Vengeful Halfling"
+  },
+  {
+    "DR Year": 940,
+    "Year Name": "Year of the Cold Claws"
+  },
+  {
+    "DR Year": 941,
+    "Year Name": "Year of Sudden Sorrows"
+  },
+  {
+    "DR Year": 942,
+    "Year Name": "Year of the Circling Vulture"
+  },
+  {
+    "DR Year": 943,
+    "Year Name": "Year of the Flying Steed"
+  },
+  {
+    "DR Year": 944,
+    "Year Name": "Year of the Animated Armor"
+  },
+  {
+    "DR Year": 945,
+    "Year Name": "Year of the Foolish Bridegroom"
+  },
+  {
+    "DR Year": 946,
+    "Year Name": "Year of the Blazing Call"
+  },
+  {
+    "DR Year": 947,
+    "Year Name": "Year of the Advancing Wind"
+  },
+  {
+    "DR Year": 948,
+    "Year Name": "Year of the Clarion Trumpet"
+  },
+  {
+    "DR Year": 949,
+    "Year Name": "Year of the Forbidden Tome"
+  },
+  {
+    "DR Year": 950,
+    "Year Name": "Year of the Doomguard"
+  },
+  {
+    "DR Year": 951,
+    "Year Name": "Year of the Empty Hourglass"
+  },
+  {
+    "DR Year": 952,
+    "Year Name": "Year of the Rings Royal"
+  },
+  {
+    "DR Year": 953,
+    "Year Name": "Year of the Guiding Crow"
+  },
+  {
+    "DR Year": 954,
+    "Year Name": "Year of Perilous Halls"
+  },
+  {
+    "DR Year": 955,
+    "Year Name": "Year of the Telltale Candle"
+  },
+  {
+    "DR Year": 956,
+    "Year Name": "Year of the Crooked Finger"
+  },
+  {
+    "DR Year": 957,
+    "Year Name": "Year of the Entombed Poet"
+  },
+  {
+    "DR Year": 958,
+    "Year Name": "Year of the Far-flung Harp"
+  },
+  {
+    "DR Year": 959,
+    "Year Name": "Year of the Haunted Crew"
+  },
+  {
+    "DR Year": 960,
+    "Year Name": "Year of the Mageling"
+  },
+  {
+    "DR Year": 961,
+    "Year Name": "Year of the Pensive Gibberling"
+  },
+  {
+    "DR Year": 962,
+    "Year Name": "Year of the Shandon Veil"
+  },
+  {
+    "DR Year": 963,
+    "Year Name": "Year of the Deadly Duo"
+  },
+  {
+    "DR Year": 964,
+    "Year Name": "Year of the Pickled Privateer"
+  },
+  {
+    "DR Year": 965,
+    "Year Name": "Year of the Runelightning"
+  },
+  {
+    "DR Year": 966,
+    "Year Name": "Year of the Squire"
+  },
+  {
+    "DR Year": 967,
+    "Year Name": "Year of the Tearful Princess"
+  },
+  {
+    "DR Year": 968,
+    "Year Name": "Year of the Wandering Gnome"
+  },
+  {
+    "DR Year": 969,
+    "Year Name": "Year of the Bright Standard"
+  },
+  {
+    "DR Year": 970,
+    "Year Name": "Year of the Child's Trinket"
+  },
+  {
+    "DR Year": 971,
+    "Year Name": "Year of the Children"
+  },
+  {
+    "DR Year": 972,
+    "Year Name": "Year of the Cairngorm Crown"
+  },
+  {
+    "DR Year": 973,
+    "Year Name": "Year of the Emptied Lair"
+  },
+  {
+    "DR Year": 974,
+    "Year Name": "Year of the Haunting Harpy"
+  },
+  {
+    "DR Year": 975,
+    "Year Name": "Year of the Bent Coin"
+  },
+  {
+    "DR Year": 976,
+    "Year Name": "Year of the Slaying Spells"
+  },
+  {
+    "DR Year": 977,
+    "Year Name": "Year of Swordforging"
+  },
+  {
+    "DR Year": 978,
+    "Year Name": "Year of the Hooded Rogue"
+  },
+  {
+    "DR Year": 979,
+    "Year Name": "Year of the Marching Forest"
+  },
+  {
+    "DR Year": 980,
+    "Year Name": "Year of the Orator"
+  },
+  {
+    "DR Year": 981,
+    "Year Name": "Year of the Rebel Uprising"
+  },
+  {
+    "DR Year": 982,
+    "Year Name": "Year of the Scythe"
+  },
+  {
+    "DR Year": 983,
+    "Year Name": "Year of the Submerged Country"
+  },
+  {
+    "DR Year": 984,
+    "Year Name": "Year of the Caravan"
+  },
+  {
+    "DR Year": 985,
+    "Year Name": "Year of Bright Nights"
+  },
+  {
+    "DR Year": 986,
+    "Year Name": "Year of the Dusken Ride"
+  },
+  {
+    "DR Year": 987,
+    "Year Name": "Year of the Flaming Dwarf"
+  },
+  {
+    "DR Year": 988,
+    "Year Name": "Year of the Meddling Avatar"
+  },
+  {
+    "DR Year": 989,
+    "Year Name": "Year of Dark Stalking"
+  },
+  {
+    "DR Year": 990,
+    "Year Name": "Year of the Muster"
+  },
+  {
+    "DR Year": 991,
+    "Year Name": "Year of the Breaking Ice"
+  },
+  {
+    "DR Year": 992,
+    "Year Name": "Year of the Watching Helm"
+  },
+  {
+    "DR Year": 993,
+    "Year Name": "Year of the Slain Mountain"
+  },
+  {
+    "DR Year": 994,
+    "Year Name": "Year of the Weary Scribe"
+  },
+  {
+    "DR Year": 995,
+    "Year Name": "Year of the Charging Mare"
+  },
+  {
+    "DR Year": 996,
+    "Year Name": "Year of the Disfiguring Scar"
+  },
+  {
+    "DR Year": 997,
+    "Year Name": "Year of the Fearful Harper"
+  },
+  {
+    "DR Year": 998,
+    "Year Name": "Year of Much Iron"
+  },
+  {
+    "DR Year": 999,
+    "Year Name": "Year of the Gaping Sky"
+  },
+  {
+    "DR Year": 1000,
+    "Year Name": "Year of the Wailing Winds"
+  },
+  {
+    "DR Year": 1001,
+    "Year Name": "Year of the Awakening"
+  },
+  {
+    "DR Year": 1002,
+    "Year Name": "Year of the Heavenly Rock"
+  },
+  {
+    "DR Year": 1003,
+    "Year Name": "Year of the Labyrinth"
+  },
+  {
+    "DR Year": 1004,
+    "Year Name": "Year of the Oracle's Carcass"
+  },
+  {
+    "DR Year": 1005,
+    "Year Name": "Year of the Pillaged Crypt"
+  },
+  {
+    "DR Year": 1006,
+    "Year Name": "Year of the Second Son"
+  },
+  {
+    "DR Year": 1007,
+    "Year Name": "Year of the Bold Barbarian"
+  },
+  {
+    "DR Year": 1008,
+    "Year Name": "Year of the Treacherous Path"
+  },
+  {
+    "DR Year": 1009,
+    "Year Name": "Year of the Broken Spear"
+  },
+  {
+    "DR Year": 1010,
+    "Year Name": "Year of Three Signs"
+  },
+  {
+    "DR Year": 1011,
+    "Year Name": "Year of the Defiant Mountain"
+  },
+  {
+    "DR Year": 1012,
+    "Year Name": "Year of the Flamboyant Coif"
+  },
+  {
+    "DR Year": 1013,
+    "Year Name": "Year of the Hunted Whale"
+  },
+  {
+    "DR Year": 1014,
+    "Year Name": "Year of the Grimacing Sage"
+  },
+  {
+    "DR Year": 1015,
+    "Year Name": "Year of the Maid Enraged"
+  },
+  {
+    "DR Year": 1016,
+    "Year Name": "Year of the Roaring Tempest"
+  },
+  {
+    "DR Year": 1017,
+    "Year Name": "Year of the Stone Rose"
+  },
+  {
+    "DR Year": 1018,
+    "Year Name": "Year of the Dracorage"
+  },
+  {
+    "DR Year": 1019,
+    "Year Name": "Year of the Sure Quarrel"
+  },
+  {
+    "DR Year": 1020,
+    "Year Name": "Year of Smoldering Spells"
+  },
+  {
+    "DR Year": 1021,
+    "Year Name": "Year of the Howling Axe"
+  },
+  {
+    "DR Year": 1022,
+    "Year Name": "Year of the Wandering Wyvern"
+  },
+  {
+    "DR Year": 1023,
+    "Year Name": "Year of the Pirates' Trove"
+  },
+  {
+    "DR Year": 1024,
+    "Year Name": "Year of Lathander's Light"
+  },
+  {
+    "DR Year": 1025,
+    "Year Name": "Year of Screaming Princesses"
+  },
+  {
+    "DR Year": 1026,
+    "Year Name": "Year of Crimson Magics"
+  },
+  {
+    "DR Year": 1027,
+    "Year Name": "Year of the Tempest"
+  },
+  {
+    "DR Year": 1028,
+    "Year Name": "Year of the Wistful Nymph"
+  },
+  {
+    "DR Year": 1029,
+    "Year Name": "Year of the Bold Strides"
+  },
+  {
+    "DR Year": 1030,
+    "Year Name": "Year of Warlords"
+  },
+  {
+    "DR Year": 1031,
+    "Year Name": "Year of the Comforting Hand"
+  },
+  {
+    "DR Year": 1032,
+    "Year Name": "Year of the Nightmaidens"
+  },
+  {
+    "DR Year": 1033,
+    "Year Name": "Year of the Dreamforging"
+  },
+  {
+    "DR Year": 1034,
+    "Year Name": "Year of Bane's Brood"
+  },
+  {
+    "DR Year": 1035,
+    "Year Name": "Year of Falling Stars"
+  },
+  {
+    "DR Year": 1036,
+    "Year Name": "Year of the Final Test"
+  },
+  {
+    "DR Year": 1037,
+    "Year Name": "Year of the Immortals"
+  },
+  {
+    "DR Year": 1038,
+    "Year Name": "Year of Spreading Spring"
+  },
+  {
+    "DR Year": 1039,
+    "Year Name": "Year of the Haunted Haven"
+  },
+  {
+    "DR Year": 1040,
+    "Year Name": "Year of the Lion's Heart"
+  },
+  {
+    "DR Year": 1041,
+    "Year Name": "Year of the Mistmarch Soldier"
+  },
+  {
+    "DR Year": 1042,
+    "Year Name": "Year of the Reaching Beacon"
+  },
+  {
+    "DR Year": 1043,
+    "Year Name": "Year of the Dark Rider"
+  },
+  {
+    "DR Year": 1044,
+    "Year Name": "Year of Singing Shards"
+  },
+  {
+    "DR Year": 1045,
+    "Year Name": "Year of the Singing Mushrooms"
+  },
+  {
+    "DR Year": 1046,
+    "Year Name": "Year of the Twilight Campaign"
+  },
+  {
+    "DR Year": 1047,
+    "Year Name": "Year of the Vitriolic Sage"
+  },
+  {
+    "DR Year": 1048,
+    "Year Name": "Year of the Chevalier"
+  },
+  {
+    "DR Year": 1049,
+    "Year Name": "Year of Auril's Absence"
+  },
+  {
+    "DR Year": 1050,
+    "Year Name": "Year of the Keening Gale"
+  },
+  {
+    "DR Year": 1051,
+    "Year Name": "Year of the Dogged Search"
+  },
+  {
+    "DR Year": 1052,
+    "Year Name": "Year of the Frozen Kingdoms"
+  },
+  {
+    "DR Year": 1053,
+    "Year Name": "Year of Lashing and Torment"
+  },
+  {
+    "DR Year": 1054,
+    "Year Name": "Year of Tolling Terrors"
+  },
+  {
+    "DR Year": 1055,
+    "Year Name": "Year of the Grueling Story"
+  },
+  {
+    "DR Year": 1056,
+    "Year Name": "Year of the Laughing Dead"
+  },
+  {
+    "DR Year": 1057,
+    "Year Name": "Year of Azure Frost"
+  },
+  {
+    "DR Year": 1058,
+    "Year Name": "Year of the Spider's Daughter"
+  },
+  {
+    "DR Year": 1059,
+    "Year Name": "Year of the Broken Pillar"
+  },
+  {
+    "DR Year": 1060,
+    "Year Name": "Year of Fantastic Spectacle"
+  },
+  {
+    "DR Year": 1061,
+    "Year Name": "Year of the Pious Dance"
+  },
+  {
+    "DR Year": 1062,
+    "Year Name": "Year of the Shattered Lance"
+  },
+  {
+    "DR Year": 1063,
+    "Year Name": "Year of the Deluded Tyrant"
+  },
+  {
+    "DR Year": 1064,
+    "Year Name": "Year of the Stranger"
+  },
+  {
+    "DR Year": 1065,
+    "Year Name": "Year of the Watching Wood"
+  },
+  {
+    "DR Year": 1066,
+    "Year Name": "Year of the Lord's Dilemma"
+  },
+  {
+    "DR Year": 1067,
+    "Year Name": "Year of the Minotaur Paladin"
+  },
+  {
+    "DR Year": 1068,
+    "Year Name": "Year of the Seer Born"
+  },
+  {
+    "DR Year": 1069,
+    "Year Name": "Year of the Thunder's Child"
+  },
+  {
+    "DR Year": 1070,
+    "Year Name": "Year of the Spawning"
+  },
+  {
+    "DR Year": 1071,
+    "Year Name": "Year of Lions' Roars"
+  },
+  {
+    "DR Year": 1072,
+    "Year Name": "Year of the Wandering Elfmaid"
+  },
+  {
+    "DR Year": 1073,
+    "Year Name": "Year of the Bottomless Ocean"
+  },
+  {
+    "DR Year": 1074,
+    "Year Name": "Year of the Tightening Fist"
+  },
+  {
+    "DR Year": 1075,
+    "Year Name": "Year of the Bronze Banner"
+  },
+  {
+    "DR Year": 1076,
+    "Year Name": "Year of the Defiant Salute"
+  },
+  {
+    "DR Year": 1077,
+    "Year Name": "Year of the Friendly Jackal"
+  },
+  {
+    "DR Year": 1078,
+    "Year Name": "Year of the Hierodulic Wolverines"
+  },
+  {
+    "DR Year": 1079,
+    "Year Name": "Year of the Lazy Scribe"
+  },
+  {
+    "DR Year": 1080,
+    "Year Name": "Year of the Misguided Archer"
+  },
+  {
+    "DR Year": 1081,
+    "Year Name": "Year of the Disastrous Bauble"
+  },
+  {
+    "DR Year": 1082,
+    "Year Name": "Year of the Prancing Korred"
+  },
+  {
+    "DR Year": 1083,
+    "Year Name": "Year of the Sighted Hind"
+  },
+  {
+    "DR Year": 1084,
+    "Year Name": "Year of the Tireless Lute"
+  },
+  {
+    "DR Year": 1085,
+    "Year Name": "Year of the Vacant Plain"
+  },
+  {
+    "DR Year": 1086,
+    "Year Name": "Year of the Seer's Fires"
+  },
+  {
+    "DR Year": 1087,
+    "Year Name": "Year of Forgotten Anger"
+  },
+  {
+    "DR Year": 1088,
+    "Year Name": "Year of Shambles"
+  },
+  {
+    "DR Year": 1089,
+    "Year Name": "Year of Three Faces"
+  },
+  {
+    "DR Year": 1090,
+    "Year Name": "Year of Slaughter"
+  },
+  {
+    "DR Year": 1091,
+    "Year Name": "Year of Watery Graves"
+  },
+  {
+    "DR Year": 1092,
+    "Year Name": "Year of the Aimless Mystic"
+  },
+  {
+    "DR Year": 1093,
+    "Year Name": "Year of the Bursting Song"
+  },
+  {
+    "DR Year": 1094,
+    "Year Name": "Year of the Crested Thrush"
+  },
+  {
+    "DR Year": 1095,
+    "Year Name": "Year of the Dawndance"
+  },
+  {
+    "DR Year": 1096,
+    "Year Name": "Year of the Diverged Path"
+  },
+  {
+    "DR Year": 1097,
+    "Year Name": "Year of the Gleaming Crown"
+  },
+  {
+    "DR Year": 1098,
+    "Year Name": "Year of the Rose"
+  },
+  {
+    "DR Year": 1099,
+    "Year Name": "Year of the Restless"
+  },
+  {
+    "DR Year": 1100,
+    "Year Name": "Year of the Bloodrose"
+  },
+  {
+    "DR Year": 1101,
+    "Year Name": "Year of the Maelstrom"
+  },
+  {
+    "DR Year": 1102,
+    "Year Name": "Year of the Chaste Maiden"
+  },
+  {
+    "DR Year": 1103,
+    "Year Name": "Year of the Consuming Glory"
+  },
+  {
+    "DR Year": 1104,
+    "Year Name": "Year of the Dark Dawn"
+  },
+  {
+    "DR Year": 1105,
+    "Year Name": "Year of the Guardian"
+  },
+  {
+    "DR Year": 1106,
+    "Year Name": "Year of the Solemn Halfling"
+  },
+  {
+    "DR Year": 1107,
+    "Year Name": "Year of the Skulk"
+  },
+  {
+    "DR Year": 1108,
+    "Year Name": "Year of the Open Chest"
+  },
+  {
+    "DR Year": 1109,
+    "Year Name": "Year of the Lover's Eyes"
+  },
+  {
+    "DR Year": 1110,
+    "Year Name": "Year of the Bloody Fields"
+  },
+  {
+    "DR Year": 1111,
+    "Year Name": "Year of the Old Giant"
+  },
+  {
+    "DR Year": 1112,
+    "Year Name": "Year of the Perilous Storm"
+  },
+  {
+    "DR Year": 1113,
+    "Year Name": "Year of the Outcast Prophet"
+  },
+  {
+    "DR Year": 1114,
+    "Year Name": "Year of the Last Enclave"
+  },
+  {
+    "DR Year": 1115,
+    "Year Name": "Year of the Haunted Herald"
+  },
+  {
+    "DR Year": 1116,
+    "Year Name": "Year of the Empty Scabbard"
+  },
+  {
+    "DR Year": 1117,
+    "Year Name": "Year of the Twelverule"
+  },
+  {
+    "DR Year": 1118,
+    "Year Name": "Year of the False Bargain"
+  },
+  {
+    "DR Year": 1119,
+    "Year Name": "Year of the Sharn Suitors"
+  },
+  {
+    "DR Year": 1120,
+    "Year Name": "Year of the Perplexing Sphinx"
+  },
+  {
+    "DR Year": 1121,
+    "Year Name": "Year of the Shameful Plea"
+  },
+  {
+    "DR Year": 1122,
+    "Year Name": "Year of the Rose Pearls"
+  },
+  {
+    "DR Year": 1123,
+    "Year Name": "Year of the Shattered Chains"
+  },
+  {
+    "DR Year": 1124,
+    "Year Name": "Year of the Shared Sorrows"
+  },
+  {
+    "DR Year": 1125,
+    "Year Name": "Year of the Lupine Torque"
+  },
+  {
+    "DR Year": 1126,
+    "Year Name": "Year of Azure Blood"
+  },
+  {
+    "DR Year": 1127,
+    "Year Name": "Year of the Luminar Procession"
+  },
+  {
+    "DR Year": 1128,
+    "Year Name": "Year of the Peryton"
+  },
+  {
+    "DR Year": 1129,
+    "Year Name": "Year of the Gilded Cormorant"
+  },
+  {
+    "DR Year": 1130,
+    "Year Name": "Year of the Howling Moon"
+  },
+  {
+    "DR Year": 1131,
+    "Year Name": "Year of the Seven Kings Horde"
+  },
+  {
+    "DR Year": 1132,
+    "Year Name": "Year of the Talking Spiders"
+  },
+  {
+    "DR Year": 1133,
+    "Year Name": "Year of the Persuasive Voice"
+  },
+  {
+    "DR Year": 1134,
+    "Year Name": "Year of the Sylvan Wards"
+  },
+  {
+    "DR Year": 1135,
+    "Year Name": "Year of the Petulant Dragon"
+  },
+  {
+    "DR Year": 1136,
+    "Year Name": "Year of the Shadowkin Return"
+  },
+  {
+    "DR Year": 1137,
+    "Year Name": "Year of the Falling Menhirs"
+  },
+  {
+    "DR Year": 1138,
+    "Year Name": "Year of the Sharpened Teeth"
+  },
+  {
+    "DR Year": 1139,
+    "Year Name": "Year of Shining Waves"
+  },
+  {
+    "DR Year": 1140,
+    "Year Name": "Year of the Knight"
+  },
+  {
+    "DR Year": 1141,
+    "Year Name": "Year of Eyes"
+  },
+  {
+    "DR Year": 1142,
+    "Year Name": "Year of the Sword's Oath"
+  },
+  {
+    "DR Year": 1143,
+    "Year Name": "Year of the Talisman"
+  },
+  {
+    "DR Year": 1144,
+    "Year Name": "Year of the Giant's Maul"
+  },
+  {
+    "DR Year": 1145,
+    "Year Name": "Year of the Smiling Flame"
+  },
+  {
+    "DR Year": 1146,
+    "Year Name": "Year of the Tardy Guests"
+  },
+  {
+    "DR Year": 1147,
+    "Year Name": "Year of the Glad Tidings"
+  },
+  {
+    "DR Year": 1148,
+    "Year Name": "Year of the Angry Sea"
+  },
+  {
+    "DR Year": 1149,
+    "Year Name": "Year of the Persuasive Trees"
+  },
+  {
+    "DR Year": 1150,
+    "Year Name": "Year of the Scourge"
+  },
+  {
+    "DR Year": 1151,
+    "Year Name": "Year of the Molten Man"
+  },
+  {
+    "DR Year": 1152,
+    "Year Name": "Year of the Portentous Waters"
+  },
+  {
+    "DR Year": 1153,
+    "Year Name": "Year of the Remembering Stones"
+  },
+  {
+    "DR Year": 1154,
+    "Year Name": "Year of the Sun Underground"
+  },
+  {
+    "DR Year": 1155,
+    "Year Name": "Year of the Tyrant's Lament"
+  },
+  {
+    "DR Year": 1156,
+    "Year Name": "Year of the Winged Gift"
+  },
+  {
+    "DR Year": 1157,
+    "Year Name": "Year of the Wizened Mage"
+  },
+  {
+    "DR Year": 1158,
+    "Year Name": "Year of the Blood Tusk Charge"
+  },
+  {
+    "DR Year": 1159,
+    "Year Name": "Year of the Cloven Stones"
+  },
+  {
+    "DR Year": 1160,
+    "Year Name": "Year of the Swimming Lass"
+  },
+  {
+    "DR Year": 1161,
+    "Year Name": "Year of the Quiet Earth"
+  },
+  {
+    "DR Year": 1162,
+    "Year Name": "Year of the Prancing Centaur"
+  },
+  {
+    "DR Year": 1163,
+    "Year Name": "Year of the Shrouded Sky"
+  },
+  {
+    "DR Year": 1164,
+    "Year Name": "Year of Long Shadows"
+  },
+  {
+    "DR Year": 1165,
+    "Year Name": "Year of the Obsidian Heart"
+  },
+  {
+    "DR Year": 1166,
+    "Year Name": "Year of Countless Scribes"
+  },
+  {
+    "DR Year": 1167,
+    "Year Name": "Year of the Parchment Heretical"
+  },
+  {
+    "DR Year": 1168,
+    "Year Name": "Year of the Leering Orc"
+  },
+  {
+    "DR Year": 1169,
+    "Year Name": "Year of the Earth Shaking"
+  },
+  {
+    "DR Year": 1170,
+    "Year Name": "Year of the Moonlight Tapestry"
+  },
+  {
+    "DR Year": 1171,
+    "Year Name": "Year of the Dark Mask"
+  },
+  {
+    "DR Year": 1172,
+    "Year Name": "Year of the Hoary Host"
+  },
+  {
+    "DR Year": 1173,
+    "Year Name": "Year of the Fledglings"
+  },
+  {
+    "DR Year": 1174,
+    "Year Name": "Year of the Agate Hammer"
+  },
+  {
+    "DR Year": 1175,
+    "Year Name": "Year of the Storm Skeleton"
+  },
+  {
+    "DR Year": 1176,
+    "Year Name": "Year of Prowling Naga"
+  },
+  {
+    "DR Year": 1177,
+    "Year Name": "Year of the Majesty"
+  },
+  {
+    "DR Year": 1178,
+    "Year Name": "Year of the Secret Rider"
+  },
+  {
+    "DR Year": 1179,
+    "Year Name": "Year of the Stalking Satyr"
+  },
+  {
+    "DR Year": 1180,
+    "Year Name": "Year of Sinking Sails"
+  },
+  {
+    "DR Year": 1181,
+    "Year Name": "Year of the Shieldtree"
+  },
+  {
+    "DR Year": 1182,
+    "Year Name": "Year of the Tomb"
+  },
+  {
+    "DR Year": 1183,
+    "Year Name": "Year of the Grisly Ghosts"
+  },
+  {
+    "DR Year": 1184,
+    "Year Name": "Year of the Howling Hourglass"
+  },
+  {
+    "DR Year": 1185,
+    "Year Name": "Year of the Immoral Imp"
+  },
+  {
+    "DR Year": 1186,
+    "Year Name": "Year of the Mesmer Pool"
+  },
+  {
+    "DR Year": 1187,
+    "Year Name": "Year of the Arcane Guise"
+  },
+  {
+    "DR Year": 1188,
+    "Year Name": "Year of the Soft Fogs"
+  },
+  {
+    "DR Year": 1189,
+    "Year Name": "Year of the Lynx"
+  },
+  {
+    "DR Year": 1190,
+    "Year Name": "Year of the Poisoned Quill"
+  },
+  {
+    "DR Year": 1191,
+    "Year Name": "Year of the Bone Helm"
+  },
+  {
+    "DR Year": 1192,
+    "Year Name": "Year of the Guide"
+  },
+  {
+    "DR Year": 1193,
+    "Year Name": "Year of the Peltast"
+  },
+  {
+    "DR Year": 1194,
+    "Year Name": "Year of the Bloody Wave"
+  },
+  {
+    "DR Year": 1195,
+    "Year Name": "Year of the Midday Mists"
+  },
+  {
+    "DR Year": 1196,
+    "Year Name": "Year of the Shrike"
+  },
+  {
+    "DR Year": 1197,
+    "Year Name": "Year of the Sundered Shields"
+  },
+  {
+    "DR Year": 1198,
+    "Year Name": "Year of the Lean Purse"
+  },
+  {
+    "DR Year": 1199,
+    "Year Name": "Year of the Baldric"
+  },
+  {
+    "DR Year": 1200,
+    "Year Name": "Year of the Buckler"
+  },
+  {
+    "DR Year": 1201,
+    "Year Name": "Year of Embers"
+  },
+  {
+    "DR Year": 1202,
+    "Year Name": "Year of the Dragon Altar"
+  },
+  {
+    "DR Year": 1203,
+    "Year Name": "Year of the Gold Sash"
+  },
+  {
+    "DR Year": 1204,
+    "Year Name": "Year of the Private Tears"
+  },
+  {
+    "DR Year": 1205,
+    "Year Name": "Year of Seven Trinkets"
+  },
+  {
+    "DR Year": 1206,
+    "Year Name": "Year of the Sarune"
+  },
+  {
+    "DR Year": 1207,
+    "Year Name": "Year of the Bloated Baron"
+  },
+  {
+    "DR Year": 1208,
+    "Year Name": "Year of the Gamine"
+  },
+  {
+    "DR Year": 1209,
+    "Year Name": "Year of the Blazing Banners"
+  },
+  {
+    "DR Year": 1210,
+    "Year Name": "Year of the Armarel"
+  },
+  {
+    "DR Year": 1211,
+    "Year Name": "Year of the Crimson Crag"
+  },
+  {
+    "DR Year": 1212,
+    "Year Name": "Year of Ocean's Wrath"
+  },
+  {
+    "DR Year": 1213,
+    "Year Name": "Year of the Night's Peace"
+  },
+  {
+    "DR Year": 1214,
+    "Year Name": "Year of the Waking Wrath"
+  },
+  {
+    "DR Year": 1215,
+    "Year Name": "Year of Starlight"
+  },
+  {
+    "DR Year": 1216,
+    "Year Name": "Year of Green Wings"
+  },
+  {
+    "DR Year": 1217,
+    "Year Name": "Year of the Falling Moon"
+  },
+  {
+    "DR Year": 1218,
+    "Year Name": "Year of the Swimming Cats"
+  },
+  {
+    "DR Year": 1219,
+    "Year Name": "Year of Prideful Tales"
+  },
+  {
+    "DR Year": 1220,
+    "Year Name": "Year of the Toppled Tree"
+  },
+  {
+    "DR Year": 1221,
+    "Year Name": "Year of the Frozen Flower"
+  },
+  {
+    "DR Year": 1222,
+    "Year Name": "Year of the Horn"
+  },
+  {
+    "DR Year": 1223,
+    "Year Name": "Year of the Trembling Tree"
+  },
+  {
+    "DR Year": 1224,
+    "Year Name": "Year of the Swollen Stars"
+  },
+  {
+    "DR Year": 1225,
+    "Year Name": "Year of the Winged Worm"
+  },
+  {
+    "DR Year": 1226,
+    "Year Name": "Year of the Black Buck"
+  },
+  {
+    "DR Year": 1227,
+    "Year Name": "Year of the Wall"
+  },
+  {
+    "DR Year": 1228,
+    "Year Name": "Year of the Tattered Banners"
+  },
+  {
+    "DR Year": 1229,
+    "Year Name": "Year of the Carrion Crow"
+  },
+  {
+    "DR Year": 1230,
+    "Year Name": "Year of the Long Watch"
+  },
+  {
+    "DR Year": 1231,
+    "Year Name": "Year of the Bright Star"
+  },
+  {
+    "DR Year": 1232,
+    "Year Name": "Year of the Weeping Wives"
+  },
+  {
+    "DR Year": 1233,
+    "Year Name": "Year of Many Monsters"
+  },
+  {
+    "DR Year": 1234,
+    "Year Name": "Year of the Full Flagon"
+  },
+  {
+    "DR Year": 1235,
+    "Year Name": "Year of the Black Horde"
+  },
+  {
+    "DR Year": 1236,
+    "Year Name": "Year of the Struck Gong"
+  },
+  {
+    "DR Year": 1237,
+    "Year Name": "Year of the Grotto"
+  },
+  {
+    "DR Year": 1238,
+    "Year Name": "Year of the Lone Candle"
+  },
+  {
+    "DR Year": 1239,
+    "Year Name": "Year of the Bloodied Sword"
+  },
+  {
+    "DR Year": 1240,
+    "Year Name": "Year of the Bright Sun"
+  },
+  {
+    "DR Year": 1241,
+    "Year Name": "Year of the Lost Lady"
+  },
+  {
+    "DR Year": 1242,
+    "Year Name": "Year of the Yellow Rose"
+  },
+  {
+    "DR Year": 1243,
+    "Year Name": "Year of the Blue Dragon"
+  },
+  {
+    "DR Year": 1244,
+    "Year Name": "Year of the Defiant Keep"
+  },
+  {
+    "DR Year": 1245,
+    "Year Name": "Year of Pain"
+  },
+  {
+    "DR Year": 1246,
+    "Year Name": "Year of Burning Steel"
+  },
+  {
+    "DR Year": 1247,
+    "Year Name": "Year of the Purple Basilisk"
+  },
+  {
+    "DR Year": 1248,
+    "Year Name": "Year of the Cockatrice"
+  },
+  {
+    "DR Year": 1249,
+    "Year Name": "Year of the Bold Knight"
+  },
+  {
+    "DR Year": 1250,
+    "Year Name": "Year of the Riven Skull"
+  },
+  {
+    "DR Year": 1251,
+    "Year Name": "Year of the Wandering Winds"
+  },
+  {
+    "DR Year": 1252,
+    "Year Name": "Year of the Empty Goblet"
+  },
+  {
+    "DR Year": 1253,
+    "Year Name": "Year of Beckoning Death"
+  },
+  {
+    "DR Year": 1254,
+    "Year Name": "Year of Silent Steel"
+  },
+  {
+    "DR Year": 1255,
+    "Year Name": "Year of the Raging Flame"
+  },
+  {
+    "DR Year": 1256,
+    "Year Name": "Year of the Dusty Throne"
+  },
+  {
+    "DR Year": 1257,
+    "Year Name": "Year of the Killing Wave"
+  },
+  {
+    "DR Year": 1258,
+    "Year Name": "Year of the Wilted Flowers"
+  },
+  {
+    "DR Year": 1259,
+    "Year Name": "Year of the Vigilant Fist"
+  },
+  {
+    "DR Year": 1260,
+    "Year Name": "Year of the Broken Blade"
+  },
+  {
+    "DR Year": 1261,
+    "Year Name": "Year of Bright Dreams"
+  },
+  {
+    "DR Year": 1262,
+    "Year Name": "Year of the Black Wind"
+  },
+  {
+    "DR Year": 1263,
+    "Year Name": "Year of the Tressym"
+  },
+  {
+    "DR Year": 1264,
+    "Year Name": "Year of the Shattered Altar"
+  },
+  {
+    "DR Year": 1265,
+    "Year Name": "Year of Flowers"
+  },
+  {
+    "DR Year": 1266,
+    "Year Name": "Year of the Leaping Frog"
+  },
+  {
+    "DR Year": 1267,
+    "Year Name": "Year of the Groaning Cart"
+  },
+  {
+    "DR Year": 1268,
+    "Year Name": "Year of Daystars"
+  },
+  {
+    "DR Year": 1269,
+    "Year Name": "Year of the Moat"
+  },
+  {
+    "DR Year": 1270,
+    "Year Name": "Year of the Tooth"
+  },
+  {
+    "DR Year": 1271,
+    "Year Name": "Year of the Shattered Wall"
+  },
+  {
+    "DR Year": 1272,
+    "Year Name": "Year of the Shrieker"
+  },
+  {
+    "DR Year": 1273,
+    "Year Name": "Year of the Wagon"
+  },
+  {
+    "DR Year": 1274,
+    "Year Name": "Year of the Purple Toad"
+  },
+  {
+    "DR Year": 1275,
+    "Year Name": "Year of the Blade"
+  },
+  {
+    "DR Year": 1276,
+    "Year Name": "Year of the Crumbling Keep"
+  },
+  {
+    "DR Year": 1277,
+    "Year Name": "Year of the Beholder"
+  },
+  {
+    "DR Year": 1278,
+    "Year Name": "Year of Many Bones"
+  },
+  {
+    "DR Year": 1279,
+    "Year Name": "Year of the Snarling Dragon"
+  },
+  {
+    "DR Year": 1280,
+    "Year Name": "Year of the Manticore"
+  },
+  {
+    "DR Year": 1281,
+    "Year Name": "Year of the Cold Soul"
+  },
+  {
+    "DR Year": 1282,
+    "Year Name": "Year of the Many Mists"
+  },
+  {
+    "DR Year": 1283,
+    "Year Name": "Year of the Crawling Clouds"
+  },
+  {
+    "DR Year": 1284,
+    "Year Name": "Year of the Dying Stars"
+  },
+  {
+    "DR Year": 1285,
+    "Year Name": "Year of the Blacksnake"
+  },
+  {
+    "DR Year": 1286,
+    "Year Name": "Year of the Rock"
+  },
+  {
+    "DR Year": 1287,
+    "Year Name": "Year of the Smoky Moon"
+  },
+  {
+    "DR Year": 1288,
+    "Year Name": "Year of the Roaring Horn"
+  },
+  {
+    "DR Year": 1289,
+    "Year Name": "Year of the Sighing Serpent"
+  },
+  {
+    "DR Year": 1290,
+    "Year Name": "Year of the Whelm"
+  },
+  {
+    "DR Year": 1291,
+    "Year Name": "Year of the Hooded Falcon"
+  },
+  {
+    "DR Year": 1292,
+    "Year Name": "Year of the Wandering Waves"
+  },
+  {
+    "DR Year": 1293,
+    "Year Name": "Year of the Talking Skull"
+  },
+  {
+    "DR Year": 1294,
+    "Year Name": "Year of the Deep Moon"
+  },
+  {
+    "DR Year": 1295,
+    "Year Name": "Year of the Ormserpent"
+  },
+  {
+    "DR Year": 1296,
+    "Year Name": "Year of the Black Hound"
+  },
+  {
+    "DR Year": 1297,
+    "Year Name": "Year of the Singing Skull"
+  },
+  {
+    "DR Year": 1298,
+    "Year Name": "Year of the Pointed Bone"
+  },
+  {
+    "DR Year": 1299,
+    "Year Name": "Year of the Claw"
+  },
+  {
+    "DR Year": 1300,
+    "Year Name": "Year of the Starfall"
+  },
+  {
+    "DR Year": 1301,
+    "Year Name": "Year of the Trumpet"
+  },
+  {
+    "DR Year": 1302,
+    "Year Name": "Year of the Broken Helm"
+  },
+  {
+    "DR Year": 1303,
+    "Year Name": "Year of the Evening Sun"
+  },
+  {
+    "DR Year": 1304,
+    "Year Name": "Year of the Stag"
+  },
+  {
+    "DR Year": 1305,
+    "Year Name": "Year of the Creeping Fang"
+  },
+  {
+    "DR Year": 1306,
+    "Year Name": "Year of Thunder"
+  },
+  {
+    "DR Year": 1307,
+    "Year Name": "Year of the Mace"
+  },
+  {
+    "DR Year": 1308,
+    "Year Name": "Year of the Catacombs"
+  },
+  {
+    "DR Year": 1309,
+    "Year Name": "Year of the Sunset Winds"
+  },
+  {
+    "DR Year": 1310,
+    "Year Name": "Year of Storms"
+  },
+  {
+    "DR Year": 1311,
+    "Year Name": "Year of the Fist"
+  },
+  {
+    "DR Year": 1312,
+    "Year Name": "Year of the Griffon"
+  },
+  {
+    "DR Year": 1313,
+    "Year Name": "Year of the Shattered Oak"
+  },
+  {
+    "DR Year": 1314,
+    "Year Name": "Year of the Shadowtop"
+  },
+  {
+    "DR Year": 1315,
+    "Year Name": "Year of Spilled Blood"
+  },
+  {
+    "DR Year": 1316,
+    "Year Name": "Year of the Gulagoar"
+  },
+  {
+    "DR Year": 1317,
+    "Year Name": "Year of the Wandering Wyrm"
+  },
+  {
+    "DR Year": 1318,
+    "Year Name": "Year of the Tired Treant"
+  },
+  {
+    "DR Year": 1319,
+    "Year Name": "Year of the Fallen Throne"
+  },
+  {
+    "DR Year": 1320,
+    "Year Name": "Year of the Watching Cold"
+  },
+  {
+    "DR Year": 1321,
+    "Year Name": "Year of Chains"
+  },
+  {
+    "DR Year": 1322,
+    "Year Name": "Year of Lurking Death"
+  },
+  {
+    "DR Year": 1323,
+    "Year Name": "Year of Dreamwebs"
+  },
+  {
+    "DR Year": 1324,
+    "Year Name": "Year of the Grimoire"
+  },
+  {
+    "DR Year": 1325,
+    "Year Name": "Year of the Great Harvests"
+  },
+  {
+    "DR Year": 1326,
+    "Year Name": "Year of the Striking Hawk"
+  },
+  {
+    "DR Year": 1327,
+    "Year Name": "Year of the Blue Flame"
+  },
+  {
+    "DR Year": 1328,
+    "Year Name": "Year of the Adder"
+  },
+  {
+    "DR Year": 1329,
+    "Year Name": "Year of the Lost Helm"
+  },
+  {
+    "DR Year": 1330,
+    "Year Name": "Year of the Marching Moon"
+  },
+  {
+    "DR Year": 1331,
+    "Year Name": "Year of the Leaping Dolphin"
+  },
+  {
+    "DR Year": 1332,
+    "Year Name": "Year of the Sword and Stars"
+  },
+  {
+    "DR Year": 1333,
+    "Year Name": "Year of the Striking Falcon"
+  },
+  {
+    "DR Year": 1334,
+    "Year Name": "Year of the Blazing Brand"
+  },
+  {
+    "DR Year": 1335,
+    "Year Name": "Year of the Snow Winds"
+  },
+  {
+    "DR Year": 1336,
+    "Year Name": "Year of the Highmantle"
+  },
+  {
+    "DR Year": 1337,
+    "Year Name": "Year of the Wandering Maiden"
+  },
+  {
+    "DR Year": 1338,
+    "Year Name": "Year of the Wanderer"
+  },
+  {
+    "DR Year": 1339,
+    "Year Name": "Year of the Weeping Moon"
+  },
+  {
+    "DR Year": 1340,
+    "Year Name": "Year of the Lion"
+  },
+  {
+    "DR Year": 1341,
+    "Year Name": "Year of the Gate"
+  },
+  {
+    "DR Year": 1342,
+    "Year Name": "Year of the Behir"
+  },
+  {
+    "DR Year": 1343,
+    "Year Name": "Year of the Boot"
+  },
+  {
+    "DR Year": 1344,
+    "Year Name": "Year of Moonfall"
+  },
+  {
+    "DR Year": 1345,
+    "Year Name": "Year of the Saddle"
+  },
+  {
+    "DR Year": 1346,
+    "Year Name": "Year of the Bloodbird"
+  },
+  {
+    "DR Year": 1347,
+    "Year Name": "Year of the Bright Blade"
+  },
+  {
+    "DR Year": 1348,
+    "Year Name": "Year of the Spur"
+  },
+  {
+    "DR Year": 1349,
+    "Year Name": "Year of the Bridle"
+  },
+  {
+    "DR Year": 1350,
+    "Year Name": "Year of the Morningstar"
+  },
+  {
+    "DR Year": 1351,
+    "Year Name": "Year of the Crown"
+  },
+  {
+    "DR Year": 1352,
+    "Year Name": "Year of the Dragon"
+  },
+  {
+    "DR Year": 1353,
+    "Year Name": "Year of the Arch"
+  },
+  {
+    "DR Year": 1354,
+    "Year Name": "Year of the Bow"
+  },
+  {
+    "DR Year": 1355,
+    "Year Name": "Year of the Harp"
+  },
+  {
+    "DR Year": 1356,
+    "Year Name": "Year of the Worm"
+  },
+  {
+    "DR Year": 1357,
+    "Year Name": "Year of the Prince"
+  },
+  {
+    "DR Year": 1358,
+    "Year Name": "Year of Shadows"
+  },
+  {
+    "DR Year": 1359,
+    "Year Name": "Year of the Serpent"
+  },
+  {
+    "DR Year": 1360,
+    "Year Name": "Year of the Turret"
+  },
+  {
+    "DR Year": 1361,
+    "Year Name": "Year of Maidens"
+  },
+  {
+    "DR Year": 1362,
+    "Year Name": "Year of the Helm"
+  },
+  {
+    "DR Year": 1363,
+    "Year Name": "Year of the Wyvern"
+  },
+  {
+    "DR Year": 1364,
+    "Year Name": "Year of the Wave"
+  },
+  {
+    "DR Year": 1365,
+    "Year Name": "Year of the Sword"
+  },
+  {
+    "DR Year": 1366,
+    "Year Name": "Year of the Staff"
+  },
+  {
+    "DR Year": 1367,
+    "Year Name": "Year of the Shield"
+  },
+  {
+    "DR Year": 1368,
+    "Year Name": "Year of the Banner"
+  },
+  {
+    "DR Year": 1369,
+    "Year Name": "Year of the Gauntlet"
+  },
+  {
+    "DR Year": 1370,
+    "Year Name": "Year of the Tankard"
+  },
+  {
+    "DR Year": 1371,
+    "Year Name": "Year of the Unstrung Harp"
+  },
+  {
+    "DR Year": 1372,
+    "Year Name": "Year of Wild Magic"
+  },
+  {
+    "DR Year": 1373,
+    "Year Name": "Year of Rogue Dragons"
+  },
+  {
+    "DR Year": 1374,
+    "Year Name": "Year of Lightning Storms"
+  },
+  {
+    "DR Year": 1375,
+    "Year Name": "Year of Risen Elfkin"
+  },
+  {
+    "DR Year": 1376,
+    "Year Name": "Year of the Bent Blade"
+  },
+  {
+    "DR Year": 1377,
+    "Year Name": "Year of the Haunting"
+  },
+  {
+    "DR Year": 1378,
+    "Year Name": "Year of the Cauldron"
+  },
+  {
+    "DR Year": 1379,
+    "Year Name": "Year of the Lost Keep"
+  },
+  {
+    "DR Year": 1380,
+    "Year Name": "Year of the Blazing Hand"
+  },
+  {
+    "DR Year": 1381,
+    "Year Name": "Year of the Starving"
+  },
+  {
+    "DR Year": 1382,
+    "Year Name": "Year of the Black Blazon"
+  },
+  {
+    "DR Year": 1383,
+    "Year Name": "Year of the Vindicated Warrior"
+  },
+  {
+    "DR Year": 1384,
+    "Year Name": "Year of Three Streams Blooded"
+  },
+  {
+    "DR Year": 1385,
+    "Year Name": "Year of Blue Fire"
+  },
+  {
+    "DR Year": 1386,
+    "Year Name": "Year of the Halflings' Lament"
+  },
+  {
+    "DR Year": 1387,
+    "Year Name": "Year of the Emerald Ermine"
+  },
+  {
+    "DR Year": 1388,
+    "Year Name": "Year of the Tanarukka"
+  },
+  {
+    "DR Year": 1389,
+    "Year Name": "Year of the Forgiven Foes"
+  },
+  {
+    "DR Year": 1390,
+    "Year Name": "Year of the Walking Man"
+  },
+  {
+    "DR Year": 1391,
+    "Year Name": "Year of the Wrathful Eye"
+  },
+  {
+    "DR Year": 1392,
+    "Year Name": "Year of the Scroll"
+  },
+  {
+    "DR Year": 1393,
+    "Year Name": "Year of the Ring"
+  },
+  {
+    "DR Year": 1394,
+    "Year Name": "Year of Deaths Unmourned"
+  },
+  {
+    "DR Year": 1395,
+    "Year Name": "Year of Silent Death"
+  },
+  {
+    "DR Year": 1396,
+    "Year Name": "Year of the Secret"
+  },
+  {
+    "DR Year": 1397,
+    "Year Name": "Year of the Quill"
+  },
+  {
+    "DR Year": 1398,
+    "Year Name": "Year of the Voyage"
+  },
+  {
+    "DR Year": 1399,
+    "Year Name": "Year of the Fallen Friends"
+  },
+  {
+    "DR Year": 1400,
+    "Year Name": "Year of Lost Ships"
+  },
+  {
+    "DR Year": 1401,
+    "Year Name": "Year of the Sheltered Viper"
+  },
+  {
+    "DR Year": 1402,
+    "Year Name": "Year of the Exorcised Helm"
+  },
+  {
+    "DR Year": 1403,
+    "Year Name": "Year of the Hidden Harp"
+  },
+  {
+    "DR Year": 1404,
+    "Year Name": "Year of the Sceptered One"
+  },
+  {
+    "DR Year": 1405,
+    "Year Name": "Year of the Golden Mask"
+  },
+  {
+    "DR Year": 1406,
+    "Year Name": "Year of the Blackened Moon"
+  },
+  {
+    "DR Year": 1407,
+    "Year Name": "Year of the Halls Unhaunted"
+  },
+  {
+    "DR Year": 1408,
+    "Year Name": "Year of the Solitary Cloister"
+  },
+  {
+    "DR Year": 1409,
+    "Year Name": "Year of True Omens"
+  },
+  {
+    "DR Year": 1410,
+    "Year Name": "Year of the Eight-legged Mount"
+  },
+  {
+    "DR Year": 1411,
+    "Year Name": "Year of the Wrathful Vizier"
+  },
+  {
+    "DR Year": 1412,
+    "Year Name": "Year of the Dauntless Dwarves"
+  },
+  {
+    "DR Year": 1413,
+    "Year Name": "Year of Sunken Vessels"
+  },
+  {
+    "DR Year": 1414,
+    "Year Name": "Year of Sea Lions Roaring"
+  },
+  {
+    "DR Year": 1415,
+    "Year Name": "Year of Staves Arcane"
+  },
+  {
+    "DR Year": 1416,
+    "Year Name": "Year of the Enthroned Puppet"
+  },
+  {
+    "DR Year": 1417,
+    "Year Name": "Year of the Phaerimm's Vengeance"
+  },
+  {
+    "DR Year": 1418,
+    "Year Name": "Year of the Lords' Coronation"
+  },
+  {
+    "DR Year": 1419,
+    "Year Name": "Year of the Empty Necropolis"
+  },
+  {
+    "DR Year": 1420,
+    "Year Name": "Year of the Dark Goddess"
+  },
+  {
+    "DR Year": 1421,
+    "Year Name": "Year of the Walking Trees"
+  },
+  {
+    "DR Year": 1422,
+    "Year Name": "Year of the Advancing Shadows"
+  },
+  {
+    "DR Year": 1423,
+    "Year Name": "Year of Thundering Hosts"
+  },
+  {
+    "DR Year": 1424,
+    "Year Name": "Year of the Dog-Eared Journal"
+  },
+  {
+    "DR Year": 1425,
+    "Year Name": "Year of Seven Sisters"
+  },
+  {
+    "DR Year": 1426,
+    "Year Name": "Year of the Dozen Dwarves"
+  },
+  {
+    "DR Year": 1427,
+    "Year Name": "Year of the Shalarins Surfacing"
+  },
+  {
+    "DR Year": 1428,
+    "Year Name": "Year of the Elfqueen's Joy"
+  },
+  {
+    "DR Year": 1429,
+    "Year Name": "Year of Ten Terrors"
+  },
+  {
+    "DR Year": 1430,
+    "Year Name": "Year of Stalking Horrors"
+  },
+  {
+    "DR Year": 1431,
+    "Year Name": "Year of the Lashing Tail"
+  },
+  {
+    "DR Year": 1432,
+    "Year Name": "Year of Silent Thunder"
+  },
+  {
+    "DR Year": 1433,
+    "Year Name": "Year of the Silent Departure"
+  },
+  {
+    "DR Year": 1434,
+    "Year Name": "Year of the Silent Crickets"
+  },
+  {
+    "DR Year": 1435,
+    "Year Name": "Year of the Silent Bell"
+  },
+  {
+    "DR Year": 1436,
+    "Year Name": "Year of Silent Shadows"
+  },
+  {
+    "DR Year": 1437,
+    "Year Name": "Year of the Silent Flute"
+  },
+  {
+    "DR Year": 1438,
+    "Year Name": "Year of Silent Waterfalls"
+  },
+  {
+    "DR Year": 1439,
+    "Year Name": "Year of the Silent Tear"
+  },
+  {
+    "DR Year": 1440,
+    "Year Name": "Year of Azuth's Woe"
+  },
+  {
+    "DR Year": 1441,
+    "Year Name": "Year of Resurrections Rampant"
+  },
+  {
+    "DR Year": 1442,
+    "Year Name": "Year of Darkenbeasts Risen"
+  },
+  {
+    "DR Year": 1443,
+    "Year Name": "Year of Silver Bell Tolling"
+  },
+  {
+    "DR Year": 1444,
+    "Year Name": "Year of the Seductive Cambion"
+  },
+  {
+    "DR Year": 1445,
+    "Year Name": "Year of the Malachite Throne"
+  },
+  {
+    "DR Year": 1446,
+    "Year Name": "Year of the Queen's Honor"
+  },
+  {
+    "DR Year": 1447,
+    "Year Name": "Year of the Fallen Tower"
+  },
+  {
+    "DR Year": 1448,
+    "Year Name": "Year of Neomen Swords"
+  },
+  {
+    "DR Year": 1449,
+    "Year Name": "Year of the Godly Invitation"
+  },
+  {
+    "DR Year": 1450,
+    "Year Name": "Year of Holy Thunder"
+  },
+  {
+    "DR Year": 1451,
+    "Year Name": "Year of Knowledge Unearthed"
+  },
+  {
+    "DR Year": 1452,
+    "Year Name": "Year of the Impatient Son"
+  },
+  {
+    "DR Year": 1453,
+    "Year Name": "Year of the Strangled Jester"
+  },
+  {
+    "DR Year": 1454,
+    "Year Name": "Year of the Emerald Sun"
+  },
+  {
+    "DR Year": 1455,
+    "Year Name": "Year of the King's Repentance"
+  },
+  {
+    "DR Year": 1456,
+    "Year Name": "Year of the Mithral Hammer"
+  },
+  {
+    "DR Year": 1457,
+    "Year Name": "Year of the Lightning Strikes"
+  },
+  {
+    "DR Year": 1458,
+    "Year Name": "Year of the Plotting Priests"
+  },
+  {
+    "DR Year": 1459,
+    "Year Name": "Year of the Forged Sigil"
+  },
+  {
+    "DR Year": 1460,
+    "Year Name": "Year of the Malachite Shadows"
+  },
+  {
+    "DR Year": 1461,
+    "Year Name": "Year of Three Goddesses Blessing"
+  },
+  {
+    "DR Year": 1462,
+    "Year Name": "Year of the Elves' Weeping"
+  },
+  {
+    "DR Year": 1463,
+    "Year Name": "Year of the Reborn Hero"
+  },
+  {
+    "DR Year": 1464,
+    "Year Name": "Year of the Six-Armed Elf"
+  },
+  {
+    "DR Year": 1465,
+    "Year Name": "Year of the Elven Swords Returned"
+  },
+  {
+    "DR Year": 1466,
+    "Year Name": "Year of the Mages in Amber"
+  },
+  {
+    "DR Year": 1467,
+    "Year Name": "Year of the Three Heroes United"
+  },
+  {
+    "DR Year": 1468,
+    "Year Name": "Year of the First Circle"
+  },
+  {
+    "DR Year": 1469,
+    "Year Name": "Year of Splendors Burning"
+  },
+  {
+    "DR Year": 1470,
+    "Year Name": "Year of the Second Circle"
+  },
+  {
+    "DR Year": 1471,
+    "Year Name": "Year of the Plagued Lords"
+  },
+  {
+    "DR Year": 1472,
+    "Year Name": "Year of the Third Circle"
+  },
+  {
+    "DR Year": 1473,
+    "Year Name": "Year of the Heretic's Rampage"
+  },
+  {
+    "DR Year": 1474,
+    "Year Name": "Year of the Fourth Circle"
+  },
+  {
+    "DR Year": 1475,
+    "Year Name": "Year of the Final Stand"
+  },
+  {
+    "DR Year": 1476,
+    "Year Name": "Year of the Fifth Circle"
+  },
+  {
+    "DR Year": 1477,
+    "Year Name": "Year of the Purloined Statue"
+  },
+  {
+    "DR Year": 1478,
+    "Year Name": "Year of the Dark Circle"
+  },
+  {
+    "DR Year": 1479,
+    "Year Name": "Year of the Ageless One"
+  },
+  {
+    "DR Year": 1480,
+    "Year Name": "Year of Deep Water Drifting"
+  },
+  {
+    "DR Year": 1481,
+    "Year Name": "Year of the Grinning Halfling"
+  },
+  {
+    "DR Year": 1482,
+    "Year Name": "Year of the Narthex Murders"
+  },
+  {
+    "DR Year": 1483,
+    "Year Name": "Year of the Tasked Weasel"
+  },
+  {
+    "DR Year": 1484,
+    "Year Name": "Year of the Awakened Sleepers"
+  },
+  {
+    "DR Year": 1485,
+    "Year Name": "Year of the Iron Dwarf's Vengeance"
+  },
+  {
+    "DR Year": 1486,
+    "Year Name": "Year of the Nether Mountain Scrolls"
+  },
+  {
+    "DR Year": 1487,
+    "Year Name": "Year of the Rune Lords Triumphant"
+  },
+  {
+    "DR Year": 1488,
+    "Year Name": "Year of Dwarvenkind Reborn"
+  },
+  {
+    "DR Year": 1489,
+    "Year Name": "Year of the Warrior Princess"
+  },
+  {
+    "DR Year": 1490,
+    "Year Name": "Year of the Star Walker's Return"
+  },
+  {
+    "DR Year": 1491,
+    "Year Name": "Year of the Scarlet Witch"
+  },
+  {
+    "DR Year": 1492,
+    "Year Name": "Year of Three Ships Sailing"
+  },
+  {
+    "DR Year": 1493,
+    "Year Name": "Year of the Purple Dragons"
+  },
+  {
+    "DR Year": 1494,
+    "Year Name": "Year of Twelve Warnings"
+  },
+  {
+    "DR Year": 1495,
+    "Year Name": "Year of the Tyrant's Pawn"
+  },
+  {
+    "DR Year": 1496,
+    "Year Name": "Year of the Duplicitous Courtier"
+  },
+  {
+    "DR Year": 1497,
+    "Year Name": "Year of the Palls Purple"
+  },
+  {
+    "DR Year": 1498,
+    "Year Name": "Year of the Black Regalia"
+  },
+  {
+    "DR Year": 1499,
+    "Year Name": "Year of the Desperate Gambit"
+  },
+  {
+    "DR Year": 1500,
+    "Year Name": "Year of the Sea's Secrets Revealed"
+  },
+  {
+    "DR Year": 1501,
+    "Year Name": "Year of the Shining Mythal"
+  },
+  {
+    "DR Year": 1502,
+    "Year Name": "Year of the Pox Plague"
+  },
+  {
+    "DR Year": 1503,
+    "Year Name": "Year of the Haunted Inn"
+  },
+  {
+    "DR Year": 1504,
+    "Year Name": "Year of the Conquering Queen"
+  },
+  {
+    "DR Year": 1505,
+    "Year Name": "Year of Ogres Marching"
+  },
+  {
+    "DR Year": 1506,
+    "Year Name": "Year of the Discarded Shields"
+  },
+  {
+    "DR Year": 1507,
+    "Year Name": "Year of the Glowing Onyx"
+  },
+  {
+    "DR Year": 1508,
+    "Year Name": "Year of the Legend Reborn"
+  },
+  {
+    "DR Year": 1509,
+    "Year Name": "Year of the Sea Lion"
+  },
+  {
+    "DR Year": 1510,
+    "Year Name": "Year of the Treasure Abandoned"
+  },
+  {
+    "DR Year": 1511,
+    "Year Name": "Year of the Lion Rampant"
+  },
+  {
+    "DR Year": 1512,
+    "Year Name": "Year of the Shattered Mirror"
+  },
+  {
+    "DR Year": 1513,
+    "Year Name": "Year of the Tawny Feline"
+  },
+  {
+    "DR Year": 1514,
+    "Year Name": "Year of the Lost Wagers"
+  },
+  {
+    "DR Year": 1515,
+    "Year Name": "Year of the Howling Ghouls"
+  },
+  {
+    "DR Year": 1516,
+    "Year Name": "Year of the Hangman's Joke"
+  },
+  {
+    "DR Year": 1517,
+    "Year Name": "Year of the Coward Rewarded"
+  },
+  {
+    "DR Year": 1518,
+    "Year Name": "Year of the Adomal Tapestry"
+  },
+  {
+    "DR Year": 1519,
+    "Year Name": "Year of the Deceitful Brother"
+  },
+  {
+    "DR Year": 1520,
+    "Year Name": "Year of the Arcane"
+  },
+  {
+    "DR Year": 1521,
+    "Year Name": "Year of the Moon Harp Restored"
+  },
+  {
+    "DR Year": 1522,
+    "Year Name": "Year of the Bored Phylls"
+  },
+  {
+    "DR Year": 1523,
+    "Year Name": "Year of the Brownie's Delight"
+  },
+  {
+    "DR Year": 1524,
+    "Year Name": "Year of the Captive Harper"
+  },
+  {
+    "DR Year": 1525,
+    "Year Name": "Year of the Drawn Line"
+  },
+  {
+    "DR Year": 1526,
+    "Year Name": "Year of the Hazy Coast"
+  },
+  {
+    "DR Year": 1527,
+    "Year Name": "Year of the Hoard Retaken"
+  },
+  {
+    "DR Year": 1528,
+    "Year Name": "Year of the Insufferable Mystic"
+  },
+  {
+    "DR Year": 1529,
+    "Year Name": "Year of the Horseman's Triumph"
+  },
+  {
+    "DR Year": 1530,
+    "Year Name": "Year of the Long-toothed Tiger"
+  },
+  {
+    "DR Year": 1531,
+    "Year Name": "Year of the Oozing Bog"
+  },
+  {
+    "DR Year": 1532,
+    "Year Name": "Year of the Locked Crypt"
+  },
+  {
+    "DR Year": 1533,
+    "Year Name": "Year of the Misshapen Mage"
+  },
+  {
+    "DR Year": 1534,
+    "Year Name": "Year of the Pale Lords"
+  },
+  {
+    "DR Year": 1535,
+    "Year Name": "Year of the Laurel Wreath"
+  },
+  {
+    "DR Year": 1536,
+    "Year Name": "Year of the Mirrored Face"
+  },
+  {
+    "DR Year": 1537,
+    "Year Name": "Year of the Jungle's Vengeance"
+  },
+  {
+    "DR Year": 1538,
+    "Year Name": "Year of the Stalking Tiger"
+  },
+  {
+    "DR Year": 1539,
+    "Year Name": "Year of the Thoughtless Suitor"
+  },
+  {
+    "DR Year": 1540,
+    "Year Name": "Year of the Lifeless Archdruid"
+  },
+  {
+    "DR Year": 1541,
+    "Year Name": "Year of the Mirthful House"
+  },
+  {
+    "DR Year": 1542,
+    "Year Name": "Year of the Painted Grin"
+  },
+  {
+    "DR Year": 1543,
+    "Year Name": "Year of the Sacred Sceptre"
+  },
+  {
+    "DR Year": 1544,
+    "Year Name": "Year of Shadow Fiends"
+  },
+  {
+    "DR Year": 1545,
+    "Year Name": "Year of the Undying March"
+  },
+  {
+    "DR Year": 1546,
+    "Year Name": "Year of the Winter Rose"
+  },
+  {
+    "DR Year": 1547,
+    "Year Name": "Year of Dungeons Reclaimed"
+  },
+  {
+    "DR Year": 1548,
+    "Year Name": "Year of the Handsome Deal"
+  },
+  {
+    "DR Year": 1549,
+    "Year Name": "Year of the Meandering Archipelago"
+  },
+  {
+    "DR Year": 1550,
+    "Year Name": "Year of the Scarlet Tabard"
+  },
+  {
+    "DR Year": 1551,
+    "Year Name": "Year of the Misty Grave"
+  },
+  {
+    "DR Year": 1552,
+    "Year Name": "Year of the Overflowing Cup"
+  },
+  {
+    "DR Year": 1553,
+    "Year Name": "Year of the Request"
+  },
+  {
+    "DR Year": 1554,
+    "Year Name": "Year of the Dark Chosen"
+  },
+  {
+    "DR Year": 1555,
+    "Year Name": "Year of the Argent Scarab"
+  },
+  {
+    "DR Year": 1556,
+    "Year Name": "Year of the Stone Steps"
+  },
+  {
+    "DR Year": 1557,
+    "Year Name": "Year of the Murdered Sage"
+  },
+  {
+    "DR Year": 1558,
+    "Year Name": "Year of the Watchful Guardian"
+  },
+  {
+    "DR Year": 1559,
+    "Year Name": "Year of the Shepherd's Son"
+  },
+  {
+    "DR Year": 1560,
+    "Year Name": "Year of the Trees' Receding"
+  },
+  {
+    "DR Year": 1561,
+    "Year Name": "Year of the Wild Hunt"
+  },
+  {
+    "DR Year": 1562,
+    "Year Name": "Year of the Pointing Finger"
+  },
+  {
+    "DR Year": 1563,
+    "Year Name": "Year of the Starlit Necklace"
+  },
+  {
+    "DR Year": 1564,
+    "Year Name": "Year of the Slaughtered Lamb"
+  },
+  {
+    "DR Year": 1565,
+    "Year Name": "Year of the Unkindest Cut"
+  },
+  {
+    "DR Year": 1566,
+    "Year Name": "Year of the Weasel"
+  },
+  {
+    "DR Year": 1567,
+    "Year Name": "Year of the Sacred Lash"
+  },
+  {
+    "DR Year": 1568,
+    "Year Name": "Year of the Studious Enchanter"
+  },
+  {
+    "DR Year": 1569,
+    "Year Name": "Year of the Turned Page"
+  },
+  {
+    "DR Year": 1570,
+    "Year Name": "Year of the Vacant Cairn"
+  },
+  {
+    "DR Year": 1571,
+    "Year Name": "Year of the Red Mantle"
+  },
+  {
+    "DR Year": 1572,
+    "Year Name": "Year of the Stingray"
+  },
+  {
+    "DR Year": 1573,
+    "Year Name": "Year of the Wicked Jailor"
+  },
+  {
+    "DR Year": 1574,
+    "Year Name": "Year of the Rebuked Storm"
+  },
+  {
+    "DR Year": 1575,
+    "Year Name": "Year of the Twin Pavilions"
+  },
+  {
+    "DR Year": 1576,
+    "Year Name": "Year of the Vanishing Throne"
+  },
+  {
+    "DR Year": 1577,
+    "Year Name": "Year of the Whispering Hood"
+  },
+  {
+    "DR Year": 1578,
+    "Year Name": "Year of the Steadfast Patrol"
+  },
+  {
+    "DR Year": 1579,
+    "Year Name": "Year of the Underking"
+  },
+  {
+    "DR Year": 1580,
+    "Year Name": "Year of the Widow's Tears"
+  },
+  {
+    "DR Year": 1581,
+    "Year Name": "Year of Rings"
+  },
+  {
+    "DR Year": 1582,
+    "Year Name": "Year of Howling Winds"
+  },
+  {
+    "DR Year": 1583,
+    "Year Name": "Year of the Decay"
+  },
+  {
+    "DR Year": 1584,
+    "Year Name": "Year of the Skirling Pipes"
+  },
+  {
+    "DR Year": 1585,
+    "Year Name": "Year of the Bloodied Manacles"
+  },
+  {
+    "DR Year": 1586,
+    "Year Name": "Year of the Pax Draconomica"
+  },
+  {
+    "DR Year": 1587,
+    "Year Name": "Year of Long Silence"
+  },
+  {
+    "DR Year": 1588,
+    "Year Name": "Year of the Swarming Ravens"
+  },
+  {
+    "DR Year": 1589,
+    "Year Name": "Year of the Watching Ancestors"
+  },
+  {
+    "DR Year": 1590,
+    "Year Name": "Year of the Coming Twilight"
+  },
+  {
+    "DR Year": 1591,
+    "Year Name": "Year of Skeletons"
+  },
+  {
+    "DR Year": 1592,
+    "Year Name": "Year of the Dying Hate"
+  },
+  {
+    "DR Year": 1593,
+    "Year Name": "Year of Rising Stars"
+  },
+  {
+    "DR Year": 1594,
+    "Year Name": "Year of Fragrant Orchards"
+  },
+  {
+    "DR Year": 1595,
+    "Year Name": "Year of Raging Baatezu"
+  },
+  {
+    "DR Year": 1596,
+    "Year Name": "Year of Heavenly Scriptures"
+  },
+  {
+    "DR Year": 1597,
+    "Year Name": "Year of the Stolen Gold"
+  },
+  {
+    "DR Year": 1598,
+    "Year Name": "Year of the Doom Cauldron"
+  },
+  {
+    "DR Year": 1599,
+    "Year Name": "Year of the Black Pearls"
+  },
+  {
+    "DR Year": 1600,
+    "Year Name": "Year of Unseen Enemies"
+  }
+]
