@@ -183,6 +183,28 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
   const [drYearNames, setDrYearNames] = useState(null);
   const [isLoadingYearNames, setIsLoadingYearNames] = useState(false);
 
+  // Load DR year names from JSON file (cached)
+  const loadDrYearNames = async () => {
+    if (drYearNames || isLoadingYearNames) return; // Already loaded or loading
+    
+    setIsLoadingYearNames(true);
+    try {
+      const response = await fetch('/dr_year_names.json');
+      if (response.ok) {
+        const yearNames = await response.json();
+        setDrYearNames(yearNames);
+      } else {
+        console.warn('Failed to load DR year names, using numeric fallback');
+        setDrYearNames({});
+      }
+    } catch (error) {
+      console.warn('Error loading DR year names:', error);
+      setDrYearNames({});
+    } finally {
+      setIsLoadingYearNames(false);
+    }
+  };
+
   useEffect(() => {
     if (isVisible && kingdom) {
       fetchCampaignDate();
