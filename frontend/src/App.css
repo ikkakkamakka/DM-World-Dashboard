@@ -2643,6 +2643,108 @@ body {
   background: rgba(58, 58, 92, 0.4);
   border: 1px solid #8b7355;
   border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.voting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.voting-header h5 {
+  color: #e8dcc6;
+  margin: 0;
+}
+
+.status-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.status-badge.active {
+  background: #28a745;
+  color: white;
+}
+
+.status-badge.completed {
+  background: #6c757d;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .event-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .event-actions {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+  
+  .event-actions button {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .event-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .event-card .event-title {
+    font-size: 1.3rem;
+  }
+  
+  .event-type-icon {
+    font-size: 2rem;
+  }
+  
+  .calendar-actions {
+    flex-direction: column;
+  }
+  
+  .calendar-actions .btn-primary,
+  .calendar-actions .btn-secondary {
+    width: 100%;
+  }
+  
+  .date-inputs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .date-inputs input,
+  .date-inputs select {
+    width: 100%;
+  }
+  
+  .upcoming-event,
+  .event-card {
+    padding: 1.2rem;
+  }
+  
+  .event-details {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .event-icon,
+  .event-type-icon {
+    align-self: center;
+    margin-bottom: 0.5rem;
+  }
+}
+.voting-session-item {
+  background: rgba(58, 58, 92, 0.4);
+  border: 1px solid #8b7355;
+  border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 1rem;
 }
