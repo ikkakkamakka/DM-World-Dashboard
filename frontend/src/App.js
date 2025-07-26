@@ -576,23 +576,33 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
             {events.map(event => (
               <div key={event.id} className="event-card">
                 <div className="event-header">
-                  <span className="event-icon" style={{ color: getEventTypeColor(event.event_type) }}>
-                    {getEventIcon(event.event_type)}
-                  </span>
-                  <div className="event-title">{event.city_name ? `${event.title} – ${event.city_name}` : event.title}</div>
+                  <div className="event-header-left">
+                    <span className="event-type-icon" style={{ color: getEventTypeColor(event.event_type) }}>
+                      {getEventIcon(event.event_type)}
+                    </span>
+                    <div className="event-title-section">
+                      <div className="event-title">{event.city_name ? `${event.title} – ${event.city_name}` : event.title}</div>
+                    </div>
+                  </div>
                   <div className="event-actions">
-                    <button onClick={() => openEditEvent(event)}>Edit</button>
-                    <button onClick={() => handleDeleteEvent(event.id)}>Delete</button>
+                    <button onClick={() => openEditEvent(event)}>✏️ Edit</button>
+                    <button onClick={() => handleDeleteEvent(event.id)}>🗑️ Delete</button>
                   </div>
                 </div>
                 <div className="event-info">
                   <div>Date: {event.event_date.day} {HARPTOS_MONTHS[event.event_date.month]?.name}, {event.event_date.dr_year} DR</div>
                   {event.city_name && <div>City: {event.city_name}</div>}
-                  <div>Type: {event.event_type}</div>
+                  <div>Type: {event.event_type.charAt(0).toUpperCase() + event.event_type.slice(1)}</div>
+                  <div>Created by: {event.created_by}</div>
                 </div>
                 <div className="event-description">{event.description}</div>
               </div>
             ))}
+            {events.length === 0 && (
+              <div style={{ textAlign: 'center', color: '#c4b5a0', fontStyle: 'italic', padding: '2rem' }}>
+                No events scheduled yet. Create your first event!
+              </div>
+            )}
           </div>
         </div>
       )}
