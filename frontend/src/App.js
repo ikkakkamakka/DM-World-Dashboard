@@ -421,6 +421,21 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
     return baseDate;
   };
 
+  const formatCalendarDayTooltip = (day, month, year) => {
+    const yearString = year.toString();
+    const yearName = drYearNames?.[yearString];
+    
+    // Create base date string
+    const baseDate = `${day} ${HARPTOS_MONTHS[month]?.name}, ${yearString} DR`;
+    
+    // Add year name if available
+    if (yearName) {
+      return `${baseDate} – ${yearName}`;
+    }
+    
+    return baseDate;
+  };
+
   const getEventIcon = (eventType) => {
     switch(eventType) {
       case 'holiday': return '🎉';
