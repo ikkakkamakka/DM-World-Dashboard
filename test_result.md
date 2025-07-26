@@ -238,11 +238,14 @@ frontend:
     file: "/app/backend/server.py, /app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
         comment: "HARPTOS CALENDAR ENHANCEMENT COMPLETED: Fixed duplicate city name issue by removing city names from backend event titles, allowing frontend to handle proper display format ('Event Title – City Name'). Implemented comprehensive magical fantasy theme with animated glowing borders, parchment-style background textures, smooth fade transitions, and themed icons for tendays/seasons. Added enhanced calendar system with campaign date management, upcoming events view, auto city event generation, and complete CRUD operations. MongoDB collections for campaign_dates and calendar_events are persistent and auto-update correctly when campaign date advances. Frontend features magical animations including magicalGlow, titleGlow, dateDisplayGlow, todayPulse, eventIndicator, and iconTwinkle animations for immersive medieval fantasy experience."
+      - working: "NA"
+        agent: "main"
+        comment: "FORGOTTEN REALMS YEAR NAMES ENHANCEMENT: Added dynamic loading of DR year names from /frontend/public/dr_year_names.json file. Updated formatHarptosDate function to display both numeric DR year and year name (e.g., '25 Flamerule, 1497 DR – Year of the Worm'). Created comprehensive year names database covering years 1350-1530 with official Forgotten Realms year names. Implemented caching mechanism to load year names only once per session. Added formatEventDate and formatCalendarDayTooltip functions for consistent year name display across main calendar header, All Events view, and calendar day tooltips. Falls back to numeric DR only when year name is not available in JSON file."
 
   - task: "Enhanced Boundary Drawing System"
     implemented: true
