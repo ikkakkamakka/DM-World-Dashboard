@@ -2735,6 +2735,13 @@ body {
     gap: 0.8rem;
   }
   
+  .event-icon,
+  .event-type-icon {
+    align-self: center;
+    margin-bottom: 0.5rem;
+  }
+}
+
 /* Event Form Styles */
 .event-form {
   display: flex;
