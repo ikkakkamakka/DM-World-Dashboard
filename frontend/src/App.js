@@ -178,6 +178,10 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
 
   // Manual date control
   const [manualDate, setManualDate] = useState({ dr_year: 1492, month: 0, day: 1 });
+  
+  // Year names cache
+  const [drYearNames, setDrYearNames] = useState(null);
+  const [isLoadingYearNames, setIsLoadingYearNames] = useState(false);
 
   useEffect(() => {
     if (isVisible && kingdom) {
