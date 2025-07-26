@@ -582,7 +582,7 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
                   title={
                     hasEvents 
                       ? `${holidays.map(h => `🎉 ${h.name}`).join(', ')} ${dayEvents.map(e => `${getEventIcon(e.event_type)} ${e.city_name ? `${e.title} – ${e.city_name}` : e.title}`).join(', ')}`
-                      : `${day} ${HARPTOS_MONTHS[displayDate.month]?.name}`
+                      : formatCalendarDayTooltip(day, displayDate.month, displayDate.drYear)
                   }
                 >
                   <span className="day-number">{day}</span>
