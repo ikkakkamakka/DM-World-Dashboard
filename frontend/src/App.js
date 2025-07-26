@@ -406,6 +406,21 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
     return baseDate;
   };
 
+  const formatEventDate = (eventDate) => {
+    const yearString = eventDate.dr_year.toString();
+    const yearName = drYearNames?.[yearString];
+    
+    // Create base date string
+    const baseDate = `${eventDate.day} ${HARPTOS_MONTHS[eventDate.month]?.name}, ${yearString} DR`;
+    
+    // Add year name if available
+    if (yearName) {
+      return `${baseDate} – ${yearName}`;
+    }
+    
+    return baseDate;
+  };
+
   const getEventIcon = (eventType) => {
     switch(eventType) {
       case 'holiday': return '🎉';
