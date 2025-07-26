@@ -645,7 +645,7 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
                   </div>
                 </div>
                 <div className="event-info">
-                  <div>Date: {event.event_date.day} {HARPTOS_MONTHS[event.event_date.month]?.name}, {event.event_date.dr_year} DR</div>
+                  <div>Date: {formatEventDate(event.event_date)}</div>
                   {event.city_name && <div>City: {event.city_name}</div>}
                   <div>Type: {event.event_type.charAt(0).toUpperCase() + event.event_type.slice(1)}</div>
                   <div>Created by: {event.created_by}</div>
