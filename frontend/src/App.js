@@ -387,10 +387,23 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
   };
 
   const formatHarptosDate = (dateObj) => {
+    const yearString = dateObj.dr_year ? dateObj.dr_year.toString() : dateObj.drYear ? dateObj.drYear.toString() : '1492';
+    const yearName = drYearNames?.[yearString];
+    
+    // Create base date string
+    let baseDate;
     if (dateObj.special_day) {
-      return `${dateObj.special_day}, ${dateObj.dr_year} DR`;
+      baseDate = `${dateObj.special_day}, ${yearString} DR`;
+    } else {
+      baseDate = `${dateObj.day} ${HARPTOS_MONTHS[dateObj.month]?.name || 'Unknown'}, ${yearString} DR`;
     }
-    return `${dateObj.day} ${HARPTOS_MONTHS[dateObj.month]?.name || 'Unknown'}, ${dateObj.dr_year} DR`;
+    
+    // Add year name if available
+    if (yearName) {
+      return `${baseDate} – ${yearName}`;
+    }
+    
+    return baseDate;
   };
 
   const getEventIcon = (eventType) => {
