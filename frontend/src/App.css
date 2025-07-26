@@ -2530,36 +2530,115 @@ body {
   z-index: 1;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .event-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-  
-  .event-actions {
-    align-self: stretch;
-    justify-content: space-between;
-  }
-  
-  .event-actions button {
-    flex: 1;
-    min-width: 0;
-  }
-  
-  .event-info {
-    grid-template-columns: 1fr;
-  }
-  
-  .event-card .event-title {
-    font-size: 1.3rem;
-  }
-  
-  .event-type-icon {
-    font-size: 2rem;
-  }
+/* Calendar Actions & Event Management */
+.calendar-actions {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+  justify-content: center;
 }
+
+.calendar-actions .btn-primary {
+  background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+  color: #1a1a2e;
+  border: 1px solid #d4af37;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  font-family: 'Cinzel', serif;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.calendar-actions .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.calendar-actions .btn-primary:hover::before {
+  left: 100%;
+}
+
+.calendar-actions .btn-primary:hover {
+  background: linear-gradient(135deg, #e6c249 0%, #ca9f31 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.5);
+}
+
+.calendar-actions .btn-secondary {
+  background: linear-gradient(135deg, rgba(42, 42, 78, 0.8) 0%, rgba(30, 30, 62, 0.8) 100%);
+  color: #e8dcc6;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  font-family: 'Cinzel', serif;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.calendar-actions .btn-secondary:hover {
+  background: linear-gradient(135deg, rgba(52, 52, 88, 0.9) 0%, rgba(40, 40, 72, 0.9) 100%);
+  border-color: rgba(212, 175, 55, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.2);
+}
+
+/* Manual Date Controls */
+.manual-date-controls {
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  animation: controlsGlow 3s ease-in-out infinite alternate;
+}
+
+.manual-date-controls h4 {
+  color: #d4af37;
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+
+.date-inputs {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.date-inputs input,
+.date-inputs select {
+  background: linear-gradient(135deg, rgba(42, 42, 78, 0.8) 0%, rgba(30, 30, 62, 0.8) 100%);
+  color: #e8dcc6;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  font-family: 'Cinzel', serif;
+  transition: all 0.3s ease;
+}
+
+.date-inputs input:focus,
+.date-inputs select:focus {
+  border-color: rgba(212, 175, 55, 0.6);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  outline: none;
+}
+
+/* Voting System */
 .voting-session-item {
   background: rgba(58, 58, 92, 0.4);
   border: 1px solid #8b7355;
