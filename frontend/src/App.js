@@ -4155,15 +4155,11 @@ function AuthenticatedApp() {
     if (!activeKingdom) return;
     
     try {
-      // Use kingdom-specific endpoint for better performance
-      const response = await fetch(`${API}/events/${activeKingdom.id}`, {
-        headers: getAuthHeaders()
-      });
-      if (response.ok) {
+      const response = await authenticatedFetch(`${API}/events/${activeKingdom.id}`);
+      if (response && response.ok) {
         const kingdomEvents = await response.json();
         setEvents(kingdomEvents);
-      } else if (response.status === 401 || response.status === 403) {
-        console.error('Authentication failed for events');
+      } else {
         setEvents([]);
       }
     } catch (error) {
