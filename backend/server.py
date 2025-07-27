@@ -1144,25 +1144,37 @@ async def broadcast_kingdom_update(kingdom_data, event_type):
 
 async def create_and_broadcast_event(description, city_name, kingdom_name, event_type, priority="normal", kingdom_id=None):
     """Helper function to create and broadcast kingdom-specific events"""
-    event = Event(
-        description=description,
-        city_name=city_name,
-        kingdom_name=kingdom_name,
-        event_type=event_type,
-        priority=priority
-    )
-    
-    # Add kingdom_id to event data if provided
-    event_data = event.dict()
+    # Get owner_id from kingdom if kingdom_id is provided
+    owner_id = None
     if kingdom_id:
-        event_data['kingdom_id'] = kingdom_id
+        kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
+        if kingdom:
+            owner_id = kingdom.get("owner_id")
     
-    await db.events.insert_one(event_data)
-    await manager.broadcast({
-        "type": "new_event",
-        "event": event_data,
-        "kingdom_id": kingdom_id  # Include kingdom_id in broadcast for frontend filtering
-    })
+    # Create event with owner_id (required field)
+    if owner_id:
+        event = Event(
+            owner_id=owner_id,
+            description=description,
+            city_name=city_name,
+            kingdom_name=kingdom_name,
+            event_type=event_type,
+            priority=priority
+        )
+        
+        # Add kingdom_id to event data if provided
+        event_data = event.dict()
+        if kingdom_id:
+            event_data['kingdom_id'] = kingdom_id
+        
+        await db.events.insert_one(event_data)
+        await manager.broadcast({
+            "type": "new_event",
+            "event": event_data,
+            "kingdom_id": kingdom_id  # Include kingdom_id in broadcast for frontend filtering
+        })
+    else:
+        logging.warning(f"Cannot create event: no owner_id found for kingdom {kingdom_id}")
 
 # Initialize multi-kingdom data and migrate existing data
 async def initialize_multi_kingdoms():
