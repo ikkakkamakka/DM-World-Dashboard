@@ -1506,17 +1506,23 @@ async def get_multi_kingdom(kingdom_id: str, current_user: dict = Depends(get_cu
     raise HTTPException(status_code=404, detail="Kingdom not found or access denied")
 
 @api_router.put("/multi-kingdom/{kingdom_id}")
-async def update_multi_kingdom(kingdom_id: str, updates: MultiKingdomUpdate):
+async def update_multi_kingdom(kingdom_id: str, updates: MultiKingdomUpdate, current_user: dict = Depends(get_current_user)):
+    """Update kingdom - only if owned by current user or user is super admin"""
+    # Build query filter
+    query_filter = {"id": kingdom_id}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
     update_data = {k: v for k, v in updates.dict(exclude_unset=True).items()}
     
     result = await db.multi_kingdoms.update_one(
-        {"id": kingdom_id},
+        query_filter,
         {"$set": update_data}
     )
     
     if result.modified_count:
         return {"message": "Kingdom updated successfully"}
-    raise HTTPException(status_code=404, detail="Kingdom not found")
+    raise HTTPException(status_code=404, detail="Kingdom not found or access denied")
 
 @api_router.delete("/multi-kingdom/{kingdom_id}")
 async def delete_multi_kingdom(kingdom_id: str):
