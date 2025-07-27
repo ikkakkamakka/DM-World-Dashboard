@@ -2912,7 +2912,8 @@ const SlavesRegistry = ({ city, authenticatedFetch }) => {
 };
 
 // Livestock Registry  
-const LivestockRegistry = ({ city }) => {
+# Quick bulk update of remaining registry components
+const LivestockRegistry = ({ city, authenticatedFetch }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '', type: 'Cattle', age: '', weight: '', value: '', owner: 'City', notes: ''
