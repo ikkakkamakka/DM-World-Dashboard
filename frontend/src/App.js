@@ -4287,6 +4287,9 @@ function AuthenticatedApp() {
           activeKingdom={activeKingdom}
           onKingdomChange={handleKingdomChange}
           onCreateNew={handleCreateNewKingdom}
+          authenticatedFetch={authenticatedFetch}
+          setErrorMessage={setErrorMessage}
+          setShowErrorModal={setShowErrorModal}
         />
       )}
 
