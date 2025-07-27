@@ -500,21 +500,21 @@ test_plan:
         agent: "testing"
         comment: "✅ BACKEND AUTHENTICATION TESTING COMPLETE: All critical dashboard endpoints now working with proper authentication. VERIFIED: /api/multi-kingdoms returns 11 kingdoms with owner_id filtering, /api/kingdom returns active kingdom with authentication, /api/city/{city_id} returns city details with proper auth, /api/voting-sessions/{kingdom_id} and /api/calendar-events/{kingdom_id}/upcoming both require authentication and kingdom ownership. Admin user authentication working perfectly with JWT tokens, bcrypt password hashing, and owner_id filtering. Dashboard data loading backend issues RESOLVED."
 
-  - task: "Frontend API Authentication Fix"
+  - task: "Add City Functionality Fix"
     implemented: true
     working: "NA"
-    file: "/app/frontend/src/App.js"
+    file: "/app/frontend/src/App.js, /app/backend/server.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
       - working: false
         agent: "user"
-        comment: "User reported blank kingdom and city dashboards. Backend testing confirmed authentication endpoints are working, indicating frontend fetch calls aren't using proper authentication."
+        comment: "User reported: 'The Add City button does NOT create a new city for the selected kingdom.' Need to fix frontend authentication, backend ownership, proper city creation flow, and test with multiple users."
       - working: "NA"
         agent: "main"
-        comment: "FRONTEND AUTHENTICATION INTEGRATION: Updated critical frontend API calls to use authenticatedFetch instead of direct fetch. Fixed: fetchCampaignDate, fetchCalendarEvents, fetchUpcomingEvents, handleManualDateUpdate, handleDeleteEvent, handleGenerateCityEvents, fetchActiveKingdom, handleKingdomEditSubmit. Updated component props to pass authenticatedFetch to HarptosCalendar, KingdomDashboard, RegistryTabs. Updated CitizensRegistry and SlavesRegistry components to use authenticatedFetch. This should resolve dashboard loading issues by ensuring proper JWT token inclusion in API requests."
+        comment: "ADD CITY AUTHENTICATION FIXES APPLIED: Frontend - Updated both EnhancedFaerunMap and FaerunMap components to accept and use authenticatedFetch prop for city creation. Fixed handleCreateCity functions to use authenticatedFetch instead of fetch, added proper error handling and user feedback. Updated component prop chains to pass authenticatedFetch. Fixed city deletion functions to use authentication. Backend - POST /api/cities already has proper authentication with get_current_user dependency and owner_id filtering. Ready for comprehensive testing with multiple users."
 
 agent_communication:
   - agent: "main"
-    message: "FRONTEND AUTHENTICATION INTEGRATION COMPLETED: Successfully updated numerous frontend API calls to use authenticatedFetch helper function for proper JWT token authentication. Key fixes include: Calendar-related functions (fetchCampaignDate, fetchCalendarEvents, fetchUpcomingEvents), Event operations (handleDeleteEvent, handleGenerateCityEvents), Kingdom operations (fetchActiveKingdom, handleKingdomEditSubmit), Registry operations (Citizens and Slaves registries updated). Updated component prop chains to pass authenticatedFetch from AuthenticatedApp -> HarptosCalendar, KingdomDashboard, RegistryTabs -> individual registry components. Backend testing confirmed authentication endpoints work properly, so these frontend fixes should resolve the blank dashboard issues by ensuring all API calls include proper Authorization headers."
+    message: "ADD CITY FUNCTIONALITY AUTHENTICATION FIX COMPLETED: Fixed critical issue where Add City button wasn't working due to missing authentication. Updated EnhancedFaerunMap and FaerunMap components to use authenticatedFetch for city creation, deletion, and boundary operations. Enhanced error handling to show specific backend error messages to users. Backend POST /api/cities endpoint already has proper authentication and ownership verification. The frontend changes ensure JWT tokens are properly included in city creation requests. Ready for testing to verify cities can be created and appear in user's kingdoms with proper data isolation."
