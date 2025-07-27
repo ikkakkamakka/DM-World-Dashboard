@@ -1165,11 +1165,10 @@ async def broadcast_kingdom_update(kingdom_data, event_type):
     except Exception as e:
         logging.error(f"Error broadcasting kingdom update: {e}")
 
-async def create_and_broadcast_event(description, city_name, kingdom_name, event_type, priority="normal", kingdom_id=None):
+async def create_and_broadcast_event(description, city_name, kingdom_name, event_type, priority="normal", kingdom_id=None, owner_id=None):
     """Helper function to create and broadcast kingdom-specific events"""
-    # Get owner_id from kingdom if kingdom_id is provided
-    owner_id = None
-    if kingdom_id:
+    # Get owner_id from kingdom if not provided directly
+    if not owner_id and kingdom_id:
         kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
         if kingdom:
             owner_id = kingdom.get("owner_id")
@@ -1188,16 +1187,19 @@ async def create_and_broadcast_event(description, city_name, kingdom_name, event
         # Add kingdom_id to event data if provided
         event_data = event.dict()
         if kingdom_id:
-            event_data['kingdom_id'] = kingdom_id
+            event_data["kingdom_id"] = kingdom_id
         
-        await db.events.insert_one(event_data)
-        await manager.broadcast({
-            "type": "new_event",
-            "event": event_data,
-            "kingdom_id": kingdom_id  # Include kingdom_id in broadcast for frontend filtering
-        })
+        # Insert into database
+        result = await db.events.insert_one(event_data)
+        if result.inserted_id:
+            # Broadcast via WebSocket
+            await manager.broadcast({
+                "type": "new_event",
+                "event": event_data
+            })
     else:
-        logging.warning(f"Cannot create event: no owner_id found for kingdom {kingdom_id}")
+        # Log warning for events without owner_id
+        logging.warning(f"Event created without owner_id: {description[:50]}...")
 
 # Initialize multi-kingdom data and migrate existing data
 async def initialize_multi_kingdoms():
