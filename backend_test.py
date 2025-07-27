@@ -5260,15 +5260,7 @@ class BackendTester:
     async def test_unauthenticated_city_creation(self):
         """Test that unauthenticated requests to POST /api/cities are rejected"""
         try:
-            # Get a kingdom to test with
-            kingdoms = await self.get_kingdoms_for_testing()
-            if not kingdoms:
-                self.errors.append("No kingdoms available for unauthenticated city test")
-                return False
-            
-            kingdom_id = kingdoms[0]['id']
-            
-            # Try to create city without authentication
+            # Try to create city without authentication - don't need kingdom ID
             city_data = {
                 "name": "Unauthorized City",
                 "governor": "Unauthorized Governor",
