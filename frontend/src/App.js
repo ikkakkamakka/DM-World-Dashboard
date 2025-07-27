@@ -2409,18 +2409,26 @@ const FaerunMap = ({ cities, onCitySelect, onMapClick, authenticatedFetch }) => 
 
   const handleCreateCity = async (cityData) => {
     try {
-      const response = await fetch(`${API}/cities`, {
+      const response = await authenticatedFetch(`${API}/cities`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...cityData, x_coordinate: newCityCoords.x, y_coordinate: newCityCoords.y })
       });
       
       if (response.ok) {
+        const result = await response.json();
+        console.log('City created successfully:', result);
         setShowAddCityForm(false);
+        // Refresh the cities list
         window.location.reload();
+      } else {
+        const errorText = await response.text();
+        console.error('Failed to create city:', response.status, errorText);
+        alert(`Failed to create city: ${errorText}`);
       }
     } catch (error) {
       console.error('Error creating city:', error);
+      alert('Error creating city. Please check your connection and try again.');
     }
   };
 
