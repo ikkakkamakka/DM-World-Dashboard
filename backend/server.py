@@ -639,6 +639,7 @@ class KingdomBoundaryCreate(BaseModel):
 
 class MultiKingdom(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    owner_id: str  # User ID who owns this kingdom
     name: str
     ruler: str
     government_type: str = "Monarchy"
