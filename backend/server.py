@@ -2424,86 +2424,83 @@ async def get_city_government(city_id: str, current_user: dict = Depends(get_cur
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.post("/cities/{city_id}/government/appoint")
-async def appoint_citizen_to_government(city_id: str, appointment: GovernmentAppointment):
-    """Appoint a citizen to a government position"""
-    # Find the kingdom containing this city
-    kingdoms = await db.multi_kingdoms.find().to_list(None)
+async def appoint_citizen_to_government(city_id: str, appointment: GovernmentAppointment, current_user: dict = Depends(get_current_user)):
+    """Appoint a citizen to a government position - only if user owns the kingdom containing the city"""
+    # Verify user owns the kingdom containing this city
+    kingdom = await verify_city_ownership(city_id, current_user)
     
-    for kingdom in kingdoms:
-        if kingdom.get('cities'):
-            for city in kingdom['cities']:
-                if city['id'] == city_id:
-                    # Find the citizen
-                    citizen_found = False
-                    citizen_name = "Unknown"
-                    
-                    for citizen in city.get('citizens', []):
-                        if citizen['id'] == appointment.citizen_id:
-                            citizen_found = True
-                            citizen_name = citizen['name']
-                            break
-                    
-                    if not citizen_found:
-                        raise HTTPException(status_code=404, detail="Citizen not found")
-                    
-                    # Check if position already exists
-                    existing_officials = city.get('government_officials', [])
-                    for official in existing_officials:
-                        if official.get('position') == appointment.position:
-                            raise HTTPException(
-                                status_code=400, 
-                                detail=f"Position '{appointment.position}' is already filled"
-                            )
-                    
-                    # Create new government official
-                    new_official = GovernmentOfficial(
-                        name=citizen_name,
-                        position=appointment.position,
-                        city_id=city_id,
-                        citizen_id=appointment.citizen_id
+    # Find the specific city
+    for city in kingdom.get('cities', []):
+        if city['id'] == city_id:
+            # Find the citizen
+            citizen_found = False
+            citizen_name = "Unknown"
+            
+            for citizen in city.get('citizens', []):
+                if citizen['id'] == appointment.citizen_id:
+                    citizen_found = True
+                    citizen_name = citizen['name']
+                    break
+            
+            if not citizen_found:
+                raise HTTPException(status_code=404, detail="Citizen not found")
+            
+            # Check if position already exists
+            existing_officials = city.get('government_officials', [])
+            for official in existing_officials:
+                if official.get('position') == appointment.position:
+                    raise HTTPException(
+                        status_code=400, 
+                        detail=f"Position '{appointment.position}' is already filled"
                     )
-                    
-                    # Update the citizen with government position
-                    result1 = await db.multi_kingdoms.update_one(
-                        {"id": kingdom["id"], "cities.id": city_id, "cities.citizens.id": appointment.citizen_id},
-                        {
-                            "$set": {
-                                "cities.$[city].citizens.$[citizen].government_position": appointment.position,
-                                "cities.$[city].citizens.$[citizen].appointed_date": datetime.utcnow()
-                            }
-                        },
-                        array_filters=[
-                            {"city.id": city_id},
-                            {"citizen.id": appointment.citizen_id}
-                        ]
-                    )
-                    
-                    # Add to government officials
-                    result2 = await db.multi_kingdoms.update_one(
-                        {"id": kingdom["id"], "cities.id": city_id},
-                        {"$push": {"cities.$.government_officials": new_official.dict()}}
-                    )
-                    
-                    if result1.modified_count and result2.modified_count:
-                        # Create event
-                        event_desc = f"🏛️ {citizen_name} appointed as {appointment.position}!"
-                        await create_and_broadcast_event(event_desc, city['name'], kingdom['name'], "appointment", "high")
-                        
-                        # Broadcast update
-                        await manager.broadcast({
-                            "type": "government_updated",
-                            "city_id": city_id,
-                            "action": "appointed",
-                            "official": new_official.dict(),
-                            "kingdom_id": kingdom["id"]
-                        })
-                        
-                        return {
-                            "message": "Citizen appointed successfully",
-                            "official": new_official.dict()
-                        }
-                    
-                    raise HTTPException(status_code=500, detail="Failed to appoint citizen")
+            
+            # Create new government official
+            new_official = GovernmentOfficial(
+                name=citizen_name,
+                position=appointment.position,
+                city_id=city_id,
+                citizen_id=appointment.citizen_id
+            )
+            
+            # Update the citizen with government position
+            result1 = await db.multi_kingdoms.update_one(
+                {"id": kingdom["id"], "cities.id": city_id, "cities.citizens.id": appointment.citizen_id},
+                {
+                    "$set": {
+                        "cities.$[city].citizens.$[citizen].government_position": appointment.position,
+                        "cities.$[city].citizens.$[citizen].appointed_date": datetime.utcnow()
+                    }
+                },
+                array_filters=[
+                    {"city.id": city_id},
+                    {"citizen.id": appointment.citizen_id}
+                ]
+            )
+            
+            # Add to government officials
+            result2 = await db.multi_kingdoms.update_one(
+                {"id": kingdom["id"], "cities.id": city_id},
+                {"$push": {"cities.$.government_officials": new_official.dict()}}
+            )
+            
+            if result1.modified_count and result2.modified_count:
+                # Create event
+                event_desc = f"🏛️ {citizen_name} appointed as {appointment.position}!"
+                await create_and_broadcast_event(
+                    event_desc, city['name'], kingdom['name'], "appointment", 
+                    kingdom_id=kingdom['id']
+                )
+                
+                # Broadcast update
+                await manager.broadcast({
+                    "type": "government_updated",
+                    "city_id": city_id,
+                    "action": "appointed",
+                    "official": new_official.dict(),
+                    "kingdom_id": kingdom["id"]
+                })
+                
+                return new_official
     
     raise HTTPException(status_code=404, detail="City not found")
 
