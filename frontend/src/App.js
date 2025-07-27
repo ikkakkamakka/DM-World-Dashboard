@@ -156,7 +156,7 @@ const getSeasonalEvents = (harptos) => {
 };
 
 // Enhanced Harptos Calendar Component with Full Event Management
-const HarptosCalendar = ({ kingdom, isVisible }) => {
+const HarptosCalendar = ({ kingdom, isVisible, authenticatedFetch }) => {
   const [campaignDate, setCampaignDate] = useState(null);
   const [events, setEvents] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
