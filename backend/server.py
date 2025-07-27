@@ -2155,25 +2155,55 @@ async def update_city(city_id: str, updates: CityUpdate):
 
 @api_router.delete("/city/{city_id}")
 async def delete_city(city_id: str):
+    """Delete a city and its government hierarchy"""
     # Find which kingdom contains this city and remove it
     kingdoms = await db.multi_kingdoms.find().to_list(None)
+    city_name = "Unknown City"
+    kingdom_id = None
+    
     for kingdom in kingdoms:
         if kingdom.get('cities'):
             for city in kingdom['cities']:
                 if city['id'] == city_id:
+                    city_name = city.get('name', 'Unknown City')
+                    kingdom_id = kingdom["id"]
+                    
+                    # Remove city from kingdom
                     result = await db.multi_kingdoms.update_one(
                         {"id": kingdom["id"]},
                         {"$pull": {"cities": {"id": city_id}}}
                     )
                     
                     if result.modified_count:
-                        await manager.broadcast({
-                            "type": "city_deleted",
-                            "city_id": city_id,
-                            "kingdom_id": kingdom["id"]
-                        })
-                        return {"message": "City deleted successfully"}
+                        # Delete related city data
+                        try:
+                            # Delete city-specific calendar events
+                            await db.calendar_events.delete_many({
+                                "kingdom_id": kingdom_id,
+                                "city_name": city_name
+                            })
+                            
+                            # Broadcast city deletion
+                            await manager.broadcast({
+                                "type": "city_deleted",
+                                "city_id": city_id,
+                                "city_name": city_name,
+                                "kingdom_id": kingdom["id"]
+                            })
+                            
+                            return {
+                                "message": f"City '{city_name}' and its government hierarchy deleted successfully",
+                                "deleted_government_positions": len(city.get('government_officials', [])),
+                                "deleted_calendar_events": True
+                            }
+                        except Exception as e:
+                            # City was removed from kingdom, but cleanup failed
+                            return {
+                                "message": f"City '{city_name}' deleted but some cleanup failed: {str(e)}",
+                                "partial_success": True
+                            }
                     break
+    
     raise HTTPException(status_code=404, detail="City not found")
 
 # Government Position Management
