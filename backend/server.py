@@ -1482,9 +1482,9 @@ async def get_all_kingdoms(current_user_id: str = Depends(get_current_user_id)):
     return kingdoms
 
 @api_router.post("/multi-kingdoms")
-async def create_multi_kingdom(kingdom: MultiKingdomCreate):
-    """Create a new kingdom"""
-    new_kingdom = MultiKingdom(**kingdom.dict())
+async def create_multi_kingdom(kingdom: MultiKingdomCreate, current_user_id: str = Depends(get_current_user_id)):
+    """Create a new kingdom for current user"""
+    new_kingdom = MultiKingdom(**kingdom.dict(), owner_id=current_user_id)
     
     result = await db.multi_kingdoms.insert_one(new_kingdom.dict())
     if result.inserted_id:
