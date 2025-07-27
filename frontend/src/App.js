@@ -259,7 +259,7 @@ const HarptosCalendar = ({ kingdom, isVisible, authenticatedFetch }) => {
   const fetchUpcomingEvents = async () => {
     if (!kingdom) return;
     try {
-      const response = await fetch(`${API}/calendar-events/${kingdom.id}/upcoming?days=10`);
+      const response = await authenticatedFetch(`${API}/calendar-events/${kingdom.id}/upcoming?days=10`);
       if (response.ok) {
         const upcomingEvents = await response.json();
         setUpcomingEvents(upcomingEvents);
