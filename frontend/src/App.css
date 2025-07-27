@@ -3232,6 +3232,10 @@ body {
   color: var(--forest-green);
 }
 
+.dropdown-item.manage-item {
+  color: var(--royal-blue);
+}
+
 .dropdown-item.delete-item {
   color: var(--burgundy);
 }
