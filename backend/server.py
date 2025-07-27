@@ -2706,18 +2706,22 @@ async def delete_soldier(soldier_id: str):
 async def create_tribute(tribute: TributeCreate):
     new_tribute = TributeRecord(**tribute.dict())
     
-    result = await db.kingdoms.update_one(
+    result = await db.multi_kingdoms.update_one(
         {"cities.name": tribute.from_city},
         {"$push": {"cities.$.tribute_records": new_tribute.dict()}}
     )
     
     if result.modified_count:
+        await manager.broadcast({
+            "type": "tribute_added",
+            "tribute": new_tribute.dict()
+        })
         return new_tribute
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/tribute/{tribute_id}")
 async def delete_tribute(tribute_id: str):
-    result = await db.kingdoms.update_one(
+    result = await db.multi_kingdoms.update_one(
         {"cities.tribute_records.id": tribute_id},
         {"$pull": {"cities.$.tribute_records": {"id": tribute_id}}}
     )
