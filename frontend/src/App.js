@@ -1025,7 +1025,7 @@ const KingdomDashboard = ({ kingdom, events, autoEventsEnabled, onToggleAutoEven
 };
 
 // Kingdom Selection Component for Multi-Kingdom Management
-const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew }) => {
+const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew, authenticatedFetch, setErrorMessage, setShowErrorModal }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [kingdomToDelete, setKingdomToDelete] = useState(null);
