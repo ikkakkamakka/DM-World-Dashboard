@@ -1879,8 +1879,11 @@ async def get_calendar_events(kingdom_id: str, current_user: dict = Depends(get_
     return events
 
 @api_router.get("/calendar-events/{kingdom_id}/upcoming")
-async def get_upcoming_events(kingdom_id: str, days: int = 10):
-    """Get upcoming events for the next N days"""
+async def get_upcoming_events(kingdom_id: str, days: int = 10, current_user: dict = Depends(get_current_user)):
+    """Get upcoming events for the next N days - only if user owns the kingdom"""
+    # Verify user owns this kingdom
+    await verify_kingdom_ownership(kingdom_id, current_user)
+    
     # Get current campaign date
     campaign_date = await db.campaign_dates.find_one({"kingdom_id": kingdom_id})
     if not campaign_date:
@@ -1922,7 +1925,7 @@ async def get_upcoming_events(kingdom_id: str, days: int = 10):
                     "days_from_now": i
                 })
     
-    # Get custom events within date range
+    # Build event filter with owner_id
     events_query = {
         "kingdom_id": kingdom_id,
         "$or": [
@@ -1940,6 +1943,9 @@ async def get_upcoming_events(kingdom_id: str, days: int = 10):
             }
         ]
     }
+    
+    if not is_super_admin(current_user):
+        events_query["owner_id"] = current_user["id"]
     
     custom_events = await db.calendar_events.find(events_query).to_list(100)
     for event in custom_events:
