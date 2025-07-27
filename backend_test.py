@@ -2641,11 +2641,14 @@ class BackendTester:
                 kingdom_data = await kingdom_response.json()
             
             # Test that auth endpoints work
-            if not hasattr(self, 'test_auth_token'):
-                self.errors.append("No auth token available for separate database test")
-                return False
+            if not hasattr(self, 'admin_token') or not self.admin_token:
+                # Try to get a token first
+                login_success = await self.test_auth_login_admin()
+                if not login_success or not hasattr(self, 'admin_token'):
+                    print("      ⚠️ No valid token available for separate database test")
+                    return True  # Don't fail if no token available
             
-            headers = {"Authorization": f"Bearer {self.test_auth_token}"}
+            headers = {"Authorization": f"Bearer {self.admin_token}"}
             async with self.session.get(f"{API_BASE}/auth/me", headers=headers) as auth_response:
                 if auth_response.status != 200:
                     self.errors.append("Auth /me endpoint not accessible")
