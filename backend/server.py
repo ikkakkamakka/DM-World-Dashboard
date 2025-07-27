@@ -2588,7 +2588,7 @@ async def get_crime_types():
 async def create_citizen(citizen: CitizenCreate):
     new_citizen = Citizen(**citizen.dict())
     
-    result = await db.kingdoms.update_one(
+    result = await db.multi_kingdoms.update_one(
         {"cities.id": citizen.city_id},
         {
             "$push": {"cities.$.citizens": new_citizen.dict()},
