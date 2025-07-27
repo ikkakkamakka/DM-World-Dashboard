@@ -484,11 +484,11 @@ test_plan:
 
   - task: "Backend GET Endpoints Authentication Fix"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "user"
@@ -496,6 +496,9 @@ test_plan:
       - working: "NA"
         agent: "main"
         comment: "BACKEND AUTHENTICATION FIXES APPLIED: Fixed 3 critical endpoints missing authentication: 1) /api/kingdom - Now requires authentication and uses multi_kingdoms collection with owner_id filtering 2) /api/voting-sessions/{kingdom_id} - Added authentication and kingdom ownership verification 3) /api/calendar-events/{kingdom_id}/upcoming - Added authentication, kingdom ownership verification, and owner_id event filtering. All endpoints now properly restrict access to user's own data with super admin exceptions."
+      - working: true
+        agent: "testing"
+        comment: "✅ BACKEND AUTHENTICATION TESTING COMPLETE: All critical dashboard endpoints now working with proper authentication. VERIFIED: /api/multi-kingdoms returns 11 kingdoms with owner_id filtering, /api/kingdom returns active kingdom with authentication, /api/city/{city_id} returns city details with proper auth, /api/voting-sessions/{kingdom_id} and /api/calendar-events/{kingdom_id}/upcoming both require authentication and kingdom ownership. Admin user authentication working perfectly with JWT tokens, bcrypt password hashing, and owner_id filtering. Dashboard data loading backend issues RESOLVED."
 
 agent_communication:
   - agent: "main"
