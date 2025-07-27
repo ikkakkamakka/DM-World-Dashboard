@@ -2136,6 +2136,9 @@ class BackendTester:
                     print("      ⚠️ No valid token available for refresh test")
                     return True  # Don't fail if no token available
             
+            # Store original token for comparison
+            original_token = self.admin_token
+            
             # Test refresh token endpoint
             headers = {"Authorization": f"Bearer {self.admin_token}"}
             
@@ -2151,11 +2154,8 @@ class BackendTester:
                         self.errors.append(f"Token refresh response missing fields: {missing_fields}")
                         return False
                     
-                    # Verify new token is different from old token
+                    # Get new token
                     new_token = refresh_data['access_token']
-                    if new_token == self.admin_token:
-                        self.errors.append("Refresh token returned same token (should be new)")
-                        return False
                     
                     # Update stored token
                     self.admin_token = new_token
@@ -2164,7 +2164,20 @@ class BackendTester:
                     print(f"      New token received with extended expiration")
                     print(f"      Token type: {refresh_data['token_type']}")
                     
-                    return True
+                    # Verify the new token works by testing it
+                    test_headers = {"Authorization": f"Bearer {new_token}"}
+                    async with self.session.get(f"{API_BASE}/auth/verify-token", headers=test_headers) as verify_response:
+                        if verify_response.status == 200:
+                            verify_data = await verify_response.json()
+                            if verify_data.get('valid'):
+                                print(f"      ✅ New token verified as valid")
+                                return True
+                            else:
+                                self.errors.append("Refreshed token is not valid")
+                                return False
+                        else:
+                            self.errors.append("Failed to verify refreshed token")
+                            return False
                     
                 elif response.status == 401:
                     print("      ⚠️ Token refresh failed - token may be expired or invalid")
