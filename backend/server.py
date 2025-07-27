@@ -1314,6 +1314,7 @@ class CampaignDate(BaseModel):
 
 class CalendarEvent(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    owner_id: str  # User ID who owns this event
     title: str
     description: str
     event_type: str  # "holiday", "city", "custom"
