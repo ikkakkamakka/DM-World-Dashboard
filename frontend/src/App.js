@@ -3822,14 +3822,29 @@ const CityDashboard = ({ city, activeTab, setActiveTab, authenticatedFetch, setE
     const confirmMessage = `Remove ${official.position}: ${official.name}?`;
     if (window.confirm(confirmMessage)) {
       try {
-        const response = await fetch(`${API}/cities/${city.id}/government/${official.id}`, {
+        const response = await authenticatedFetch(`${API}/cities/${city.id}/government/${official.id}`, {
           method: 'DELETE'
         });
-        if (response.ok) {
+        
+        if (response && response.ok) {
           window.location.reload();
+        } else if (response) {
+          if (response.status === 401) {
+            setErrorMessage('Authentication failed. Please log in again.');
+            setShowErrorModal(true);
+          } else if (response.status === 403) {
+            setErrorMessage('Access denied. You do not have permission to remove officials.');
+            setShowErrorModal(true);
+          } else {
+            const errorData = await response.json().catch(() => ({}));
+            setErrorMessage(errorData.detail || 'Failed to remove official. Please try again.');
+            setShowErrorModal(true);
+          }
         }
       } catch (error) {
         console.error('Error removing official:', error);
+        setErrorMessage('Network error. Please check your connection and try again.');
+        setShowErrorModal(true);
       }
     }
   };
