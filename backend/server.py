@@ -2315,14 +2315,19 @@ async def update_city(city_id: str, updates: CityUpdate):
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/city/{city_id}")
-async def delete_city(city_id: str):
-    """Delete a city and its government hierarchy"""
-    # Find which kingdom contains this city and remove it
-    kingdoms = await db.multi_kingdoms.find().to_list(None)
-    city_name = "Unknown City"
-    kingdom_id = None
+async def delete_city(city_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a city and its government hierarchy - only if user owns the kingdom containing the city"""
+    # Verify user owns the kingdom containing this city
+    kingdom = await verify_city_ownership(city_id, current_user)
     
-    for kingdom in kingdoms:
+    city_name = "Unknown City"
+    kingdom_id = kingdom["id"]
+    
+    # Find the city to get its name
+    for city in kingdom.get('cities', []):
+        if city['id'] == city_id:
+            city_name = city['name']
+            break
         if kingdom.get('cities'):
             for city in kingdom['cities']:
                 if city['id'] == city_id:
