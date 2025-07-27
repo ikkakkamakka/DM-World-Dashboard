@@ -1195,6 +1195,38 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
           </div>
         </form>
       </Modal>
+
+      <Modal isOpen={showDeleteModal} onClose={handleDeleteCancel} title="Delete Kingdom">
+        <div className="delete-confirmation">
+          <div className="warning-message">
+            <div className="warning-icon">⚠️</div>
+            <p>Are you sure you want to delete <strong>{kingdomToDelete?.name}</strong>?</p>
+            <p className="warning-text">This will also delete all its cities and government hierarchy.</p>
+          </div>
+          
+          <div className="form-group">
+            <label>Type <strong>DELETE</strong> to confirm:</label>
+            <input
+              type="text"
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              placeholder="Type DELETE here"
+              className="delete-confirm-input"
+            />
+          </div>
+          
+          <div className="form-actions">
+            <button 
+              onClick={handleDeleteConfirm}
+              className="btn-danger"
+              disabled={deleteConfirmText !== 'DELETE'}
+            >
+              Delete Kingdom
+            </button>
+            <button onClick={handleDeleteCancel} className="btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
