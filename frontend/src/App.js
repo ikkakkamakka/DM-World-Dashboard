@@ -4397,6 +4397,7 @@ function AuthenticatedApp() {
                 })) || []
               )} 
               onCitySelect={handleViewChange}
+              authenticatedFetch={authenticatedFetch}
             />
           )}
 
