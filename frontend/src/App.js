@@ -1437,16 +1437,22 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
 
   const deleteBoundary = async (boundaryId) => {
     try {
-      const response = await fetch(`${API}/kingdom-boundaries/${boundaryId}`, {
+      const response = await authenticatedFetch(`${API}/kingdom-boundaries/${boundaryId}`, {
         method: 'DELETE'
       });
       
       if (response.ok) {
+        console.log('Boundary deleted successfully');
         // Refresh boundaries
         window.location.reload();
+      } else {
+        const errorText = await response.text();
+        console.error('Failed to delete boundary:', response.status, errorText);
+        alert(`Failed to delete boundary: ${errorText}`);
       }
     } catch (error) {
       console.error('Error deleting boundary:', error);
+      alert('Error deleting boundary. Please try again.');
     }
   };
 
