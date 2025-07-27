@@ -2634,7 +2634,11 @@ async def get_crime_types():
 
 # Citizens Management
 @api_router.post("/citizens")
-async def create_citizen(citizen: CitizenCreate):
+async def create_citizen(citizen: CitizenCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new citizen - only if user owns the kingdom containing the city"""
+    # Verify user owns the kingdom containing this city
+    await verify_city_ownership(citizen.city_id, current_user)
+    
     new_citizen = Citizen(**citizen.dict())
     
     result = await db.multi_kingdoms.update_one(
