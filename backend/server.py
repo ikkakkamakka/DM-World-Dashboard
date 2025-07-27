@@ -1525,12 +1525,17 @@ async def update_multi_kingdom(kingdom_id: str, updates: MultiKingdomUpdate, cur
     raise HTTPException(status_code=404, detail="Kingdom not found or access denied")
 
 @api_router.delete("/multi-kingdom/{kingdom_id}")
-async def delete_multi_kingdom(kingdom_id: str):
-    """Delete a kingdom and all its cities, government hierarchy, and related data"""
+async def delete_multi_kingdom(kingdom_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a kingdom and all its cities, government hierarchy, and related data - only if owned by current user or user is super admin"""
+    # Build query filter
+    query_filter = {"id": kingdom_id}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
     # Find the kingdom to get its data before deletion
-    kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
+    kingdom = await db.multi_kingdoms.find_one(query_filter)
     if not kingdom:
-        raise HTTPException(status_code=404, detail="Kingdom not found")
+        raise HTTPException(status_code=404, detail="Kingdom not found or access denied")
     
     # Delete related data in cascade
     try:
