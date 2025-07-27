@@ -2461,14 +2461,16 @@ class BackendTester:
         """Test that passwords are properly hashed with bcrypt"""
         print("\n   🔒 Testing Password Hashing Security...")
         try:
-            # Create another test user to verify password hashing
-            test_user_2 = {
-                "username": "hashtest_user_2025",
-                "email": "hashtest@faeruncampaign.com", 
+            # Create a unique test user to verify password hashing
+            import time
+            unique_id = str(int(time.time()))
+            test_user = {
+                "username": f"hashtest_user_{unique_id}",
+                "email": f"hashtest_{unique_id}@faeruncampaign.com", 
                 "password": "PlainTextPassword123"
             }
             
-            async with self.session.post(f"{API_BASE}/auth/signup", json=test_user_2) as response:
+            async with self.session.post(f"{API_BASE}/auth/signup", json=test_user) as response:
                 if response.status == 200:
                     # Password hashing is verified by the fact that:
                     # 1. User can be created (password is hashed during creation)
@@ -2477,8 +2479,8 @@ class BackendTester:
                     
                     # Test login with the same password to verify hash verification works
                     login_data = {
-                        "username": test_user_2['username'],
-                        "password": test_user_2['password']
+                        "username": test_user['username'],
+                        "password": test_user['password']
                     }
                     
                     async with self.session.post(f"{API_BASE}/auth/login", json=login_data) as login_response:
