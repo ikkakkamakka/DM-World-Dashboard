@@ -5550,6 +5550,26 @@ class BackendTester:
             # Run the focused Add City tests
             success = await self.test_add_city_authentication_and_ownership()
             
+            # Additional related endpoint tests
+            print("\n🔍 ADDITIONAL TESTS: Related City Endpoints...")
+            print("=" * 50)
+            
+            # Test related endpoints with authentication
+            admin_token = await self.authenticate_admin_user()
+            if admin_token:
+                related_tests = {
+                    'city_get_with_auth': await self.test_city_get_with_auth(admin_token),
+                    'city_delete_with_auth': await self.test_city_delete_with_auth(admin_token)
+                }
+                
+                for test_name, result in related_tests.items():
+                    self.test_results[test_name] = result
+                    status = "✅ PASS" if result else "❌ FAIL"
+                    print(f"{status} {test_name.replace('_', ' ').title()}")
+                
+                related_success = all(related_tests.values())
+                success = success and related_success
+            
             # Print detailed results
             print("\n" + "=" * 70)
             print("🏰 ADD CITY FUNCTIONALITY TEST RESULTS")
@@ -5561,7 +5581,9 @@ class BackendTester:
                 ('add_city_ownership_assignment', 'Cities assigned to correct owner_id'),
                 ('add_city_data_isolation', 'Data isolation working'),
                 ('add_city_validation', 'Backend validation working'),
-                ('add_city_requires_auth', 'Authentication requirement enforced')
+                ('add_city_requires_auth', 'Authentication requirement enforced'),
+                ('city_get_with_auth', 'GET /api/city/{city_id} with auth'),
+                ('city_delete_with_auth', 'DELETE /api/city/{city_id} with auth')
             ]
             
             passed_tests = 0
@@ -5583,6 +5605,85 @@ class BackendTester:
             
         finally:
             await self.cleanup()
+
+    async def test_city_get_with_auth(self, token):
+        """Test GET /api/city/{city_id} with authentication"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            
+            # Get user's kingdoms to find a city
+            async with self.session.get(f"{API_BASE}/multi-kingdoms", headers=headers) as response:
+                if response.status == 200:
+                    kingdoms = await response.json()
+                    
+                    # Find a city to test with
+                    test_city_id = None
+                    for kingdom in kingdoms:
+                        for city in kingdom.get('cities', []):
+                            test_city_id = city['id']
+                            break
+                        if test_city_id:
+                            break
+                    
+                    if not test_city_id:
+                        print("      ⚠️ No cities found for GET test")
+                        return True  # Not a failure, just no data
+                    
+                    # Test GET city with authentication
+                    async with self.session.get(f"{API_BASE}/city/{test_city_id}", headers=headers) as city_response:
+                        if city_response.status == 200:
+                            city_data = await city_response.json()
+                            if 'id' in city_data and 'name' in city_data:
+                                print(f"      ✅ GET city with auth successful: {city_data['name']}")
+                                return True
+                            else:
+                                self.errors.append("GET city response missing required fields")
+                                return False
+                        else:
+                            self.errors.append(f"GET city with auth failed: {city_response.status}")
+                            return False
+                else:
+                    self.errors.append("Failed to get kingdoms for city GET test")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"City GET with auth test error: {str(e)}")
+            return False
+
+    async def test_city_delete_with_auth(self, token):
+        """Test DELETE /api/city/{city_id} with authentication"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            
+            # First create a city to delete
+            city_data = {
+                "name": "City To Delete",
+                "governor": "Delete Governor",
+                "x_coordinate": 300.0,
+                "y_coordinate": 300.0
+            }
+            
+            async with self.session.post(f"{API_BASE}/cities", json=city_data, headers=headers) as response:
+                if response.status == 200:
+                    created_city = await response.json()
+                    city_id = created_city['id']
+                    
+                    # Now delete the city
+                    async with self.session.delete(f"{API_BASE}/city/{city_id}", headers=headers) as delete_response:
+                        if delete_response.status == 200:
+                            print(f"      ✅ DELETE city with auth successful: {created_city['name']}")
+                            return True
+                        else:
+                            error_text = await delete_response.text()
+                            self.errors.append(f"DELETE city with auth failed: {delete_response.status} - {error_text}")
+                            return False
+                else:
+                    self.errors.append("Failed to create city for delete test")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"City DELETE with auth test error: {str(e)}")
+            return False
 
 async def main():
     """Main test runner - focused on Add City authentication and ownership testing"""
