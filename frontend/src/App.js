@@ -3986,7 +3986,13 @@ const CityDashboard = ({ city, activeTab, setActiveTab, authenticatedFetch, setE
 
       {/* Government Management Modal */}
       <Modal isOpen={showGovtManagement} onClose={() => setShowGovtManagement(false)} title="Manage Government Positions">
-        <GovernmentManagement city={city} onClose={() => setShowGovtManagement(false)} />
+        <GovernmentManagement 
+          city={city} 
+          onClose={() => setShowGovtManagement(false)} 
+          authenticatedFetch={authenticatedFetch}
+          setErrorMessage={setErrorMessage}
+          setShowErrorModal={setShowErrorModal}
+        />
       </Modal>
 
       <div className="stats-grid">
