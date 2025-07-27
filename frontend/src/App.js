@@ -317,7 +317,7 @@ const HarptosCalendar = ({ kingdom, isVisible, authenticatedFetch }) => {
 
   const handleDeleteEvent = async (eventId) => {
     try {
-      const response = await fetch(`${API}/calendar-events/${eventId}`, {
+      const response = await authenticatedFetch(`${API}/calendar-events/${eventId}`, {
         method: 'DELETE'
       });
       
