@@ -446,6 +446,24 @@ test_plan:
         agent: "main"
         comment: "FRONTEND AUTH INTEGRATION ADDED: Fixed runtime error by adding JWT authentication to frontend API calls. Added useAuth() hook to AuthenticatedApp component, created authenticatedFetch() helper for secure API requests, updated fetchMultiKingdoms() and fetchEvents() to include Authorization headers. Added proper error handling for 401/403 responses. Frontend now fetches kingdoms only when token is available."
 
+  - task: "Frontend Authentication Integration Fix with Sliding Session"
+    implemented: true
+    working: "NA" 
+    file: "/app/frontend/src/Auth.js, /app/frontend/src/App.js, /app/backend/auth.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported: 'kingdoms.map is not a function' runtime error in frontend. Frontend trying to call .map() on undefined/null kingdoms data."
+      - working: "NA"
+        agent: "main"
+        comment: "FRONTEND AUTH INTEGRATION ADDED: Fixed runtime error by adding JWT authentication to frontend API calls. Added useAuth() hook to AuthenticatedApp component, created authenticatedFetch() helper for secure API requests, updated fetchMultiKingdoms() and fetchEvents() to include Authorization headers. Added proper error handling for 401/403 responses. Frontend now fetches kingdoms only when token is available."
+      - working: "NA"
+        agent: "main"
+        comment: "SLIDING SESSION LOGIC IMPLEMENTED: Complete implementation of idle timeout functionality in Auth.js - tracks user activity (mousemove, clicks, keyboard), refreshes tokens every 5 minutes for active users, auto-logout after 30 minutes inactivity, shows warning modal 2 minutes before logout. Enhanced authenticatedFetch() in App.js with proper 401/403 error handling, user-friendly error messages, and automatic logout on expired sessions. Added refresh token endpoint (/api/auth/refresh-token) to backend. All services restarted and running properly."
+
 agent_communication:
   - agent: "main"
-    message: "DATA SEPARATION SUCCESSFULLY IMPLEMENTED: Backend authentication system working perfectly with full data isolation. Admin user (admin/admin123) can access migrated kingdoms via API. All registry endpoints secured with ownership verification. Fixed frontend 'kingdoms.map' error by integrating JWT authentication into API calls. Frontend now includes Authorization headers and proper error handling. System provides complete multi-user data separation with super admin functionality. Ready for frontend testing and multi-account verification."
+    message: "COMPREHENSIVE FRONTEND AUTHENTICATION FIX COMPLETED: Successfully implemented sliding session logic with idle timeout functionality. Auth.js now includes activity tracking (mousemove, clicks, keyboard events), periodic token refresh (every 5 minutes for active users), 30-minute idle timeout with 2-minute warning modal, and automatic logout. Enhanced App.js authenticatedFetch() function with proper 401/403 error handling, user-friendly error modals, and automatic session cleanup. Added backend refresh token endpoint for token renewal. All components working together to provide seamless authentication experience with proper session management. Ready for comprehensive testing to verify login persistence, idle timeout behavior, warning modal functionality, and graceful error handling."
