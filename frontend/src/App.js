@@ -1027,6 +1027,9 @@ const KingdomDashboard = ({ kingdom, events, autoEventsEnabled, onToggleAutoEven
 // Kingdom Selection Component for Multi-Kingdom Management
 const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [kingdomToDelete, setKingdomToDelete] = useState(null);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [newKingdomData, setNewKingdomData] = useState({
     name: '',
     ruler: '',
@@ -1062,6 +1065,43 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
     } catch (error) {
       console.error('Error creating kingdom:', error);
     }
+  };
+
+  const handleDeleteClick = (e, kingdom) => {
+    e.stopPropagation(); // Prevent kingdom selection
+    setKingdomToDelete(kingdom);
+    setDeleteConfirmText('');
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deleteConfirmText !== 'DELETE') {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API}/multi-kingdom/${kingdomToDelete.id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        setShowDeleteModal(false);
+        setKingdomToDelete(null);
+        setDeleteConfirmText('');
+        // Refresh kingdoms list
+        window.location.reload();
+      } else {
+        console.error('Failed to delete kingdom');
+      }
+    } catch (error) {
+      console.error('Error deleting kingdom:', error);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setKingdomToDelete(null);
+    setDeleteConfirmText('');
   };
 
   return (
