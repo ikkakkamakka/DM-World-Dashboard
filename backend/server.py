@@ -2726,7 +2726,10 @@ async def delete_slave(slave_id: str, current_user: dict = Depends(get_current_u
 
 # Livestock Management
 @api_router.post("/livestock")
-async def create_livestock(livestock: LivestockCreate):
+async def create_livestock(livestock: LivestockCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new livestock - only if user owns the kingdom containing the city"""
+    await verify_city_ownership(livestock.city_id, current_user)
+    
     new_livestock = Livestock(**livestock.dict())
     
     result = await db.multi_kingdoms.update_one(
@@ -2743,7 +2746,15 @@ async def create_livestock(livestock: LivestockCreate):
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/livestock/{livestock_id}")
-async def delete_livestock(livestock_id: str):
+async def delete_livestock(livestock_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete livestock - only if user owns the kingdom containing the livestock"""
+    kingdom = await db.multi_kingdoms.find_one({"cities.livestock.id": livestock_id})
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Livestock not found")
+    
+    if not is_super_admin(current_user) and kingdom.get("owner_id") != current_user["id"]:
+        raise HTTPException(status_code=403, detail="Access denied: Not your livestock")
+    
     result = await db.multi_kingdoms.update_one(
         {"cities.livestock.id": livestock_id},
         {"$pull": {"cities.$.livestock": {"id": livestock_id}}}
@@ -2755,7 +2766,10 @@ async def delete_livestock(livestock_id: str):
 
 # Military/Garrison Management
 @api_router.post("/soldiers")
-async def create_soldier(soldier: SoldierCreate):
+async def create_soldier(soldier: SoldierCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new soldier - only if user owns the kingdom containing the city"""
+    await verify_city_ownership(soldier.city_id, current_user)
+    
     new_soldier = Soldier(**soldier.dict())
     
     result = await db.multi_kingdoms.update_one(
@@ -2772,7 +2786,15 @@ async def create_soldier(soldier: SoldierCreate):
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/soldiers/{soldier_id}")
-async def delete_soldier(soldier_id: str):
+async def delete_soldier(soldier_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a soldier - only if user owns the kingdom containing the soldier"""
+    kingdom = await db.multi_kingdoms.find_one({"cities.garrison.id": soldier_id})
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Soldier not found")
+    
+    if not is_super_admin(current_user) and kingdom.get("owner_id") != current_user["id"]:
+        raise HTTPException(status_code=403, detail="Access denied: Not your soldier")
+    
     result = await db.multi_kingdoms.update_one(
         {"cities.garrison.id": soldier_id},
         {"$pull": {"cities.$.garrison": {"id": soldier_id}}}
