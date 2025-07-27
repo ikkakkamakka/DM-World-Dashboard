@@ -1499,11 +1499,45 @@ async def update_multi_kingdom(kingdom_id: str, updates: MultiKingdomUpdate):
 
 @api_router.delete("/multi-kingdom/{kingdom_id}")
 async def delete_multi_kingdom(kingdom_id: str):
-    result = await db.multi_kingdoms.delete_one({"id": kingdom_id})
+    """Delete a kingdom and all its cities, government hierarchy, and related data"""
+    # Find the kingdom to get its data before deletion
+    kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Kingdom not found")
     
-    if result.deleted_count:
-        return {"message": "Kingdom deleted successfully"}
-    raise HTTPException(status_code=404, detail="Kingdom not found")
+    # Delete related data in cascade
+    try:
+        # Delete kingdom boundaries
+        await db.kingdom_boundaries.delete_many({"kingdom_id": kingdom_id})
+        
+        # Delete campaign dates
+        await db.campaign_dates.delete_many({"kingdom_id": kingdom_id})
+        
+        # Delete calendar events
+        await db.calendar_events.delete_many({"kingdom_id": kingdom_id})
+        
+        # Delete the kingdom itself
+        result = await db.multi_kingdoms.delete_one({"id": kingdom_id})
+        
+        if result.deleted_count:
+            # Broadcast kingdom deletion
+            await manager.broadcast({
+                "type": "kingdom_deleted",
+                "kingdom_id": kingdom_id,
+                "kingdom_name": kingdom.get('name', 'Unknown Kingdom')
+            })
+            
+            return {
+                "message": f"Kingdom '{kingdom.get('name', 'Unknown Kingdom')}' and all related data deleted successfully",
+                "deleted_cities": len(kingdom.get('cities', [])),
+                "deleted_boundaries": True,
+                "deleted_calendar_data": True
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to delete kingdom")
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting kingdom: {str(e)}")
 
 @api_router.post("/multi-kingdom/{kingdom_id}/set-active")
 async def set_active_kingdom(kingdom_id: str):
