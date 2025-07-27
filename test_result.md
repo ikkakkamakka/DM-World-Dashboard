@@ -464,6 +464,21 @@ test_plan:
         agent: "main"
         comment: "SLIDING SESSION LOGIC IMPLEMENTED: Complete implementation of idle timeout functionality in Auth.js - tracks user activity (mousemove, clicks, keyboard), refreshes tokens every 5 minutes for active users, auto-logout after 30 minutes inactivity, shows warning modal 2 minutes before logout. Enhanced authenticatedFetch() in App.js with proper 401/403 error handling, user-friendly error messages, and automatic logout on expired sessions. Added refresh token endpoint (/api/auth/refresh-token) to backend. All services restarted and running properly."
 
+  - task: "Frontend Kingdom Creation Fix"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported: Frontend kingdom creation not working - JWT token not being sent with POST request to /api/multi-kingdoms"
+      - working: true
+        agent: "main"
+        comment: "FIXED: Updated handleCreateKingdom function in KingdomSelector component to use authenticatedFetch helper instead of direct fetch call. This ensures JWT token is properly included in Authorization header. Also updated handleDeleteConfirm to use authenticatedFetch. Enhanced error handling with user-friendly error messages and modal display. Passed authenticatedFetch, setErrorMessage, and setShowErrorModal as props to KingdomSelector. Kingdom creation now works correctly with proper authentication and error handling."
+
 agent_communication:
   - agent: "main"
-    message: "COMPREHENSIVE FRONTEND AUTHENTICATION FIX COMPLETED: Successfully implemented sliding session logic with idle timeout functionality. Auth.js now includes activity tracking (mousemove, clicks, keyboard events), periodic token refresh (every 5 minutes for active users), 30-minute idle timeout with 2-minute warning modal, and automatic logout. Enhanced App.js authenticatedFetch() function with proper 401/403 error handling, user-friendly error modals, and automatic session cleanup. Added backend refresh token endpoint for token renewal. All components working together to provide seamless authentication experience with proper session management. Ready for comprehensive testing to verify login persistence, idle timeout behavior, warning modal functionality, and graceful error handling."
+    message: "KINGDOM CREATION AUTHENTICATION FIX COMPLETED: Successfully fixed the critical issue where logged-in users couldn't create new kingdoms. The problem was that the handleCreateKingdom function was making direct fetch calls without including the JWT token in the Authorization header. Fixed by updating the KingdomSelector component to use the authenticatedFetch helper function and passing necessary props. Also enhanced error handling for better user feedback. Manual testing confirmed: 1) Admin user can create kingdoms successfully 2) New users see 0 kingdoms initially (proper data isolation) 3) Users can create their own kingdoms 4) Super admin can see all kingdoms 5) Multi-user ownership test script passes all 4 tests (Data Isolation, Cross-User Prevention, Super Admin Access, Registry Operations). The authentication system and data separation are now working perfectly."
