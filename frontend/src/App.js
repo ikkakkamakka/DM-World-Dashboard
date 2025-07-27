@@ -3853,7 +3853,7 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
                   <div className="official-name">{official.name}</div>
                   <button 
                     className="remove-official-btn"
-                    onClick={() => handleRemoveOfficial(official.id)}
+                    onClick={() => handleRemoveOfficial(official)}
                     title="Remove from position"
                   >
                     ✖
