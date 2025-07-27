@@ -4510,6 +4510,8 @@ class BackendTester:
             
             # PRIORITY TESTS FOR CURRENT FOCUS
             print("\n" + "🎯" * 20 + " PRIORITY TESTS " + "🎯" * 20)
+            await self.test_registry_creation_endpoints()  # PRIORITY: Test registry creation endpoints
+            await self.test_government_hierarchy_system()  # PRIORITY: Test government hierarchy system
             await self.test_authentication_system()  # PRIORITY: Test authentication system
             await self.test_enhanced_harptos_calendar_system()  # PRIORITY: Test Enhanced Harptos Calendar
             await self.test_multi_kingdom_autogenerate_functionality()
