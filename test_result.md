@@ -369,8 +369,8 @@ test_plan:
   test_priority: "high_first"
 
   - task: "City Management Add Button Functionality"
-    implemented: false
-    working: false
+    implemented: true
+    working: "NA"
     file: "/app/backend/server.py, /app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
@@ -379,10 +379,13 @@ test_plan:
       - working: false
         agent: "user"
         comment: "User reported: Add buttons for Citizens, Slaves, Livestock, Garrison, Tribute, and Crime do NOT currently add new entries. Only Auto Generate works. Need to fix so clicking Add <Item> opens proper modal form, validates inputs, POST to backend API, and updates frontend state immediately."
+      - working: "NA"
+        agent: "main"
+        comment: "BACKEND FIXED: Updated all registry creation endpoints (Citizens, Slaves, Livestock, Soldiers, Tribute, Crime) to use db.multi_kingdoms instead of db.kingdoms. Added WebSocket broadcasting for real-time updates. All POST endpoints now target correct collection and include proper broadcast messages."
 
   - task: "Local Government Remove Button Fix"
-    implemented: false
-    working: false
+    implemented: true
+    working: "NA"
     file: "/app/backend/server.py, /app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
@@ -391,10 +394,13 @@ test_plan:
       - working: false
         agent: "user"
         comment: "User reported: Remove (X) button for hierarchy positions needs fixing - should prompt for confirmation, DELETE via backend API, update UI immediately. Admin Staff category should only appear if positions assigned. When position is in use, remove from available options in Manage Positions modal to prevent duplication."
+      - working: "NA"
+        agent: "main"
+        comment: "FRONTEND IMPROVED: Enhanced handleRemoveOfficial function to show specific confirmation messages with official name and position. Updated all remove button calls to pass full official object. Added conditional rendering for Administrative Staff section to only show when positions exist. Click outside handler added for dropdown closing."
 
   - task: "City Actions Button UI Fix"
-    implemented: false
-    working: false
+    implemented: true
+    working: "NA"
     file: "/app/frontend/src/App.js, /app/frontend/src/App.css"
     stuck_count: 0
     priority: "high"
@@ -403,6 +409,9 @@ test_plan:
       - working: false
         agent: "user"
         comment: "User reported: Actions button floating awkwardly, should be aligned to top-right of city header bar (same line as city name) with clearer dropdown options: Edit City Details, Manage Positions (hierarchy), Delete City. Dropdown should close properly after selection."
+      - working: "NA"
+        agent: "main"
+        comment: "FRONTEND UI ENHANCED: Restructured city header to place Actions button on same line as city title using flexbox layout. Added 'Manage Positions' option to dropdown. Updated dropdown item labels to be more descriptive (Edit City Details, Manage Positions, Delete City). Added CSS classes and improved styling for better UX."
 
 agent_communication:
   - agent: "main"
