@@ -3695,6 +3695,9 @@ const GovernmentManagement = ({ city, onClose }) => {
 const CityDashboard = ({ city, activeTab, setActiveTab }) => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [showGovtManagement, setShowGovtManagement] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [editFormData, setEditFormData] = useState({
     name: city?.name || '',
     governor: city?.governor || ''
@@ -3720,6 +3723,38 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
     } catch (error) {
       console.error('Error updating city:', error);
     }
+  };
+
+  const handleDeleteClick = () => {
+    setShowDropdown(false);
+    setDeleteConfirmText('');
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deleteConfirmText !== 'DELETE') {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API}/city/${city.id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        // Redirect back to kingdom dashboard
+        window.location.href = '/';
+      } else {
+        console.error('Failed to delete city');
+      }
+    } catch (error) {
+      console.error('Error deleting city:', error);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setDeleteConfirmText('');
   };
 
   const handleRemoveOfficial = async (officialId) => {
