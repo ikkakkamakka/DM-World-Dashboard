@@ -1124,6 +1124,13 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
             onClick={() => onKingdomChange(kingdom)}
             style={{ borderColor: kingdom.color }}
           >
+            <button 
+              className="kingdom-delete-btn"
+              onClick={(e) => handleDeleteClick(e, kingdom)}
+              title="Delete Kingdom"
+            >
+              ✕
+            </button>
             <div className="kingdom-color-indicator" style={{ backgroundColor: kingdom.color }}></div>
             <div className="kingdom-info">
               <h4>{kingdom.name}</h4>
