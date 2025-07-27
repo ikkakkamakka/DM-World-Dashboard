@@ -1758,8 +1758,11 @@ async def clear_all_kingdom_boundaries(kingdom_id: str, current_user: dict = Dep
 
 # Enhanced Harptos Calendar Management System
 @api_router.get("/campaign-date/{kingdom_id}")
-async def get_campaign_date(kingdom_id: str):
-    """Get the current campaign date for a kingdom"""
+async def get_campaign_date(kingdom_id: str, current_user: dict = Depends(get_current_user)):
+    """Get the current campaign date for a kingdom - only if user owns the kingdom"""
+    # Verify user owns this kingdom
+    await verify_kingdom_ownership(kingdom_id, current_user)
+    
     campaign_date = await db.campaign_dates.find_one({"kingdom_id": kingdom_id})
     
     if not campaign_date:
@@ -1773,7 +1776,8 @@ async def get_campaign_date(kingdom_id: str):
             tenday=harptos_now["tenday"],
             season=harptos_now["season"],
             is_leap_year=harptos_now["is_leap_year"],
-            special_day=harptos_now.get("special_day")
+            special_day=harptos_now.get("special_day"),
+            owner_id=current_user["id"]  # Set owner
         )
         await db.campaign_dates.insert_one(new_date.dict())
         campaign_date = new_date.dict()
@@ -1783,8 +1787,11 @@ async def get_campaign_date(kingdom_id: str):
     return campaign_date
 
 @api_router.put("/campaign-date/{kingdom_id}")
-async def update_campaign_date(kingdom_id: str, date_update: CampaignDateUpdate):
-    """Update/advance campaign date manually (DM control)"""
+async def update_campaign_date(kingdom_id: str, date_update: CampaignDateUpdate, current_user: dict = Depends(get_current_user)):
+    """Update/advance campaign date manually (DM control) - only if user owns the kingdom"""
+    # Verify user owns this kingdom
+    await verify_kingdom_ownership(kingdom_id, current_user)
+    
     tenday, season = calculate_tenday_and_season(date_update.month, date_update.day)
     is_leap = is_leap_year(date_update.dr_year)
     
@@ -1804,23 +1811,31 @@ async def update_campaign_date(kingdom_id: str, date_update: CampaignDateUpdate)
         "is_leap_year": is_leap,
         "special_day": special_day,
         "last_updated": datetime.utcnow(),
-        "updated_by": date_update.updated_by
+        "updated_by": current_user["username"],  # Use current user
+        "owner_id": current_user["id"]  # Ensure owner is set
     }
     
+    # Build query filter
+    query_filter = {"kingdom_id": kingdom_id}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
     result = await db.campaign_dates.update_one(
-        {"kingdom_id": kingdom_id},
+        query_filter,
         {"$set": update_data},
         upsert=True
     )
     
     if result.upserted_id or result.modified_count:
-        # Broadcast time change event
+        # Broadcast time change event with owner_id
         formatted_date = f"{date_update.day} {HARPTOS_MONTHS[date_update.month]['name']}, {date_update.dr_year} DR"
         await create_and_broadcast_event(
             f"📅 DM advanced campaign time to {formatted_date}", 
             "Kingdom", 
             "Time", 
-            "time-advance"
+            "time-advance",
+            kingdom_id=kingdom_id,
+            owner_id=current_user["id"]
         )
         return {"message": "Campaign date updated successfully", "date": update_data}
     
