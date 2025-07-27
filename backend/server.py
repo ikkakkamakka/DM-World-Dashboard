@@ -2070,8 +2070,11 @@ async def generate_random_city_events(kingdom_id: str, count: int = 5, date_rang
 
 # Voting System Management
 @api_router.get("/voting-sessions/{kingdom_id}")
-async def get_voting_sessions(kingdom_id: str):
-    """Get all voting sessions for a kingdom"""
+async def get_voting_sessions(kingdom_id: str, current_user: dict = Depends(get_current_user)):
+    """Get all voting sessions for a kingdom - only if user owns the kingdom"""
+    # Verify user owns this kingdom
+    await verify_kingdom_ownership(kingdom_id, current_user)
+    
     sessions = await db.voting_sessions.find({"kingdom_id": kingdom_id}).to_list(100)
     for session in sessions:
         session.pop('_id', None)
