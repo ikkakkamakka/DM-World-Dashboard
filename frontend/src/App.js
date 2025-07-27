@@ -1964,10 +1964,18 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     e.stopPropagation();
     if (window.confirm(`Are you sure you want to delete ${city.name}?`)) {
       try {
-        const response = await fetch(`${API}/city/${city.id}`, { method: 'DELETE' });
-        if (response.ok) window.location.reload();
+        const response = await authenticatedFetch(`${API}/city/${city.id}`, { method: 'DELETE' });
+        if (response.ok) {
+          console.log('City deleted successfully');
+          window.location.reload();
+        } else {
+          const errorText = await response.text();
+          console.error('Failed to delete city:', response.status, errorText);
+          alert(`Failed to delete city: ${errorText}`);
+        }
       } catch (error) {
         console.error('Error deleting city:', error);
+        alert('Error deleting city. Please try again.');
       }
     }
   };
