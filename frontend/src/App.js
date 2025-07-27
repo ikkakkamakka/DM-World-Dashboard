@@ -3778,13 +3778,34 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
         <div className="city-header-content">
           <h1 className="city-title">{city.name}</h1>
           <p className="city-governor">Governor: {city.governor}</p>
-          <button 
-            className="edit-city-btn"
-            onClick={() => setShowEditForm(true)}
-            title="Edit city details"
-          >
-            ✏️ Edit
-          </button>
+          <div className="city-actions-dropdown">
+            <button 
+              className="edit-city-btn dropdown-toggle"
+              onClick={() => setShowDropdown(!showDropdown)}
+              title="City actions"
+            >
+              ⚙️ Actions ▼
+            </button>
+            {showDropdown && (
+              <div className="dropdown-menu">
+                <button 
+                  className="dropdown-item edit-item"
+                  onClick={() => {
+                    setShowDropdown(false);
+                    setShowEditForm(true);
+                  }}
+                >
+                  ✏️ Edit City
+                </button>
+                <button 
+                  className="dropdown-item delete-item"
+                  onClick={handleDeleteClick}
+                >
+                  🗑️ Delete City
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
