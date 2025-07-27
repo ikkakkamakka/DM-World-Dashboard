@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext, useEffect } from 'react';
+import React, { useState, useContext, createContext, useEffect, useCallback, useRef } from 'react';
 
 // Authentication Context
 const AuthContext = createContext();
@@ -15,8 +15,125 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('authToken'));
+  
+  // Session management state
+  const [isSessionWarning, setIsSessionWarning] = useState(false);
+  const [sessionWarningCountdown, setSessionWarningCountdown] = useState(120); // 2 minutes in seconds
+  const [lastActivity, setLastActivity] = useState(Date.now());
+  
+  // Refs to store intervals
+  const activityCheckInterval = useRef(null);
+  const tokenRefreshInterval = useRef(null);
+  const warningCountdownInterval = useRef(null);
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+
+  // Session configuration
+  const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes in milliseconds
+  const WARNING_TIME = 2 * 60 * 1000; // 2 minutes before logout in milliseconds
+  const TOKEN_REFRESH_INTERVAL = 5 * 60 * 1000; // Refresh token every 5 minutes if active
+  const ACTIVITY_CHECK_INTERVAL = 60 * 1000; // Check activity every minute
+
+  // Track user activity
+  const updateActivity = useCallback(() => {
+    setLastActivity(Date.now());
+    if (isSessionWarning) {
+      setIsSessionWarning(false);
+      if (warningCountdownInterval.current) {
+        clearInterval(warningCountdownInterval.current);
+        warningCountdownInterval.current = null;
+      }
+    }
+  }, [isSessionWarning]);
+
+  // Add activity event listeners
+  useEffect(() => {
+    if (token && user) {
+      const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+      
+      activityEvents.forEach(event => {
+        document.addEventListener(event, updateActivity, { passive: true });
+      });
+
+      return () => {
+        activityEvents.forEach(event => {
+          document.removeEventListener(event, updateActivity);
+        });
+      };
+    }
+  }, [token, user, updateActivity]);
+
+  // Session timeout and token refresh management
+  useEffect(() => {
+    if (token && user) {
+      // Check activity and handle session timeout
+      activityCheckInterval.current = setInterval(() => {
+        const now = Date.now();
+        const timeSinceActivity = now - lastActivity;
+        
+        if (timeSinceActivity >= SESSION_TIMEOUT) {
+          // Session expired - auto logout
+          console.log('Session expired due to inactivity');
+          logout();
+        } else if (timeSinceActivity >= SESSION_TIMEOUT - WARNING_TIME && !isSessionWarning) {
+          // Show warning modal
+          setIsSessionWarning(true);
+          setSessionWarningCountdown(120); // 2 minutes
+          
+          // Start countdown timer
+          warningCountdownInterval.current = setInterval(() => {
+            setSessionWarningCountdown(prev => {
+              if (prev <= 1) {
+                // Auto logout when countdown reaches 0
+                logout();
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        }
+      }, ACTIVITY_CHECK_INTERVAL);
+
+      // Periodic token refresh for active users
+      tokenRefreshInterval.current = setInterval(async () => {
+        const timeSinceActivity = Date.now() - lastActivity;
+        
+        // Only refresh token if user has been active recently (within last 10 minutes)
+        if (timeSinceActivity < 10 * 60 * 1000) {
+          try {
+            const response = await fetch(`${backendUrl}/api/auth/refresh-token`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            if (response.ok) {
+              const data = await response.json();
+              localStorage.setItem('authToken', data.access_token);
+              setToken(data.access_token);
+              console.log('Token refreshed successfully');
+            }
+          } catch (error) {
+            console.error('Token refresh failed:', error);
+          }
+        }
+      }, TOKEN_REFRESH_INTERVAL);
+    }
+
+    return () => {
+      if (activityCheckInterval.current) {
+        clearInterval(activityCheckInterval.current);
+      }
+      if (tokenRefreshInterval.current) {
+        clearInterval(tokenRefreshInterval.current);
+      }
+      if (warningCountdownInterval.current) {
+        clearInterval(warningCountdownInterval.current);
+      }
+    };
+  }, [token, user, lastActivity, isSessionWarning, backendUrl]);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -35,6 +152,7 @@ export const AuthProvider = ({ children }) => {
           if (response.ok) {
             setToken(storedToken);
             setUser(JSON.parse(storedUser));
+            setLastActivity(Date.now()); // Update activity time on successful auth
           } else {
             // Token is invalid, clear storage
             localStorage.removeItem('authToken');
@@ -75,6 +193,7 @@ export const AuthProvider = ({ children }) => {
         
         setToken(data.access_token);
         setUser(data.user_info);
+        setLastActivity(Date.now()); // Update activity on login
         
         return { success: true };
       } else {
@@ -106,6 +225,7 @@ export const AuthProvider = ({ children }) => {
         
         setToken(data.access_token);
         setUser(data.user_info);
+        setLastActivity(Date.now()); // Update activity on signup
         
         return { success: true };
       } else {
@@ -118,12 +238,35 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
+    // Clear intervals
+    if (activityCheckInterval.current) {
+      clearInterval(activityCheckInterval.current);
+    }
+    if (tokenRefreshInterval.current) {
+      clearInterval(tokenRefreshInterval.current);
+    }
+    if (warningCountdownInterval.current) {
+      clearInterval(warningCountdownInterval.current);
+    }
+    
+    // Clear storage and state
     localStorage.removeItem('authToken');
     localStorage.removeItem('authUser');
     setToken(null);
     setUser(null);
-  };
+    setIsSessionWarning(false);
+    setSessionWarningCountdown(120);
+  }, []);
+
+  const extendSession = useCallback(() => {
+    setLastActivity(Date.now());
+    setIsSessionWarning(false);
+    if (warningCountdownInterval.current) {
+      clearInterval(warningCountdownInterval.current);
+      warningCountdownInterval.current = null;
+    }
+  }, []);
 
   const value = {
     user,
@@ -132,12 +275,16 @@ export const AuthProvider = ({ children }) => {
     signup,
     logout,
     loading,
-    isAuthenticated: !!user && !!token
+    isAuthenticated: !!user && !!token,
+    isSessionWarning,
+    sessionWarningCountdown,
+    extendSession
   };
 
   return (
     <AuthContext.Provider value={value}>
       {children}
+      {isSessionWarning && <SessionWarningModal />}
     </AuthContext.Provider>
   );
 };
