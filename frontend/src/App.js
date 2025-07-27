@@ -2390,7 +2390,7 @@ const FaerunMap = ({ cities, onCitySelect, onMapClick, authenticatedFetch }) => 
     e.stopPropagation();
     if (window.confirm(`Are you sure you want to delete ${city.name}? This action cannot be undone.`)) {
       try {
-        const response = await fetch(`${API}/city/${city.id}`, {
+        const response = await authenticatedFetch(`${API}/city/${city.id}`, {
           method: 'DELETE'
         });
         
@@ -2406,7 +2406,7 @@ const FaerunMap = ({ cities, onCitySelect, onMapClick, authenticatedFetch }) => 
         } else {
           const errorText = await response.text();
           console.error('Failed to delete city:', response.status, errorText);
-          alert('Failed to delete city. Please try again.');
+          alert(`Failed to delete city: ${errorText}`);
         }
       } catch (error) {
         console.error('Error deleting city:', error);
