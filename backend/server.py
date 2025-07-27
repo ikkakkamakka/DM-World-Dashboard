@@ -628,6 +628,7 @@ class AutoGenerateRequest(BaseModel):
 
 class KingdomBoundary(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    owner_id: str  # User ID who owns this boundary
     kingdom_id: str
     boundary_points: List[dict] = []  # Array of {x: float, y: float} coordinates
     color: str = "#1e3a8a"  # Default blue
