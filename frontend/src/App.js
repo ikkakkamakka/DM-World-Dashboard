@@ -1050,20 +1050,35 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
   const handleCreateKingdom = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API}/multi-kingdoms`, {
+      const response = await authenticatedFetch(`${API}/multi-kingdoms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newKingdomData)
       });
       
-      if (response.ok) {
+      if (response && response.ok) {
         const newKingdom = await response.json();
         setShowCreateForm(false);
         setNewKingdomData({ name: '', ruler: '', government_type: 'Monarchy', color: '#1e3a8a' });
         onCreateNew(newKingdom);
+      } else if (response) {
+        // Handle specific error cases
+        if (response.status === 401) {
+          setErrorMessage('Authentication failed. Please log in again.');
+          setShowErrorModal(true);
+        } else if (response.status === 403) {
+          setErrorMessage('Access denied. You do not have permission to create kingdoms.');
+          setShowErrorModal(true);
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          setErrorMessage(errorData.detail || 'Failed to create kingdom. Please try again.');
+          setShowErrorModal(true);
+        }
       }
     } catch (error) {
       console.error('Error creating kingdom:', error);
+      setErrorMessage('Network error. Please check your connection and try again.');
+      setShowErrorModal(true);
     }
   };
 
