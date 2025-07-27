@@ -3962,6 +3962,38 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
         </form>
       </Modal>
 
+      <Modal isOpen={showDeleteModal} onClose={handleDeleteCancel} title="Delete City">
+        <div className="delete-confirmation">
+          <div className="warning-message">
+            <div className="warning-icon">⚠️</div>
+            <p>Are you sure you want to delete <strong>{city.name}</strong>?</p>
+            <p className="warning-text">This will remove its local government hierarchy and all linked data.</p>
+          </div>
+          
+          <div className="form-group">
+            <label>Type <strong>DELETE</strong> to confirm:</label>
+            <input
+              type="text"
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              placeholder="Type DELETE here"
+              className="delete-confirm-input"
+            />
+          </div>
+          
+          <div className="form-actions">
+            <button 
+              onClick={handleDeleteConfirm}
+              className="btn-danger"
+              disabled={deleteConfirmText !== 'DELETE'}
+            >
+              Delete City
+            </button>
+            <button onClick={handleDeleteCancel} className="btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </Modal>
+
       <RegistryTabs 
         city={city} 
         activeTab={activeTab} 
