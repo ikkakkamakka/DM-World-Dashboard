@@ -1361,10 +1361,20 @@ body {
   text-align: center;
 }
 
+.city-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.city-title {
+  margin: 0;
+  flex-grow: 1;
+  text-align: left;
+}
+
 .edit-city-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
   background: var(--primary-gold);
   color: var(--forest-green);
   border: none;
