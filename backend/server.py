@@ -1700,10 +1700,10 @@ async def get_kingdom_boundaries(kingdom_id: str, current_user: dict = Depends(g
     return boundaries
 
 @api_router.delete("/kingdom-boundaries/{boundary_id}")
-async def delete_kingdom_boundary(boundary_id: str):
-    boundary = await db.kingdom_boundaries.find_one({"id": boundary_id})
-    if not boundary:
-        raise HTTPException(status_code=404, detail="Boundary not found")
+async def delete_kingdom_boundary(boundary_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a kingdom boundary - only if user owns the kingdom containing the boundary"""
+    # Verify user owns the kingdom containing this boundary
+    boundary = await verify_boundary_ownership(boundary_id, current_user)
     
     # Remove from both collections
     await db.kingdom_boundaries.delete_one({"id": boundary_id})
@@ -1715,11 +1715,10 @@ async def delete_kingdom_boundary(boundary_id: str):
     return {"message": "Boundary deleted successfully"}
 
 @api_router.put("/kingdom-boundaries/{boundary_id}")
-async def update_kingdom_boundary(boundary_id: str, boundary_update: dict):
-    """Update existing kingdom boundary with new points"""
-    boundary = await db.kingdom_boundaries.find_one({"id": boundary_id})
-    if not boundary:
-        raise HTTPException(status_code=404, detail="Boundary not found")
+async def update_kingdom_boundary(boundary_id: str, boundary_update: dict, current_user: dict = Depends(get_current_user)):
+    """Update existing kingdom boundary with new points - only if user owns the kingdom"""
+    # Verify user owns the kingdom containing this boundary
+    boundary = await verify_boundary_ownership(boundary_id, current_user)
     
     # Update boundary points
     updated_boundary = {**boundary, "boundary_points": boundary_update["boundary_points"]}
@@ -1738,10 +1737,16 @@ async def update_kingdom_boundary(boundary_id: str, boundary_update: dict):
     return {"message": "Boundary updated successfully"}
 
 @api_router.delete("/kingdom-boundaries/clear/{kingdom_id}")
-async def clear_all_kingdom_boundaries(kingdom_id: str):
-    """Clear all boundaries for a specific kingdom"""
+async def clear_all_kingdom_boundaries(kingdom_id: str, current_user: dict = Depends(get_current_user)):
+    """Clear all boundaries for a specific kingdom - only if user owns the kingdom"""
+    # Verify user owns this kingdom
+    await verify_kingdom_ownership(kingdom_id, current_user)
+    
     # Delete all boundaries for this kingdom from boundaries collection
-    result = await db.kingdom_boundaries.delete_many({"kingdom_id": kingdom_id})
+    result = await db.kingdom_boundaries.delete_many({
+        "kingdom_id": kingdom_id,
+        **({"owner_id": current_user["id"]} if not is_super_admin(current_user) else {})
+    })
     
     # Remove all boundaries from the kingdom document
     await db.multi_kingdoms.update_one(
