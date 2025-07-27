@@ -5134,6 +5134,7 @@ class BackendTester:
         
         # Core authentication tests
         core_tests = [
+            ('auth_dashboard_fixes', 'Authentication Dashboard Fixes (PRIORITY)'),
             ('auth_login_admin', 'POST /api/auth/login (admin/admin123)'),
             ('auth_verify_token', 'GET /api/auth/verify-token'),
             ('auth_refresh_token', 'POST /api/auth/refresh-token (NEW)'),
