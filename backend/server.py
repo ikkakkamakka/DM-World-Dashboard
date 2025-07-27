@@ -2233,8 +2233,14 @@ async def assign_city_to_kingdom(city_id: str, kingdom_id: str, current_user: di
     
     raise HTTPException(status_code=404, detail="Target kingdom not found")
 @api_router.get("/kingdom")
-async def get_kingdom():
-    kingdom = await db.kingdoms.find_one()
+async def get_kingdom(current_user: dict = Depends(get_current_user)):
+    """DEPRECATED: Use /multi-kingdoms instead. Get kingdom for legacy compatibility."""
+    # For backward compatibility, return active kingdom for current user
+    query_filter = {"is_active": True}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    kingdom = await db.multi_kingdoms.find_one(query_filter)
     if kingdom:
         kingdom.pop('_id', None)
         return kingdom
