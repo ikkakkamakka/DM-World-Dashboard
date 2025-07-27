@@ -4099,7 +4099,8 @@ const CityDashboard = ({ city, activeTab, setActiveTab, authenticatedFetch, setE
       <RegistryTabs 
         city={city} 
         activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
+        setActiveTab={setActiveTab}
+        authenticatedFetch={authenticatedFetch}
       />
     </div>
   );
