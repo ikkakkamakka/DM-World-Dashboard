@@ -1474,9 +1474,9 @@ api_router = APIRouter(prefix="/api")
 
 # Multiple Kingdoms Management
 @api_router.get("/multi-kingdoms")
-async def get_all_kingdoms():
-    """Get all kingdoms for selection interface"""
-    kingdoms = await db.multi_kingdoms.find().to_list(100)
+async def get_all_kingdoms(current_user_id: str = Depends(get_current_user_id)):
+    """Get all kingdoms for current user"""
+    kingdoms = await db.multi_kingdoms.find({"owner_id": current_user_id}).to_list(100)
     for kingdom in kingdoms:
         kingdom.pop('_id', None)
     return kingdoms
