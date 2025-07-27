@@ -4059,6 +4059,32 @@ function AuthenticatedApp() {
     return headers;
   };
 
+  // Authenticated fetch helper
+  const authenticatedFetch = async (url, options = {}) => {
+    const config = {
+      ...options,
+      headers: {
+        ...getAuthHeaders(),
+        ...options.headers
+      }
+    };
+    
+    try {
+      const response = await fetch(url, config);
+      
+      if (response.status === 401 || response.status === 403) {
+        console.error('Authentication failed for:', url);
+        // Could redirect to login here if needed
+        return null;
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Fetch error for:', url, error);
+      return null;
+    }
+  };
+
   // Fetch initial data when token is available
   useEffect(() => {
     if (token) {
