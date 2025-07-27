@@ -2733,7 +2733,7 @@ const CitizensRegistry = ({ city, authenticatedFetch }) => {
 };
 
 // Slaves Registry
-const SlavesRegistry = ({ city }) => {
+const SlavesRegistry = ({ city, authenticatedFetch }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '', age: '', origin: '', occupation: '', owner: '', purchase_price: '', notes: ''
@@ -2742,7 +2742,7 @@ const SlavesRegistry = ({ city }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API}/slaves`, {
+      const response = await authenticatedFetch(`${API}/slaves`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -2765,7 +2765,7 @@ const SlavesRegistry = ({ city }) => {
   const handleDelete = async (slaveId) => {
     if (window.confirm('Are you sure you want to delete this slave record?')) {
       try {
-        const response = await fetch(`${API}/slaves/${slaveId}`, {
+        const response = await authenticatedFetch(`${API}/slaves/${slaveId}`, {
           method: 'DELETE'
         });
         if (response.ok) {
@@ -2779,7 +2779,7 @@ const SlavesRegistry = ({ city }) => {
 
   const handleAutoGenerate = async () => {
     try {
-      const response = await fetch(`${API}/auto-generate`, {
+      const response = await authenticatedFetch(`${API}/auto-generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
