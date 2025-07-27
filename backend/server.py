@@ -1523,9 +1523,14 @@ api_router = APIRouter(prefix="/api")
 
 # Multiple Kingdoms Management
 @api_router.get("/multi-kingdoms")
-async def get_all_kingdoms(current_user_id: str = Depends(get_current_user_id)):
-    """Get all kingdoms for current user"""
-    kingdoms = await db.multi_kingdoms.find({"owner_id": current_user_id}).to_list(100)
+async def get_all_kingdoms(current_user: dict = Depends(get_current_user)):
+    """Get all kingdoms - user's own kingdoms or all kingdoms if super admin"""
+    # Super admin sees all kingdoms, regular users see only their own
+    if is_super_admin(current_user):
+        kingdoms = await db.multi_kingdoms.find().to_list(100)
+    else:
+        kingdoms = await db.multi_kingdoms.find({"owner_id": current_user["id"]}).to_list(100)
+    
     for kingdom in kingdoms:
         kingdom.pop('_id', None)
     return kingdoms
