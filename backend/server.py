@@ -2211,77 +2211,227 @@ async def delete_city(city_id: str):
 async def get_available_positions():
     return {"positions": GOVERNMENT_POSITIONS}
 
+@api_router.get("/cities/{city_id}/government")
+async def get_city_government(city_id: str):
+    """Get all government positions for a city"""
+    kingdoms = await db.multi_kingdoms.find().to_list(None)
+    
+    for kingdom in kingdoms:
+        if kingdom.get('cities'):
+            for city in kingdom['cities']:
+                if city['id'] == city_id:
+                    government_officials = city.get('government_officials', [])
+                    
+                    # Ensure officials have all required fields
+                    for official in government_officials:
+                        if 'id' not in official:
+                            official['id'] = str(uuid.uuid4())
+                    
+                    return {
+                        "city_id": city_id,
+                        "city_name": city.get('name', 'Unknown City'),
+                        "government_officials": government_officials
+                    }
+    
+    raise HTTPException(status_code=404, detail="City not found")
+
 @api_router.post("/cities/{city_id}/government/appoint")
 async def appoint_citizen_to_government(city_id: str, appointment: GovernmentAppointment):
-    # Create government official record
-    new_official = GovernmentOfficial(
-        name="", # Will be filled from citizen data
-        position=appointment.position,
-        city_id=city_id,
-        citizen_id=appointment.citizen_id
-    )
+    """Appoint a citizen to a government position"""
+    # Find the kingdom containing this city
+    kingdoms = await db.multi_kingdoms.find().to_list(None)
     
-    # Update citizen with government position
-    result1 = await db.kingdoms.update_one(
-        {"cities.id": city_id, "cities.citizens.id": appointment.citizen_id},
-        {
-            "$set": {
-                "cities.$[city].citizens.$[citizen].government_position": appointment.position,
-                "cities.$[city].citizens.$[citizen].appointed_date": datetime.utcnow()
-            }
-        },
-        array_filters=[
-            {"city.id": city_id},
-            {"citizen.id": appointment.citizen_id}
-        ]
-    )
+    for kingdom in kingdoms:
+        if kingdom.get('cities'):
+            for city in kingdom['cities']:
+                if city['id'] == city_id:
+                    # Find the citizen
+                    citizen_found = False
+                    citizen_name = "Unknown"
+                    
+                    for citizen in city.get('citizens', []):
+                        if citizen['id'] == appointment.citizen_id:
+                            citizen_found = True
+                            citizen_name = citizen['name']
+                            break
+                    
+                    if not citizen_found:
+                        raise HTTPException(status_code=404, detail="Citizen not found")
+                    
+                    # Check if position already exists
+                    existing_officials = city.get('government_officials', [])
+                    for official in existing_officials:
+                        if official.get('position') == appointment.position:
+                            raise HTTPException(
+                                status_code=400, 
+                                detail=f"Position '{appointment.position}' is already filled"
+                            )
+                    
+                    # Create new government official
+                    new_official = GovernmentOfficial(
+                        name=citizen_name,
+                        position=appointment.position,
+                        city_id=city_id,
+                        citizen_id=appointment.citizen_id
+                    )
+                    
+                    # Update the citizen with government position
+                    result1 = await db.multi_kingdoms.update_one(
+                        {"id": kingdom["id"], "cities.id": city_id, "cities.citizens.id": appointment.citizen_id},
+                        {
+                            "$set": {
+                                "cities.$[city].citizens.$[citizen].government_position": appointment.position,
+                                "cities.$[city].citizens.$[citizen].appointed_date": datetime.utcnow()
+                            }
+                        },
+                        array_filters=[
+                            {"city.id": city_id},
+                            {"citizen.id": appointment.citizen_id}
+                        ]
+                    )
+                    
+                    # Add to government officials
+                    result2 = await db.multi_kingdoms.update_one(
+                        {"id": kingdom["id"], "cities.id": city_id},
+                        {"$push": {"cities.$.government_officials": new_official.dict()}}
+                    )
+                    
+                    if result1.modified_count and result2.modified_count:
+                        # Create event
+                        event_desc = f"🏛️ {citizen_name} appointed as {appointment.position}!"
+                        await create_and_broadcast_event(event_desc, city['name'], kingdom['name'], "appointment", "high")
+                        
+                        # Broadcast update
+                        await manager.broadcast({
+                            "type": "government_updated",
+                            "city_id": city_id,
+                            "action": "appointed",
+                            "official": new_official.dict(),
+                            "kingdom_id": kingdom["id"]
+                        })
+                        
+                        return {
+                            "message": "Citizen appointed successfully",
+                            "official": new_official.dict()
+                        }
+                    
+                    raise HTTPException(status_code=500, detail="Failed to appoint citizen")
     
-    # Get citizen name and add to government officials
-    kingdom = await db.kingdoms.find_one()
-    citizen_name = "Unknown"
-    for city in kingdom['cities']:
-        if city['id'] == city_id:
-            for citizen in city['citizens']:
-                if citizen['id'] == appointment.citizen_id:
-                    citizen_name = citizen['name']
-                    break
+    raise HTTPException(status_code=404, detail="City not found")
+
+@api_router.put("/cities/{city_id}/government/{official_id}")
+async def update_government_official(city_id: str, official_id: str, updates: dict):
+    """Update a government official's information"""
+    kingdoms = await db.multi_kingdoms.find().to_list(None)
     
-    new_official.name = citizen_name
+    for kingdom in kingdoms:
+        if kingdom.get('cities'):
+            for city in kingdom['cities']:
+                if city['id'] == city_id:
+                    # Find the official
+                    officials = city.get('government_officials', [])
+                    official_found = False
+                    
+                    for i, official in enumerate(officials):
+                        if official['id'] == official_id:
+                            official_found = True
+                            
+                            # Update allowed fields
+                            allowed_updates = ['position']
+                            update_data = {}
+                            
+                            for key, value in updates.items():
+                                if key in allowed_updates:
+                                    update_data[f"cities.$.government_officials.{i}.{key}"] = value
+                            
+                            if update_data:
+                                result = await db.multi_kingdoms.update_one(
+                                    {"id": kingdom["id"], "cities.id": city_id},
+                                    {"$set": update_data}
+                                )
+                                
+                                if result.modified_count:
+                                    await manager.broadcast({
+                                        "type": "government_updated",
+                                        "city_id": city_id,
+                                        "action": "updated",
+                                        "official_id": official_id,
+                                        "updates": updates,
+                                        "kingdom_id": kingdom["id"]
+                                    })
+                                    
+                                    return {"message": "Government official updated successfully"}
+                            
+                            break
+                    
+                    if not official_found:
+                        raise HTTPException(status_code=404, detail="Government official not found")
     
-    result2 = await db.kingdoms.update_one(
-        {"cities.id": city_id},
-        {"$push": {"cities.$.government_officials": new_official.dict()}}
-    )
-    
-    if result1.modified_count and result2.modified_count:
-        event_desc = f"🏛️ {citizen_name} appointed as {appointment.position} in {city['name']}!"
-        await create_and_broadcast_event(event_desc, city['name'], kingdom['name'], "appointment", "high")
-        return {"message": "Citizen appointed successfully"}
-    
-    raise HTTPException(status_code=404, detail="City or citizen not found")
+    raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/cities/{city_id}/government/{official_id}")
 async def remove_government_official(city_id: str, official_id: str):
-    # Remove from government officials
-    result1 = await db.kingdoms.update_one(
-        {"cities.id": city_id},
-        {"$pull": {"cities.$.government_officials": {"id": official_id}}}
-    )
+    """Remove a government official and clear their citizen's position"""
+    kingdoms = await db.multi_kingdoms.find().to_list(None)
     
-    # Remove government position from citizen
-    result2 = await db.kingdoms.update_one(
-        {"cities.id": city_id},
-        {
-            "$unset": {
-                "cities.$[city].citizens.$[].government_position": "",
-                "cities.$[city].citizens.$[].appointed_date": ""
-            }
-        },
-        array_filters=[{"city.id": city_id}]
-    )
+    for kingdom in kingdoms:
+        if kingdom.get('cities'):
+            for city in kingdom['cities']:
+                if city['id'] == city_id:
+                    # Find the official to get citizen_id
+                    officials = city.get('government_officials', [])
+                    citizen_id = None
+                    official_name = "Unknown"
+                    
+                    for official in officials:
+                        if official['id'] == official_id:
+                            citizen_id = official.get('citizen_id')
+                            official_name = official.get('name', 'Unknown')
+                            break
+                    
+                    if not citizen_id:
+                        raise HTTPException(status_code=404, detail="Government official not found")
+                    
+                    # Remove from government officials
+                    result1 = await db.multi_kingdoms.update_one(
+                        {"id": kingdom["id"], "cities.id": city_id},
+                        {"$pull": {"cities.$.government_officials": {"id": official_id}}}
+                    )
+                    
+                    # Remove government position from citizen
+                    result2 = await db.multi_kingdoms.update_one(
+                        {"id": kingdom["id"], "cities.id": city_id, "cities.citizens.id": citizen_id},
+                        {
+                            "$unset": {
+                                "cities.$[city].citizens.$[citizen].government_position": "",
+                                "cities.$[city].citizens.$[citizen].appointed_date": ""
+                            }
+                        },
+                        array_filters=[
+                            {"city.id": city_id},
+                            {"citizen.id": citizen_id}
+                        ]
+                    )
+                    
+                    if result1.modified_count:
+                        # Create event
+                        event_desc = f"🏛️ {official_name} removed from government position!"
+                        await create_and_broadcast_event(event_desc, city['name'], kingdom['name'], "removal", "medium")
+                        
+                        # Broadcast update
+                        await manager.broadcast({
+                            "type": "government_updated",
+                            "city_id": city_id,
+                            "action": "removed",
+                            "official_id": official_id,
+                            "kingdom_id": kingdom["id"]
+                        })
+                        
+                        return {"message": "Government official removed successfully"}
+                    
+                    raise HTTPException(status_code=500, detail="Failed to remove government official")
     
-    if result1.modified_count:
-        return {"message": "Government official removed successfully"}
+    raise HTTPException(status_code=404, detail="City not found")
     raise HTTPException(status_code=404, detail="Official not found")
 
 # FIXED Auto-generation endpoints
