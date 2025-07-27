@@ -2400,26 +2400,26 @@ async def get_available_positions():
     return {"positions": GOVERNMENT_POSITIONS}
 
 @api_router.get("/cities/{city_id}/government")
-async def get_city_government(city_id: str):
-    """Get all government positions for a city"""
-    kingdoms = await db.multi_kingdoms.find().to_list(None)
+async def get_city_government(city_id: str, current_user: dict = Depends(get_current_user)):
+    """Get all government positions for a city - only if user owns the kingdom containing the city"""
+    # Verify user owns the kingdom containing this city
+    kingdom = await verify_city_ownership(city_id, current_user)
     
-    for kingdom in kingdoms:
-        if kingdom.get('cities'):
-            for city in kingdom['cities']:
-                if city['id'] == city_id:
-                    government_officials = city.get('government_officials', [])
-                    
-                    # Ensure officials have all required fields
-                    for official in government_officials:
-                        if 'id' not in official:
-                            official['id'] = str(uuid.uuid4())
-                    
-                    return {
-                        "city_id": city_id,
-                        "city_name": city.get('name', 'Unknown City'),
-                        "government_officials": government_officials
-                    }
+    # Find the specific city
+    for city in kingdom.get('cities', []):
+        if city['id'] == city_id:
+            government_officials = city.get('government_officials', [])
+            
+            # Ensure officials have all required fields
+            for official in government_officials:
+                if 'id' not in official:
+                    official['id'] = str(uuid.uuid4())
+            
+            return {
+                "city_id": city_id,
+                "city_name": city.get('name', 'Unknown City'),
+                "government_officials": government_officials
+            }
     
     raise HTTPException(status_code=404, detail="City not found")
 
