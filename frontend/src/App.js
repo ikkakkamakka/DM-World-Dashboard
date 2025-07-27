@@ -4324,6 +4324,26 @@ function AuthenticatedApp() {
           )}
         </>
       )}
+
+      {/* Error Modal */}
+      <Modal 
+        isOpen={showErrorModal} 
+        onClose={() => setShowErrorModal(false)} 
+        title="Error"
+      >
+        <div className="error-modal-content">
+          <div className="error-icon">⚠️</div>
+          <p>{errorMessage}</p>
+          <div className="error-actions">
+            <button 
+              className="btn-primary" 
+              onClick={() => setShowErrorModal(false)}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
