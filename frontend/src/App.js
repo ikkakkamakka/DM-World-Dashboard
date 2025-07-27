@@ -4363,6 +4363,7 @@ function AuthenticatedApp() {
               events={events}
               autoEventsEnabled={autoEventsEnabled}
               onToggleAutoEvents={handleToggleAutoEvents}
+              authenticatedFetch={authenticatedFetch}
             />
           )}
 
