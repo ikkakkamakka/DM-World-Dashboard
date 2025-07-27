@@ -3646,7 +3646,7 @@ const CrimeRegistry = ({ city }) => {
 };
 
 // Government Management Component
-const GovernmentManagement = ({ city, onClose }) => {
+const GovernmentManagement = ({ city, onClose, authenticatedFetch, setErrorMessage, setShowErrorModal }) => {
   const [availablePositions] = useState([
     'Captain of the Guard', 'Master of Coin', 'High Scribe', 'Court Wizard', 'Head Cleric',
     'Trade Minister', 'City Magistrate', 'Harbor Master', 'Master Builder', 'Tax Collector', 'Market Warden'
@@ -3656,26 +3656,40 @@ const GovernmentManagement = ({ city, onClose }) => {
 
   const handleAppointment = async () => {
     if (!selectedCitizen || !selectedPosition) {
-      alert('Please select both a citizen and a position');
+      setErrorMessage('Please select both a citizen and a position');
+      setShowErrorModal(true);
       return;
     }
 
     try {
-      const response = await fetch(`${API}/cities/${city.id}/government/appoint`, {
+      const response = await authenticatedFetch(`${API}/cities/${city.id}/government/appoint`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           citizen_id: selectedCitizen,
           position: selectedPosition
         })
       });
       
-      if (response.ok) {
+      if (response && response.ok) {
         onClose();
         window.location.reload();
+      } else if (response) {
+        if (response.status === 401) {
+          setErrorMessage('Authentication failed. Please log in again.');
+          setShowErrorModal(true);
+        } else if (response.status === 403) {
+          setErrorMessage('Access denied. You do not have permission to appoint officials.');
+          setShowErrorModal(true);
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          setErrorMessage(errorData.detail || 'Failed to appoint citizen. Please try again.');
+          setShowErrorModal(true);
+        }
       }
     } catch (error) {
       console.error('Error appointing citizen:', error);
+      setErrorMessage('Network error. Please check your connection and try again.');
+      setShowErrorModal(true);
     }
   };
 
