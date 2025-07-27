@@ -272,7 +272,7 @@ const HarptosCalendar = ({ kingdom, isVisible, authenticatedFetch }) => {
   const handleManualDateUpdate = async () => {
     if (!kingdom) return;
     try {
-      const response = await fetch(`${API}/campaign-date/${kingdom.id}`, {
+      const response = await authenticatedFetch(`${API}/campaign-date/${kingdom.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(manualDate)
