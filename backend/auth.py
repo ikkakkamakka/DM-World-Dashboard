@@ -252,3 +252,35 @@ async def logout():
 async def verify_token(current_user: dict = Depends(get_current_user)):
     """Verify if token is valid"""
     return {"valid": True, "username": current_user["username"]}
+
+@auth_router.post("/refresh-token", response_model=Token)
+async def refresh_token(current_user: dict = Depends(get_current_user)):
+    """Refresh access token for active users"""
+    # Create new access token with extended expiration
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    new_access_token = create_access_token(
+        data={"sub": current_user["username"]}, 
+        expires_delta=access_token_expires
+    )
+    
+    # Update last login timestamp
+    await users_db.users.update_one(
+        {"username": current_user["username"]},
+        {"$set": {"last_login": datetime.utcnow()}}
+    )
+    
+    # Return new token and user info
+    user_info = {
+        "id": current_user["id"],
+        "username": current_user["username"],
+        "email": current_user["email"],
+        "is_active": current_user["is_active"],
+        "created_at": current_user["created_at"].isoformat() if isinstance(current_user["created_at"], datetime) else current_user["created_at"],
+        "last_login": datetime.utcnow().isoformat()
+    }
+    
+    return {
+        "access_token": new_access_token,
+        "token_type": "bearer",
+        "user_info": user_info
+    }
