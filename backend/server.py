@@ -2735,18 +2735,22 @@ async def delete_tribute(tribute_id: str):
 async def create_crime(crime: CrimeCreate):
     new_crime = CrimeRecord(**crime.dict())
     
-    result = await db.kingdoms.update_one(
+    result = await db.multi_kingdoms.update_one(
         {"cities.id": crime.city_id},
         {"$push": {"cities.$.crime_records": new_crime.dict()}}
     )
     
     if result.modified_count:
+        await manager.broadcast({
+            "type": "crime_added",
+            "crime": new_crime.dict()
+        })
         return new_crime
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/crimes/{crime_id}")
 async def delete_crime(crime_id: str):
-    result = await db.kingdoms.update_one(
+    result = await db.multi_kingdoms.update_one(
         {"cities.crime_records.id": crime_id},
         {"$pull": {"cities.$.crime_records": {"id": crime_id}}}
     )
