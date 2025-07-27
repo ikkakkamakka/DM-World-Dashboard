@@ -226,7 +226,7 @@ const HarptosCalendar = ({ kingdom, isVisible, authenticatedFetch }) => {
   const fetchCampaignDate = async () => {
     if (!kingdom) return;
     try {
-      const response = await fetch(`${API}/campaign-date/${kingdom.id}`);
+      const response = await authenticatedFetch(`${API}/campaign-date/${kingdom.id}`);
       if (response.ok) {
         const date = await response.json();
         setCampaignDate(date);
