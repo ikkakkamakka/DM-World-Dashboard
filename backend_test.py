@@ -5593,19 +5593,19 @@ class BackendTester:
             await self.cleanup()
 
 async def main():
-    """Main test runner - focused on authentication system testing"""
+    """Main test runner - focused on Add City authentication and ownership testing"""
     tester = BackendTester()
     
-    # Run focused authentication tests as requested in review
-    success = await tester.run_authentication_tests()
+    # Run focused Add City tests as requested in review
+    success = await tester.run_add_city_tests()
     
     if success:
-        print("\n🎉 All authentication tests passed!")
-        print("✅ Enhanced authentication system with sliding session is working correctly")
+        print("\n🎉 All Add City tests passed!")
+        print("✅ Add City functionality with authentication and ownership is working correctly")
         return 0
     else:
-        print("\n❌ Some authentication tests failed!")
-        print("🔧 Issues need to be resolved before frontend integration")
+        print("\n❌ Some Add City tests failed!")
+        print("🔧 Issues need to be resolved for Add City functionality")
         return 1
 
 if __name__ == "__main__":
