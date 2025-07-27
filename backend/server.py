@@ -2890,6 +2890,50 @@ async def delete_crime(crime_id: str, current_user: dict = Depends(get_current_u
         return {"message": "Crime record deleted successfully"}
     raise HTTPException(status_code=404, detail="Crime not found")
 
+# Data Migration for existing kingdoms (run once)
+@api_router.post("/migrate-data")
+async def migrate_existing_data():
+    """Migrate existing kingdoms to have owner_id field - run once for data migration"""
+    try:
+        # Set a default admin user ID - replace with actual admin ID
+        default_owner_id = "admin-user-id-placeholder"
+        
+        # Update all kingdoms without owner_id
+        result = await db.multi_kingdoms.update_many(
+            {"owner_id": {"$exists": False}},
+            {"$set": {"owner_id": default_owner_id}}
+        )
+        
+        # Update all events without owner_id
+        events_result = await db.events.update_many(
+            {"owner_id": {"$exists": False}},
+            {"$set": {"owner_id": default_owner_id}}
+        )
+        
+        # Update all calendar events without owner_id
+        calendar_events_result = await db.calendar_events.update_many(
+            {"owner_id": {"$exists": False}},
+            {"$set": {"owner_id": default_owner_id}}
+        )
+        
+        # Update all kingdom boundaries without owner_id
+        boundaries_result = await db.kingdom_boundaries.update_many(
+            {"owner_id": {"$exists": False}},
+            {"$set": {"owner_id": default_owner_id}}
+        )
+        
+        return {
+            "message": "Data migration completed successfully",
+            "kingdoms_updated": result.modified_count,
+            "events_updated": events_result.modified_count,
+            "calendar_events_updated": calendar_events_result.modified_count,
+            "boundaries_updated": boundaries_result.modified_count,
+            "default_owner_id": default_owner_id
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Migration failed: {str(e)}")
+
 # Events Management
 @api_router.get("/events")
 async def get_events():
