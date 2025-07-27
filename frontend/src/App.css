@@ -3112,4 +3112,278 @@ body {
     flex-wrap: wrap;
   }
 }
+
+/* Kingdom and City Delete Functionality Styles */
+.kingdom-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(220, 38, 38, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  opacity: 0;
+  z-index: 2;
+}
+
+.kingdom-card {
+  position: relative;
+}
+
+.kingdom-card:hover .kingdom-delete-btn {
+  opacity: 1;
+}
+
+.kingdom-delete-btn:hover {
+  background: rgba(185, 28, 28, 1);
+  transform: scale(1.1);
+}
+
+/* City Actions Dropdown */
+.city-actions-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-toggle:hover {
+  background: linear-gradient(135deg, var(--dark-gold) 0%, var(--primary-gold) 100%);
+  transform: translateY(-2px);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--parchment);
+  border: 2px solid var(--primary-gold);
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  min-width: 150px;
+  z-index: 1000;
+  animation: dropdownSlide 0.2s ease-out;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: 'Crimson Text', serif;
+  font-size: 14px;
+  transition: all 0.2s;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--royal-blue);
+}
+
+.dropdown-item.edit-item {
+  color: var(--forest-green);
+}
+
+.dropdown-item.delete-item {
+  color: var(--burgundy);
+}
+
+.dropdown-item.delete-item:hover {
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+}
+
+/* Delete Confirmation Modal Styles */
+.delete-confirmation {
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.warning-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid #fca5a5;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: #7f1d1d;
+}
+
+.warning-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.warning-text {
+  font-style: italic;
+  color: #991b1b;
+  margin-top: 10px;
+}
+
+.delete-confirm-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #fca5a5;
+  border-radius: 6px;
+  font-family: 'Crimson Text', serif;
+  font-size: 14px;
+  text-align: center;
+  background: rgba(254, 226, 226, 0.5);
+}
+
+.delete-confirm-input:focus {
+  outline: none;
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Enhanced Modal Styles for Delete Operations */
+.modal-overlay {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(-50px) scale(0.9);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Government Hierarchy Enhanced Styles */
+.government-hierarchy {
+  position: relative;
+}
+
+.government-hierarchy::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(30, 58, 138, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.no-officials {
+  text-align: center;
+  color: #8b7355;
+  font-style: italic;
+  padding: 40px;
+  background: rgba(212, 175, 55, 0.05);
+  border: 2px dashed rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.remove-official-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(220, 38, 38, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  opacity: 0;
+}
+
+.government-official {
+  position: relative;
+}
+
+.government-official:hover .remove-official-btn {
+  opacity: 1;
+}
+
+.remove-official-btn:hover {
+  background: rgba(185, 28, 28, 1);
+  transform: scale(1.1);
+}
 /* End of enhanced Harptos Calendar styles */
