@@ -4378,6 +4378,9 @@ function AuthenticatedApp() {
               city={currentCity}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
+              authenticatedFetch={authenticatedFetch}
+              setErrorMessage={setErrorMessage}
+              setShowErrorModal={setShowErrorModal}
             />
           )}
         </>
