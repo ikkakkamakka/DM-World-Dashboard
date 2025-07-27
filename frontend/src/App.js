@@ -4039,6 +4039,7 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
 
 // Main App Component with Multi-Kingdom Support and Authentication
 function AuthenticatedApp() {
+  const { token } = useAuth(); // Get authentication token
   const [kingdom, setKingdom] = useState(null);
   const [multiKingdoms, setMultiKingdoms] = useState([]);
   const [activeKingdom, setActiveKingdom] = useState(null);
@@ -4048,6 +4049,15 @@ function AuthenticatedApp() {
   const [autoEventsEnabled, setAutoEventsEnabled] = useState(true);
   const [wsConnection, setWsConnection] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState('Connecting...');
+
+  // Helper function to create authenticated headers
+  const getAuthHeaders = () => {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
 
   // Fetch initial data
   useEffect(() => {
