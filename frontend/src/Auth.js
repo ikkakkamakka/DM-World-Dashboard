@@ -289,6 +289,48 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// Session Warning Modal Component
+const SessionWarningModal = () => {
+  const { sessionWarningCountdown, extendSession, logout } = useAuth();
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-slate-800 rounded-lg shadow-2xl w-full max-w-md p-6 border border-red-600">
+        <div className="text-center">
+          <div className="text-red-400 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-red-400 mb-4">Session Timeout Warning</h2>
+          <p className="text-slate-300 mb-4">
+            Your session will expire in <strong className="text-red-400">{formatTime(sessionWarningCountdown)}</strong> due to inactivity.
+          </p>
+          <p className="text-slate-400 text-sm mb-6">
+            Click "Stay Logged In" to extend your session, or you will be automatically logged out.
+          </p>
+          <div className="flex space-x-4">
+            <button
+              onClick={extendSession}
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+            >
+              Stay Logged In
+            </button>
+            <button
+              onClick={logout}
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+            >
+              Logout Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Login/Signup Component
 export const AuthScreen = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
