@@ -4059,20 +4059,22 @@ function AuthenticatedApp() {
     return headers;
   };
 
-  // Fetch initial data
+  // Fetch initial data when token is available
   useEffect(() => {
-    fetchMultiKingdoms();
-    fetchActiveKingdom();
-    fetchEvents();
-    fetchAutoEventsStatus();
-    connectWebSocket();
+    if (token) {
+      fetchMultiKingdoms();
+      fetchActiveKingdom();
+      fetchEvents();
+      fetchAutoEventsStatus();
+      connectWebSocket();
+    }
 
     return () => {
       if (wsConnection) {
         wsConnection.close();
       }
     };
-  }, []);
+  }, [token]); // Depend on token
 
   const fetchMultiKingdoms = async () => {
     try {
