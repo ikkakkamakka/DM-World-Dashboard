@@ -120,23 +120,17 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     )
     
     try:
-        print(f"DEBUG: Attempting to decode token: {credentials.credentials[:50]}...")
         payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
-        print(f"DEBUG: Token decoded successfully, username: {username}")
         if username is None:
-            print("DEBUG: No username in token")
             raise credentials_exception
-    except jwt.PyJWTError as e:
-        print(f"DEBUG: JWT decode error: {e}")
+    except jwt.PyJWTError:
         raise credentials_exception
     
     user = await get_user_by_username(username)
     if user is None:
-        print(f"DEBUG: User not found in database: {username}")
         raise credentials_exception
     
-    print(f"DEBUG: User found: {user['username']}")
     return user
 
 # API endpoints
