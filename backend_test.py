@@ -4782,15 +4782,19 @@ class BackendTester:
         return success
 
 async def main():
-    """Main test runner"""
+    """Main test runner - focused on authentication system testing"""
     tester = BackendTester()
-    success = await tester.run_all_tests()
+    
+    # Run focused authentication tests as requested in review
+    success = await tester.run_authentication_tests()
     
     if success:
-        print("\n🎉 All backend tests passed!")
+        print("\n🎉 All authentication tests passed!")
+        print("✅ Enhanced authentication system with sliding session is working correctly")
         return 0
     else:
-        print("\n💥 Some backend tests failed!")
+        print("\n❌ Some authentication tests failed!")
+        print("🔧 Issues need to be resolved before frontend integration")
         return 1
 
 if __name__ == "__main__":
