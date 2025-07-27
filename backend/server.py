@@ -1981,8 +1981,11 @@ async def delete_calendar_event(event_id: str):
     raise HTTPException(status_code=404, detail="Calendar event not found")
 
 @api_router.post("/calendar-events/generate-city-events")
-async def generate_random_city_events(kingdom_id: str, count: int = 5, date_range_days: int = 30):
-    """Generate random city-specific events"""
+async def generate_random_city_events(kingdom_id: str, count: int = 5, date_range_days: int = 30, current_user: dict = Depends(get_current_user)):
+    """Generate random city-specific events - only if user owns the kingdom"""
+    # Verify user owns this kingdom
+    await verify_kingdom_ownership(kingdom_id, current_user)
+    
     # Get kingdom's cities
     kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
     if not kingdom:
