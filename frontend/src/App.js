@@ -3899,28 +3899,36 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
             </div>
           </div>
           
-          {/* Minor Officials - Fourth Tier */}
-          <div className="hierarchy-level minor-officials">
-            <h4 className="tier-title">Administrative Staff</h4>
-            <div className="officials-tier">
-              {city.government_officials?.filter(official => 
-                !['Captain of the Guard', 'Master of Coin', 'High Scribe', 'Court Wizard', 'Head Cleric',
-                  'Trade Minister', 'City Magistrate', 'Harbor Master', 'Master Builder', 'Tax Collector', 'Market Warden'].includes(official.position)
-              ).map(official => (
-                <div key={official.id} className="government-official minor-card">
-                  <div className="official-rank">{official.position}</div>
-                  <div className="official-name">{official.name}</div>
-                  <button 
-                    className="remove-official-btn"
-                    onClick={() => handleRemoveOfficial(official)}
-                    title="Remove from position"
-                  >
-                    ✖
-                  </button>
+          {/* Minor Officials - Fourth Tier - Only show if there are administrative staff */}
+          {(() => {
+            const adminStaff = city.government_officials?.filter(official => 
+              !['Captain of the Guard', 'Master of Coin', 'High Scribe', 'Court Wizard', 'Head Cleric',
+                'Trade Minister', 'City Magistrate', 'Harbor Master', 'Master Builder', 'Tax Collector', 'Market Warden'].includes(official.position)
+            ) || [];
+            
+            if (adminStaff.length === 0) return null;
+            
+            return (
+              <div className="hierarchy-level minor-officials">
+                <h4 className="tier-title">Administrative Staff</h4>
+                <div className="officials-tier">
+                  {adminStaff.map(official => (
+                    <div key={official.id} className="government-official minor-card">
+                      <div className="official-rank">{official.position}</div>
+                      <div className="official-name">{official.name}</div>
+                      <button 
+                        className="remove-official-btn"
+                        onClick={() => handleRemoveOfficial(official)}
+                        title="Remove from position"
+                      >
+                        ✖
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            );
+          })()}
           
           {/* Show message if no officials */}
           {(!city.government_officials || city.government_officials.length === 0) && (
