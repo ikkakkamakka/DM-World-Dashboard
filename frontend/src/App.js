@@ -4201,7 +4201,7 @@ function AuthenticatedApp() {
 
   const fetchActiveKingdom = async () => {
     try {
-      const response = await fetch(`${API}/active-kingdom`);
+      const response = await authenticatedFetch(`${API}/active-kingdom`);
       const data = await response.json();
       setActiveKingdom(data);
       setKingdom(data); // For backward compatibility
