@@ -3776,36 +3776,47 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
     <div className="city-dashboard">
       <div className="city-header">
         <div className="city-header-content">
-          <h1 className="city-title">{city.name}</h1>
-          <p className="city-governor">Governor: {city.governor}</p>
-          <div className="city-actions-dropdown">
-            <button 
-              className="edit-city-btn dropdown-toggle"
-              onClick={() => setShowDropdown(!showDropdown)}
-              title="City actions"
-            >
-              ⚙️ Actions ▼
-            </button>
-            {showDropdown && (
-              <div className="dropdown-menu">
-                <button 
-                  className="dropdown-item edit-item"
-                  onClick={() => {
-                    setShowDropdown(false);
-                    setShowEditForm(true);
-                  }}
-                >
-                  ✏️ Edit City
-                </button>
-                <button 
-                  className="dropdown-item delete-item"
-                  onClick={handleDeleteClick}
-                >
-                  🗑️ Delete City
-                </button>
-              </div>
-            )}
+          <div className="city-title-row">
+            <h1 className="city-title">{city.name}</h1>
+            <div className="city-actions-dropdown">
+              <button 
+                className="edit-city-btn dropdown-toggle"
+                onClick={() => setShowDropdown(!showDropdown)}
+                title="City actions"
+              >
+                ⚙️ Actions ▼
+              </button>
+              {showDropdown && (
+                <div className="dropdown-menu">
+                  <button 
+                    className="dropdown-item edit-item"
+                    onClick={() => {
+                      setShowDropdown(false);
+                      setShowEditForm(true);
+                    }}
+                  >
+                    ✏️ Edit City Details
+                  </button>
+                  <button 
+                    className="dropdown-item manage-item"
+                    onClick={() => {
+                      setShowDropdown(false);
+                      setShowGovtManagement(true);
+                    }}
+                  >
+                    👥 Manage Positions
+                  </button>
+                  <button 
+                    className="dropdown-item delete-item"
+                    onClick={handleDeleteClick}
+                  >
+                    🗑️ Delete City
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
+          <p className="city-governor">Governor: {city.governor}</p>
         </div>
       </div>
 
