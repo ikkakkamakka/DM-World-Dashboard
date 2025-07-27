@@ -500,6 +500,21 @@ test_plan:
         agent: "testing"
         comment: "✅ BACKEND AUTHENTICATION TESTING COMPLETE: All critical dashboard endpoints now working with proper authentication. VERIFIED: /api/multi-kingdoms returns 11 kingdoms with owner_id filtering, /api/kingdom returns active kingdom with authentication, /api/city/{city_id} returns city details with proper auth, /api/voting-sessions/{kingdom_id} and /api/calendar-events/{kingdom_id}/upcoming both require authentication and kingdom ownership. Admin user authentication working perfectly with JWT tokens, bcrypt password hashing, and owner_id filtering. Dashboard data loading backend issues RESOLVED."
 
+  - task: "Frontend API Authentication Fix"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported blank kingdom and city dashboards. Backend testing confirmed authentication endpoints are working, indicating frontend fetch calls aren't using proper authentication."
+      - working: "NA"
+        agent: "main"
+        comment: "FRONTEND AUTHENTICATION INTEGRATION: Updated critical frontend API calls to use authenticatedFetch instead of direct fetch. Fixed: fetchCampaignDate, fetchCalendarEvents, fetchUpcomingEvents, handleManualDateUpdate, handleDeleteEvent, handleGenerateCityEvents, fetchActiveKingdom, handleKingdomEditSubmit. Updated component props to pass authenticatedFetch to HarptosCalendar, KingdomDashboard, RegistryTabs. Updated CitizensRegistry and SlavesRegistry components to use authenticatedFetch. This should resolve dashboard loading issues by ensuring proper JWT token inclusion in API requests."
+
 agent_communication:
   - agent: "main"
-    message: "BACKEND GET ENDPOINTS AUTHENTICATION FIX COMPLETED: Fixed critical authentication gaps in backend API endpoints that were causing blank dashboard issues. Updated /api/kingdom to use multi_kingdoms collection with owner_id filtering, added authentication to /api/voting-sessions/{kingdom_id} and /api/calendar-events/{kingdom_id}/upcoming endpoints with proper ownership verification. All endpoints now include Depends(get_current_user) for JWT authentication and verify_kingdom_ownership() calls to ensure users only access their own data. Ready for backend testing to verify these fixes resolve the dashboard data loading problems."
+    message: "FRONTEND AUTHENTICATION INTEGRATION COMPLETED: Successfully updated numerous frontend API calls to use authenticatedFetch helper function for proper JWT token authentication. Key fixes include: Calendar-related functions (fetchCampaignDate, fetchCalendarEvents, fetchUpcomingEvents), Event operations (handleDeleteEvent, handleGenerateCityEvents), Kingdom operations (fetchActiveKingdom, handleKingdomEditSubmit), Registry operations (Citizens and Slaves registries updated). Updated component prop chains to pass authenticatedFetch from AuthenticatedApp -> HarptosCalendar, KingdomDashboard, RegistryTabs -> individual registry components. Backend testing confirmed authentication endpoints work properly, so these frontend fixes should resolve the blank dashboard issues by ensuring all API calls include proper Authorization headers."
