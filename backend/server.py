@@ -2237,9 +2237,14 @@ async def update_kingdom(updates: dict):
     raise HTTPException(status_code=404, detail="Kingdom not found")
 
 @api_router.post("/cities")
-async def create_city(city: CityCreate):
-    # Get the active kingdom
-    active_kingdom = await db.multi_kingdoms.find_one({"is_active": True})
+async def create_city(city: CityCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new city in user's active kingdom"""
+    # Get the user's active kingdom
+    query_filter = {"is_active": True}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    active_kingdom = await db.multi_kingdoms.find_one(query_filter)
     if not active_kingdom:
         raise HTTPException(status_code=404, detail="No active kingdom found")
     
@@ -2255,20 +2260,29 @@ async def create_city(city: CityCreate):
         await manager.broadcast({
             "type": "city_created",
             "city": new_city.dict(),
-            "kingdom_id": active_kingdom["id"]
+            "kingdom_id": active_kingdom["id"],
+            "owner_id": current_user["id"]
         })
         return new_city
     raise HTTPException(status_code=404, detail="Failed to create city")
 
 @api_router.get("/city/{city_id}")
-async def get_city(city_id: str):
-    # Search across all kingdoms for the city
-    kingdoms = await db.multi_kingdoms.find().to_list(None)
-    for kingdom in kingdoms:
-        if kingdom.get('cities'):
-            for city in kingdom['cities']:
-                if city['id'] == city_id:
-                    return city
+async def get_city(city_id: str, current_user: dict = Depends(get_current_user)):
+    """Get city details - only if user owns the kingdom containing the city"""
+    # Search user's kingdoms only for the city
+    query_filter = {"cities.id": city_id}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    kingdom = await db.multi_kingdoms.find_one(query_filter)
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="City not found or access denied")
+    
+    # Find the specific city
+    for city in kingdom.get('cities', []):
+        if city['id'] == city_id:
+            return city
+    
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.put("/city/{city_id}")
