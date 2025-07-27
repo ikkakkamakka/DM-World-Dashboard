@@ -51,6 +51,18 @@ async def get_current_user_id(current_user: dict = Depends(get_current_user)) ->
     """Extract user ID from authenticated user"""
     return current_user["id"]
 
+# Helper function to check if user owns kingdom containing city
+async def verify_city_ownership(city_id: str, current_user: dict) -> dict:
+    """Check if current user owns the kingdom containing the specified city"""
+    query_filter = {"cities.id": city_id}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    kingdom = await db.multi_kingdoms.find_one(query_filter)
+    if not kingdom:
+        raise HTTPException(status_code=403, detail="Access denied: City not found or not owned by user")
+    return kingdom
+
 # Super admin check (for future admin features)
 SUPER_ADMIN_USERNAME = "admin"  # Can be configured via env later
 
