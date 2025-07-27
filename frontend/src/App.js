@@ -4370,6 +4370,7 @@ function AuthenticatedApp() {
             <HarptosCalendar 
               kingdom={activeKingdom}
               isVisible={true}
+              authenticatedFetch={authenticatedFetch}
             />
           )}
 
