@@ -840,7 +840,7 @@ const Navigation = ({ currentView, onViewChange, kingdom, onBackToSelector }) =>
 };
 
 // Kingdom Dashboard Component with Totals and Kingdom Editing
-const KingdomDashboard = ({ kingdom, events, autoEventsEnabled, onToggleAutoEvents }) => {
+const KingdomDashboard = ({ kingdom, events, autoEventsEnabled, onToggleAutoEvents, authenticatedFetch }) => {
   const [showKingdomEditForm, setShowKingdomEditForm] = useState(false);
   const [kingdomEditData, setKingdomEditData] = useState({
     name: kingdom?.name || '',
