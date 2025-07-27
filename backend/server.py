@@ -51,7 +51,7 @@ async def get_current_user_id(current_user: dict = Depends(get_current_user)) ->
     """Extract user ID from authenticated user"""
     return current_user["id"]
 
-# Helper function to check if user owns kingdom containing city
+# Enhanced helper function to check if user owns kingdom containing city
 async def verify_city_ownership(city_id: str, current_user: dict) -> dict:
     """Check if current user owns the kingdom containing the specified city"""
     query_filter = {"cities.id": city_id}
@@ -62,6 +62,29 @@ async def verify_city_ownership(city_id: str, current_user: dict) -> dict:
     if not kingdom:
         raise HTTPException(status_code=403, detail="Access denied: City not found or not owned by user")
     return kingdom
+
+# Helper function to verify kingdom ownership
+async def verify_kingdom_ownership(kingdom_id: str, current_user: dict) -> dict:
+    """Check if current user owns the specified kingdom"""
+    query_filter = {"id": kingdom_id}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    kingdom = await db.multi_kingdoms.find_one(query_filter)
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Kingdom not found or access denied")
+    return kingdom
+
+# Helper function to verify boundary ownership
+async def verify_boundary_ownership(boundary_id: str, current_user: dict) -> dict:
+    """Check if current user owns the kingdom containing the specified boundary"""
+    boundary = await db.kingdom_boundaries.find_one({"id": boundary_id})
+    if not boundary:
+        raise HTTPException(status_code=404, detail="Boundary not found")
+    
+    # Verify kingdom ownership
+    await verify_kingdom_ownership(boundary["kingdom_id"], current_user)
+    return boundary
 
 # Super admin check (for future admin features)
 SUPER_ADMIN_USERNAME = "admin"  # Can be configured via env later
