@@ -2683,7 +2683,11 @@ async def delete_citizen(citizen_id: str, current_user: dict = Depends(get_curre
 
 # Slaves Management
 @api_router.post("/slaves")
-async def create_slave(slave: SlaveCreate):
+async def create_slave(slave: SlaveCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new slave - only if user owns the kingdom containing the city"""
+    # Verify user owns the kingdom containing this city
+    await verify_city_ownership(slave.city_id, current_user)
+    
     new_slave = Slave(**slave.dict())
     
     result = await db.multi_kingdoms.update_one(
@@ -2692,11 +2696,25 @@ async def create_slave(slave: SlaveCreate):
     )
     
     if result.modified_count:
+        await manager.broadcast({
+            "type": "slave_added",
+            "slave": new_slave.dict()
+        })
         return new_slave
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/slaves/{slave_id}")
-async def delete_slave(slave_id: str):
+async def delete_slave(slave_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a slave - only if user owns the kingdom containing the slave"""
+    # First find which city contains this slave to check ownership
+    kingdom = await db.multi_kingdoms.find_one({"cities.slaves.id": slave_id})
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Slave not found")
+    
+    # Check ownership
+    if not is_super_admin(current_user) and kingdom.get("owner_id") != current_user["id"]:
+        raise HTTPException(status_code=403, detail="Access denied: Not your slave")
+    
     result = await db.multi_kingdoms.update_one(
         {"cities.slaves.id": slave_id},
         {"$pull": {"cities.$.slaves": {"id": slave_id}}}
