@@ -2623,7 +2623,7 @@ async def delete_citizen(citizen_id: str):
 async def create_slave(slave: SlaveCreate):
     new_slave = Slave(**slave.dict())
     
-    result = await db.kingdoms.update_one(
+    result = await db.multi_kingdoms.update_one(
         {"cities.id": slave.city_id},
         {"$push": {"cities.$.slaves": new_slave.dict()}}
     )
@@ -2634,7 +2634,7 @@ async def create_slave(slave: SlaveCreate):
 
 @api_router.delete("/slaves/{slave_id}")
 async def delete_slave(slave_id: str):
-    result = await db.kingdoms.update_one(
+    result = await db.multi_kingdoms.update_one(
         {"cities.slaves.id": slave_id},
         {"$pull": {"cities.$.slaves": {"id": slave_id}}}
     )
