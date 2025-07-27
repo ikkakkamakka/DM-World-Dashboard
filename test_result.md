@@ -370,11 +370,11 @@ test_plan:
 
   - task: "City Management Add Button Functionality"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py, /app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "user"
@@ -382,6 +382,9 @@ test_plan:
       - working: "NA"
         agent: "main"
         comment: "BACKEND FIXED: Updated all registry creation endpoints (Citizens, Slaves, Livestock, Soldiers, Tribute, Crime) to use db.multi_kingdoms instead of db.kingdoms. Added WebSocket broadcasting for real-time updates. All POST endpoints now target correct collection and include proper broadcast messages."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETE: All 6 registry creation endpoints working perfectly with multi-kingdom architecture. TESTED ENDPOINTS: POST /api/citizens ✅, POST /api/slaves ✅, POST /api/livestock ✅, POST /api/soldiers ✅, POST /api/tribute ✅, POST /api/crimes ✅. All endpoints correctly use db.multi_kingdoms collection, validate input data, create items with proper structure, update database counts, and include WebSocket broadcasting. Error handling verified for invalid city_ids (404) and missing fields (422). Database persistence confirmed in multi_kingdoms collection. All registry types successfully created and stored with proper city associations."
 
   - task: "Local Government Remove Button Fix"
     implemented: true
