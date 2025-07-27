@@ -1974,7 +1974,7 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
 
   const handleCreateCity = async (cityData) => {
     try {
-      const response = await fetch(`${API}/cities`, {
+      const response = await authenticatedFetch(`${API}/cities`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -1989,16 +1989,16 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
         const result = await response.json();
         console.log('City created successfully:', result);
         setShowAddCityForm(false);
-        // Refresh data after a short delay
-        setTimeout(() => window.location.reload(), 1000);
+        // Refresh the kingdom data to update cities list
+        window.location.reload();
       } else {
         const errorText = await response.text();
         console.error('Failed to create city:', response.status, errorText);
-        alert('Failed to create city. Please try again.');
+        alert(`Failed to create city: ${errorText}`);
       }
     } catch (error) {
       console.error('Error creating city:', error);
-      alert('Error creating city. Please try again.');
+      alert('Error creating city. Please check your connection and try again.');
     }
   };
 
