@@ -1761,9 +1761,23 @@ async def update_campaign_date(kingdom_id: str, date_update: CampaignDateUpdate)
     raise HTTPException(status_code=500, detail="Failed to update campaign date")
 
 @api_router.get("/calendar-events/{kingdom_id}")
-async def get_calendar_events(kingdom_id: str):
-    """Get all calendar events for a kingdom"""
-    events = await db.calendar_events.find({"kingdom_id": kingdom_id}).to_list(100)
+async def get_calendar_events(kingdom_id: str, current_user: dict = Depends(get_current_user)):
+    """Get all calendar events for a kingdom - only if user owns the kingdom"""
+    # Verify user owns this kingdom
+    query_filter = {"id": kingdom_id}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    kingdom = await db.multi_kingdoms.find_one(query_filter)
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Kingdom not found or access denied")
+    
+    # Get calendar events for this kingdom
+    event_filter = {"kingdom_id": kingdom_id}
+    if not is_super_admin(current_user):
+        event_filter["owner_id"] = current_user["id"]
+    
+    events = await db.calendar_events.find(event_filter).to_list(100)
     for event in events:
         event.pop('_id', None)
     return events
