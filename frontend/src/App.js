@@ -4177,11 +4177,11 @@ function AuthenticatedApp() {
 
   const handleKingdomChange = async (selectedKingdom) => {
     try {
-      const response = await fetch(`${API}/multi-kingdom/${selectedKingdom.id}/set-active`, {
+      const response = await authenticatedFetch(`${API}/multi-kingdom/${selectedKingdom.id}/set-active`, {
         method: 'POST'
       });
       
-      if (response.ok) {
+      if (response && response.ok) {
         setActiveKingdom(selectedKingdom);
         setKingdom(selectedKingdom);
         setCurrentView('kingdom');
