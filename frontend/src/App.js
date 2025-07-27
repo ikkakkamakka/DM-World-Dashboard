@@ -2578,7 +2578,7 @@ const getTabCount = (city, tab) => {
 };
 
 // Citizens Registry
-const CitizensRegistry = ({ city }) => {
+const CitizensRegistry = ({ city, authenticatedFetch }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '', age: '', occupation: '', health: 'Healthy', notes: ''
@@ -2587,7 +2587,7 @@ const CitizensRegistry = ({ city }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API}/citizens`, {
+      const response = await authenticatedFetch(`${API}/citizens`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, city_id: city.id, age: parseInt(formData.age) })
@@ -2605,7 +2605,7 @@ const CitizensRegistry = ({ city }) => {
   const handleDelete = async (citizenId) => {
     if (window.confirm('Are you sure you want to delete this citizen?')) {
       try {
-        const response = await fetch(`${API}/citizens/${citizenId}`, {
+        const response = await authenticatedFetch(`${API}/citizens/${citizenId}`, {
           method: 'DELETE'
         });
         if (response.ok) {
@@ -2619,7 +2619,7 @@ const CitizensRegistry = ({ city }) => {
 
   const handleAutoGenerate = async () => {
     try {
-      const response = await fetch(`${API}/auto-generate`, {
+      const response = await authenticatedFetch(`${API}/auto-generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
