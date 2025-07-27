@@ -49,7 +49,10 @@ manager = ConnectionManager()
 # Helper function to get current user ID
 async def get_current_user_id(current_user: dict = Depends(get_current_user)) -> str:
     """Extract user ID from authenticated user"""
-    return current_user["id"]
+    print(f"DEBUG: get_current_user_id called with user: {current_user}")
+    user_id = current_user["id"]
+    print(f"DEBUG: Extracted user ID: {user_id}")
+    return user_id
 
 # Enhanced helper function to check if user owns kingdom containing city
 async def verify_city_ownership(city_id: str, current_user: dict) -> dict:
