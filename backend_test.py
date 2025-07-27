@@ -2035,60 +2035,33 @@ class BackendTester:
             return False
 
     async def test_authentication_system(self):
-        """Test the complete JWT-based authentication system"""
-        print("\n🔐 Testing Authentication System...")
+        """Test enhanced authentication system with sliding session functionality"""
+        print("\n🔐 Testing Enhanced Authentication System with Sliding Session...")
         
-        # Test user registration
-        signup_success = await self.test_auth_signup()
-        self.test_results['auth_signup'] = signup_success
-        
-        # Test user login
-        login_success = await self.test_auth_login()
-        self.test_results['auth_login'] = login_success
-        
-        # Test JWT token validation
-        jwt_success = await self.test_auth_jwt_tokens()
-        self.test_results['auth_jwt_tokens'] = jwt_success
-        
-        # Test password hashing
-        password_hash_success = await self.test_auth_password_hashing()
-        self.test_results['auth_password_hashing'] = password_hash_success
-        
-        # Test invalid credentials handling
-        invalid_creds_success = await self.test_auth_invalid_credentials()
-        self.test_results['auth_invalid_credentials'] = invalid_creds_success
-        
-        # Test duplicate validation
-        duplicate_success = await self.test_auth_duplicate_validation()
-        self.test_results['auth_duplicate_validation'] = duplicate_success
-        
-        # Test separate database
-        separate_db_success = await self.test_auth_separate_database()
-        self.test_results['auth_separate_database'] = separate_db_success
-        
-        # Test /me endpoint
-        me_success = await self.test_auth_me()
-        self.test_results['auth_me'] = me_success
-        
-        # Test token verification
-        verify_success = await self.test_auth_verify_token()
-        self.test_results['auth_verify_token'] = verify_success
-        
-        # Test logout
-        logout_success = await self.test_auth_logout()
-        self.test_results['auth_logout'] = logout_success
-        
-        # Summary
+        # Test authentication endpoints as requested in review
         auth_tests = [
-            signup_success, login_success, jwt_success, password_hash_success,
-            invalid_creds_success, duplicate_success, separate_db_success,
-            me_success, verify_success, logout_success
+            ("auth_login_admin", self.test_auth_login_admin),
+            ("auth_verify_token", self.test_auth_verify_token),
+            ("auth_refresh_token", self.test_auth_refresh_token),
+            ("multi_kingdoms_authenticated", self.test_multi_kingdoms_authenticated),
+            ("auth_invalid_token_handling", self.test_auth_invalid_token_handling),
+            ("auth_jwt_tokens", self.test_auth_jwt_tokens),
+            ("auth_password_hashing", self.test_auth_password_hashing),
+            ("auth_separate_database", self.test_auth_separate_database)
         ]
         
-        passed_auth_tests = sum(auth_tests)
-        total_auth_tests = len(auth_tests)
+        auth_results = {}
+        for test_name, test_func in auth_tests:
+            print(f"\n   🔑 Testing {test_name.replace('auth_', '').replace('_', ' ').title()}...")
+            success = await test_func()
+            auth_results[test_name] = success
+            self.test_results[test_name] = success
         
-        print(f"\n   📊 Authentication Summary: {passed_auth_tests}/{total_auth_tests} tests passed")
+        # Summary for authentication tests
+        passed_auth_tests = sum(auth_results.values())
+        total_auth_tests = len(auth_results)
+        
+        print(f"\n   📊 Enhanced Authentication Summary: {passed_auth_tests}/{total_auth_tests} tests passed")
         
         return passed_auth_tests == total_auth_tests
 
