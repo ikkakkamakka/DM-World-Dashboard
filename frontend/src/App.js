@@ -3757,10 +3757,11 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
     setDeleteConfirmText('');
   };
 
-  const handleRemoveOfficial = async (officialId) => {
-    if (window.confirm('Are you sure you want to remove this official from their position?')) {
+  const handleRemoveOfficial = async (official) => {
+    const confirmMessage = `Remove ${official.position}: ${official.name}?`;
+    if (window.confirm(confirmMessage)) {
       try {
-        const response = await fetch(`${API}/cities/${city.id}/government/${officialId}`, {
+        const response = await fetch(`${API}/cities/${city.id}/government/${official.id}`, {
           method: 'DELETE'
         });
         if (response.ok) {
