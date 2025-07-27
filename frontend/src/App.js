@@ -1095,21 +1095,33 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
     }
 
     try {
-      const response = await fetch(`${API}/multi-kingdom/${kingdomToDelete.id}`, {
+      const response = await authenticatedFetch(`${API}/multi-kingdom/${kingdomToDelete.id}`, {
         method: 'DELETE'
       });
       
-      if (response.ok) {
+      if (response && response.ok) {
         setShowDeleteModal(false);
         setKingdomToDelete(null);
         setDeleteConfirmText('');
         // Refresh kingdoms list
         window.location.reload();
-      } else {
-        console.error('Failed to delete kingdom');
+      } else if (response) {
+        if (response.status === 401) {
+          setErrorMessage('Authentication failed. Please log in again.');
+          setShowErrorModal(true);
+        } else if (response.status === 403) {
+          setErrorMessage('Access denied. You do not have permission to delete this kingdom.');
+          setShowErrorModal(true);
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          setErrorMessage(errorData.detail || 'Failed to delete kingdom. Please try again.');
+          setShowErrorModal(true);
+        }
       }
     } catch (error) {
       console.error('Error deleting kingdom:', error);
+      setErrorMessage('Network error. Please check your connection and try again.');
+      setShowErrorModal(true);
     }
   };
 
