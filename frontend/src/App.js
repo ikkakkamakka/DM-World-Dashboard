@@ -2536,7 +2536,7 @@ const AddCityForm = ({ onSubmit, onCancel }) => {
 };
 
 // Registry Tabs Component
-const RegistryTabs = ({ city, activeTab, setActiveTab }) => {
+const RegistryTabs = ({ city, activeTab, setActiveTab, authenticatedFetch }) => {
   const tabs = ['Citizens', 'Slaves', 'Livestock', 'Garrison', 'Tribute', 'Crime'];
 
   return (
@@ -2554,12 +2554,12 @@ const RegistryTabs = ({ city, activeTab, setActiveTab }) => {
       </div>
       
       <div className="tab-content">
-        {activeTab === 'Citizens' && <CitizensRegistry city={city} />}
-        {activeTab === 'Slaves' && <SlavesRegistry city={city} />}
-        {activeTab === 'Livestock' && <LivestockRegistry city={city} />}
-        {activeTab === 'Garrison' && <GarrisonRegistry city={city} />}
-        {activeTab === 'Tribute' && <TributeRegistry city={city} />}
-        {activeTab === 'Crime' && <CrimeRegistry city={city} />}
+        {activeTab === 'Citizens' && <CitizensRegistry city={city} authenticatedFetch={authenticatedFetch} />}
+        {activeTab === 'Slaves' && <SlavesRegistry city={city} authenticatedFetch={authenticatedFetch} />}
+        {activeTab === 'Livestock' && <LivestockRegistry city={city} authenticatedFetch={authenticatedFetch} />}
+        {activeTab === 'Garrison' && <GarrisonRegistry city={city} authenticatedFetch={authenticatedFetch} />}
+        {activeTab === 'Tribute' && <TributeRegistry city={city} authenticatedFetch={authenticatedFetch} />}
+        {activeTab === 'Crime' && <CrimeRegistry city={city} authenticatedFetch={authenticatedFetch} />}
       </div>
     </div>
   );
