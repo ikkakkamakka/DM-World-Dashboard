@@ -2174,22 +2174,29 @@ async def get_voting_results(session_id: str):
 
 # City assignment to kingdoms
 @api_router.put("/cities/{city_id}/assign-kingdom/{kingdom_id}")
-async def assign_city_to_kingdom(city_id: str, kingdom_id: str):
-    """Assign a city to a specific kingdom"""
-    # Get city data from legacy kingdom
-    legacy_kingdom = await db.kingdoms.find_one()
-    city_data = None
+async def assign_city_to_kingdom(city_id: str, kingdom_id: str, current_user: dict = Depends(get_current_user)):
+    """Assign a city to a specific kingdom - only if user owns both source and target kingdoms"""
+    # Verify user owns the target kingdom
+    target_kingdom = await verify_kingdom_ownership(kingdom_id, current_user)
     
-    if legacy_kingdom:
-        for city in legacy_kingdom.get('cities', []):
-            if city['id'] == city_id:
-                city_data = city
-                break
+    # Find current kingdom containing this city and verify ownership
+    source_kingdom = await verify_city_ownership(city_id, current_user)
+    
+    # Get city data from source kingdom
+    city_data = None
+    for city in source_kingdom.get('cities', []):
+        if city['id'] == city_id:
+            city_data = city
+            break
     
     if not city_data:
         raise HTTPException(status_code=404, detail="City not found")
     
-    # Add city to new kingdom
+    # Don't allow moving city to the same kingdom
+    if source_kingdom['id'] == kingdom_id:
+        raise HTTPException(status_code=400, detail="City is already in this kingdom")
+    
+    # Add city to target kingdom
     result = await db.multi_kingdoms.update_one(
         {"id": kingdom_id},
         {
@@ -2199,9 +2206,9 @@ async def assign_city_to_kingdom(city_id: str, kingdom_id: str):
     )
     
     if result.modified_count:
-        # Remove city from legacy kingdom
-        await db.kingdoms.update_one(
-            {},
+        # Remove city from source kingdom
+        await db.multi_kingdoms.update_one(
+            {"id": source_kingdom['id']},
             {
                 "$pull": {"cities": {"id": city_id}},
                 "$inc": {"total_population": -city_data.get('population', 0)}
@@ -2209,7 +2216,7 @@ async def assign_city_to_kingdom(city_id: str, kingdom_id: str):
         )
         return {"message": "City assigned successfully"}
     
-    raise HTTPException(status_code=404, detail="Kingdom not found")
+    raise HTTPException(status_code=404, detail="Target kingdom not found")
 @api_router.get("/kingdom")
 async def get_kingdom():
     kingdom = await db.kingdoms.find_one()
