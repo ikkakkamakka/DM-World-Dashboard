@@ -858,7 +858,7 @@ const KingdomDashboard = ({ kingdom, events, autoEventsEnabled, onToggleAutoEven
   const handleKingdomEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API}/kingdom`, {
+      const response = await authenticatedFetch(`${API}/kingdom`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(kingdomEditData)
