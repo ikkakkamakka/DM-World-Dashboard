@@ -1049,19 +1049,26 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
 
   const handleCreateKingdom = async (e) => {
     e.preventDefault();
+    console.log('Creating kingdom with data:', newKingdomData);
+    console.log('Token available:', !!token);
+    
     try {
       const response = await authenticatedFetch(`${API}/multi-kingdoms`, {
         method: 'POST',
         body: JSON.stringify(newKingdomData)
       });
       
+      console.log('Response status:', response?.status);
+      
       if (response && response.ok) {
         const newKingdom = await response.json();
+        console.log('Kingdom created successfully:', newKingdom);
         setShowCreateForm(false);
         setNewKingdomData({ name: '', ruler: '', government_type: 'Monarchy', color: '#1e3a8a' });
         onCreateNew(newKingdom);
       } else if (response) {
         // Handle specific error cases
+        console.log('Error response:', response.status, response.statusText);
         if (response.status === 401) {
           setErrorMessage('Authentication failed. Please log in again.');
           setShowErrorModal(true);
@@ -1070,6 +1077,7 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
           setShowErrorModal(true);
         } else {
           const errorData = await response.json().catch(() => ({}));
+          console.log('Error data:', errorData);
           setErrorMessage(errorData.detail || 'Failed to create kingdom. Please try again.');
           setShowErrorModal(true);
         }
