@@ -2806,7 +2806,16 @@ async def delete_soldier(soldier_id: str, current_user: dict = Depends(get_curre
 
 # Tribute Management
 @api_router.post("/tribute")
-async def create_tribute(tribute: TributeCreate):
+async def create_tribute(tribute: TributeCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new tribute record - only if user owns the kingdom containing the city"""
+    # Find kingdom by city name and verify ownership
+    kingdom = await db.multi_kingdoms.find_one({"cities.name": tribute.from_city})
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="City not found")
+    
+    if not is_super_admin(current_user) and kingdom.get("owner_id") != current_user["id"]:
+        raise HTTPException(status_code=403, detail="Access denied: Not your city")
+    
     new_tribute = TributeRecord(**tribute.dict())
     
     result = await db.multi_kingdoms.update_one(
@@ -2823,7 +2832,15 @@ async def create_tribute(tribute: TributeCreate):
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/tribute/{tribute_id}")
-async def delete_tribute(tribute_id: str):
+async def delete_tribute(tribute_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a tribute record - only if user owns the kingdom containing the tribute"""
+    kingdom = await db.multi_kingdoms.find_one({"cities.tribute_records.id": tribute_id})
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Tribute record not found")
+    
+    if not is_super_admin(current_user) and kingdom.get("owner_id") != current_user["id"]:
+        raise HTTPException(status_code=403, detail="Access denied: Not your tribute record")
+    
     result = await db.multi_kingdoms.update_one(
         {"cities.tribute_records.id": tribute_id},
         {"$pull": {"cities.$.tribute_records": {"id": tribute_id}}}
@@ -2835,7 +2852,10 @@ async def delete_tribute(tribute_id: str):
 
 # Crime Management
 @api_router.post("/crimes")
-async def create_crime(crime: CrimeCreate):
+async def create_crime(crime: CrimeCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new crime record - only if user owns the kingdom containing the city"""
+    await verify_city_ownership(crime.city_id, current_user)
+    
     new_crime = CrimeRecord(**crime.dict())
     
     result = await db.multi_kingdoms.update_one(
@@ -2852,7 +2872,15 @@ async def create_crime(crime: CrimeCreate):
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/crimes/{crime_id}")
-async def delete_crime(crime_id: str):
+async def delete_crime(crime_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a crime record - only if user owns the kingdom containing the crime"""
+    kingdom = await db.multi_kingdoms.find_one({"cities.crime_records.id": crime_id})
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Crime not found")
+    
+    if not is_super_admin(current_user) and kingdom.get("owner_id") != current_user["id"]:
+        raise HTTPException(status_code=403, detail="Access denied: Not your crime record")
+    
     result = await db.multi_kingdoms.update_one(
         {"cities.crime_records.id": crime_id},
         {"$pull": {"cities.$.crime_records": {"id": crime_id}}}
@@ -2860,7 +2888,7 @@ async def delete_crime(crime_id: str):
     
     if result.modified_count:
         return {"message": "Crime record deleted successfully"}
-    raise HTTPException(status_code=404, detail="Crime record not found")
+    raise HTTPException(status_code=404, detail="Crime not found")
 
 # Events Management
 @api_router.get("/events")
