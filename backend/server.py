@@ -1541,10 +1541,15 @@ async def get_all_kingdoms(current_user: dict = Depends(get_current_user)):
 @api_router.post("/multi-kingdoms")
 async def create_multi_kingdom(kingdom: MultiKingdomCreate, current_user_id: str = Depends(get_current_user_id)):
     """Create a new kingdom for current user"""
+    print(f"DEBUG: create_multi_kingdom called with kingdom: {kingdom}")
+    print(f"DEBUG: current_user_id: {current_user_id}")
+    
     new_kingdom = MultiKingdom(**kingdom.dict(), owner_id=current_user_id)
+    print(f"DEBUG: new_kingdom created: {new_kingdom}")
     
     result = await db.multi_kingdoms.insert_one(new_kingdom.dict())
     if result.inserted_id:
+        print(f"DEBUG: Kingdom inserted with ID: {result.inserted_id}")
         return new_kingdom
     raise HTTPException(status_code=500, detail="Failed to create kingdom")
 
