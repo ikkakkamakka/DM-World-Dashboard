@@ -387,7 +387,7 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
   };
 
   const formatHarptosDate = (dateObj) => {
-    const yearString = dateObj.dr_year ? dateObj.dr_year.toString() : dateObj.drYear ? dateObj.drYear.toString() : '1492';
+    const yearString = (dateObj.dr_year || dateObj.drYear || 1492).toString();
     const yearName = drYearNames?.[yearString];
     
     // Create base date string
