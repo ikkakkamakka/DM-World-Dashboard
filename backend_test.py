@@ -4696,6 +4696,376 @@ class BackendTester:
             self.errors.append(f"Government isolation test error: {str(e)}")
             return False
 
+    async def test_authentication_dashboard_fixes(self):
+        """Test the specific authentication fixes for dashboard data loading issues"""
+        print("\n🔐 Testing Authentication Fixes for Dashboard Data Loading...")
+        
+        # First, authenticate as admin user
+        admin_token = await self.authenticate_admin_user()
+        if not admin_token:
+            self.errors.append("Failed to authenticate admin user - cannot test dashboard fixes")
+            return False
+        
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Test 1: /api/multi-kingdoms with authentication
+        multi_kingdoms_success = await self.test_authenticated_multi_kingdoms(headers)
+        
+        # Test 2: /api/kingdom with authentication  
+        kingdom_success = await self.test_authenticated_kingdom_endpoint(headers)
+        
+        # Test 3: /api/city/{city_id} with authentication
+        city_success = await self.test_authenticated_city_endpoint(headers)
+        
+        # Test 4: /api/cities/{city_id}/government with authentication
+        government_success = await self.test_authenticated_government_endpoint(headers)
+        
+        # Test 5: /api/voting-sessions/{kingdom_id} with authentication
+        voting_success = await self.test_authenticated_voting_sessions(headers)
+        
+        # Test 6: /api/calendar-events/{kingdom_id}/upcoming with authentication
+        calendar_success = await self.test_authenticated_calendar_events(headers)
+        
+        # Test unauthenticated requests return proper 401/403
+        unauth_success = await self.test_unauthenticated_requests()
+        
+        # Summary
+        auth_tests = [multi_kingdoms_success, kingdom_success, city_success, 
+                     government_success, voting_success, calendar_success, unauth_success]
+        passed_auth_tests = sum(auth_tests)
+        total_auth_tests = len(auth_tests)
+        
+        print(f"\n   📊 Authentication Dashboard Fixes Summary: {passed_auth_tests}/{total_auth_tests} tests passed")
+        
+        return passed_auth_tests == total_auth_tests
+
+    async def authenticate_admin_user(self):
+        """Authenticate admin user and return JWT token"""
+        print("\n   🔑 Authenticating admin user...")
+        try:
+            login_data = {
+                "username": "admin",
+                "password": "admin123"
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/login", json=login_data) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    token = result.get("access_token")
+                    if token:
+                        print("      ✅ Admin authentication successful")
+                        return token
+                    else:
+                        self.errors.append("Login response missing access_token")
+                        return None
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Admin login failed: HTTP {response.status} - {error_text}")
+                    return None
+        except Exception as e:
+            self.errors.append(f"Admin authentication error: {str(e)}")
+            return None
+
+    async def test_authenticated_multi_kingdoms(self, headers):
+        """Test /api/multi-kingdoms with authentication and owner_id filtering"""
+        print("\n   🏰 Testing authenticated /api/multi-kingdoms...")
+        try:
+            async with self.session.get(f"{API_BASE}/multi-kingdoms", headers=headers) as response:
+                if response.status == 200:
+                    kingdoms = await response.json()
+                    
+                    if not isinstance(kingdoms, list):
+                        self.errors.append("Multi-kingdoms should return a list")
+                        return False
+                    
+                    if len(kingdoms) == 0:
+                        self.errors.append("No kingdoms found - owner_id filtering may be too restrictive")
+                        return False
+                    
+                    # Check that all kingdoms have owner_id field
+                    for kingdom in kingdoms:
+                        if 'owner_id' not in kingdom:
+                            self.errors.append("Kingdom missing owner_id field")
+                            return False
+                        
+                        # Verify kingdom structure
+                        required_fields = ['id', 'name', 'ruler', 'cities', 'owner_id']
+                        missing_fields = [field for field in required_fields if field not in kingdom]
+                        if missing_fields:
+                            self.errors.append(f"Kingdom missing fields: {missing_fields}")
+                            return False
+                    
+                    print(f"      ✅ Found {len(kingdoms)} kingdoms with proper owner_id filtering")
+                    print(f"      Sample kingdom: {kingdoms[0]['name']} (Owner: {kingdoms[0]['owner_id']})")
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Authenticated multi-kingdoms failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Authenticated multi-kingdoms test error: {str(e)}")
+            return False
+
+    async def test_authenticated_kingdom_endpoint(self, headers):
+        """Test /api/kingdom with authentication"""
+        print("\n   👑 Testing authenticated /api/kingdom...")
+        try:
+            async with self.session.get(f"{API_BASE}/kingdom", headers=headers) as response:
+                if response.status == 200:
+                    kingdom = await response.json()
+                    
+                    # Verify kingdom structure
+                    required_fields = ['id', 'name', 'ruler', 'cities', 'total_population', 'royal_treasury']
+                    missing_fields = [field for field in required_fields if field not in kingdom]
+                    if missing_fields:
+                        self.errors.append(f"Kingdom endpoint missing fields: {missing_fields}")
+                        return False
+                    
+                    # Check that it returns active kingdom for user
+                    if 'owner_id' not in kingdom:
+                        self.errors.append("Kingdom endpoint missing owner_id field")
+                        return False
+                    
+                    print(f"      ✅ Kingdom endpoint working: {kingdom['name']} (Owner: {kingdom['owner_id']})")
+                    print(f"      Population: {kingdom['total_population']}, Treasury: {kingdom['royal_treasury']}")
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Authenticated kingdom endpoint failed: HTTP {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Authenticated kingdom endpoint test error: {str(e)}")
+            return False
+
+    async def test_authenticated_city_endpoint(self, headers):
+        """Test /api/city/{city_id} with authentication"""
+        print("\n   🏘️ Testing authenticated /api/city/{city_id}...")
+        try:
+            # First get a kingdom to find city IDs
+            async with self.session.get(f"{API_BASE}/multi-kingdoms", headers=headers) as response:
+                if response.status != 200:
+                    self.errors.append("Cannot test city endpoint - multi-kingdoms failed")
+                    return False
+                
+                kingdoms = await response.json()
+                if not kingdoms or not kingdoms[0].get('cities'):
+                    self.errors.append("No cities found for testing")
+                    return False
+                
+                test_city = kingdoms[0]['cities'][0]
+                city_id = test_city['id']
+                
+                # Test city endpoint with authentication
+                async with self.session.get(f"{API_BASE}/city/{city_id}", headers=headers) as city_response:
+                    if city_response.status == 200:
+                        city_data = await city_response.json()
+                        
+                        # Verify city structure
+                        required_fields = ['id', 'name', 'governor', 'population', 'treasury', 'citizens']
+                        missing_fields = [field for field in required_fields if field not in city_data]
+                        if missing_fields:
+                            self.errors.append(f"City endpoint missing fields: {missing_fields}")
+                            return False
+                        
+                        print(f"      ✅ City endpoint working: {city_data['name']} (Pop: {city_data['population']})")
+                        print(f"      Governor: {city_data['governor']}, Citizens: {len(city_data.get('citizens', []))}")
+                        return True
+                        
+                    else:
+                        error_text = await city_response.text()
+                        self.errors.append(f"Authenticated city endpoint failed: HTTP {city_response.status} - {error_text}")
+                        return False
+                        
+        except Exception as e:
+            self.errors.append(f"Authenticated city endpoint test error: {str(e)}")
+            return False
+
+    async def test_authenticated_government_endpoint(self, headers):
+        """Test /api/cities/{city_id}/government with authentication"""
+        print("\n   🏛️ Testing authenticated /api/cities/{city_id}/government...")
+        try:
+            # First get a kingdom to find city IDs
+            async with self.session.get(f"{API_BASE}/multi-kingdoms", headers=headers) as response:
+                if response.status != 200:
+                    self.errors.append("Cannot test government endpoint - multi-kingdoms failed")
+                    return False
+                
+                kingdoms = await response.json()
+                if not kingdoms or not kingdoms[0].get('cities'):
+                    self.errors.append("No cities found for government testing")
+                    return False
+                
+                test_city = kingdoms[0]['cities'][0]
+                city_id = test_city['id']
+                
+                # Test government endpoint with authentication
+                async with self.session.get(f"{API_BASE}/cities/{city_id}/government", headers=headers) as gov_response:
+                    if gov_response.status == 200:
+                        government_data = await gov_response.json()
+                        
+                        if not isinstance(government_data, list):
+                            self.errors.append("Government endpoint should return a list")
+                            return False
+                        
+                        print(f"      ✅ Government endpoint working: Found {len(government_data)} officials")
+                        
+                        # Check structure of officials if any exist
+                        if government_data:
+                            official = government_data[0]
+                            required_fields = ['id', 'name', 'position', 'city_id']
+                            missing_fields = [field for field in required_fields if field not in official]
+                            if missing_fields:
+                                self.errors.append(f"Government official missing fields: {missing_fields}")
+                                return False
+                            
+                            print(f"      Sample official: {official['name']} ({official['position']})")
+                        
+                        return True
+                        
+                    else:
+                        error_text = await gov_response.text()
+                        self.errors.append(f"Authenticated government endpoint failed: HTTP {gov_response.status} - {error_text}")
+                        return False
+                        
+        except Exception as e:
+            self.errors.append(f"Authenticated government endpoint test error: {str(e)}")
+            return False
+
+    async def test_authenticated_voting_sessions(self, headers):
+        """Test /api/voting-sessions/{kingdom_id} with authentication"""
+        print("\n   🗳️ Testing authenticated /api/voting-sessions/{kingdom_id}...")
+        try:
+            # First get a kingdom ID
+            async with self.session.get(f"{API_BASE}/multi-kingdoms", headers=headers) as response:
+                if response.status != 200:
+                    self.errors.append("Cannot test voting sessions - multi-kingdoms failed")
+                    return False
+                
+                kingdoms = await response.json()
+                if not kingdoms:
+                    self.errors.append("No kingdoms found for voting sessions testing")
+                    return False
+                
+                kingdom_id = kingdoms[0]['id']
+                
+                # Test voting sessions endpoint with authentication
+                async with self.session.get(f"{API_BASE}/voting-sessions/{kingdom_id}", headers=headers) as voting_response:
+                    if voting_response.status == 200:
+                        voting_data = await voting_response.json()
+                        
+                        if not isinstance(voting_data, list):
+                            self.errors.append("Voting sessions endpoint should return a list")
+                            return False
+                        
+                        print(f"      ✅ Voting sessions endpoint working: Found {len(voting_data)} sessions")
+                        return True
+                        
+                    elif voting_response.status == 404:
+                        # 404 is acceptable if no voting sessions exist yet
+                        print("      ✅ Voting sessions endpoint working: No sessions found (404 expected)")
+                        return True
+                        
+                    else:
+                        error_text = await voting_response.text()
+                        self.errors.append(f"Authenticated voting sessions failed: HTTP {voting_response.status} - {error_text}")
+                        return False
+                        
+        except Exception as e:
+            self.errors.append(f"Authenticated voting sessions test error: {str(e)}")
+            return False
+
+    async def test_authenticated_calendar_events(self, headers):
+        """Test /api/calendar-events/{kingdom_id}/upcoming with authentication"""
+        print("\n   📅 Testing authenticated /api/calendar-events/{kingdom_id}/upcoming...")
+        try:
+            # First get a kingdom ID
+            async with self.session.get(f"{API_BASE}/multi-kingdoms", headers=headers) as response:
+                if response.status != 200:
+                    self.errors.append("Cannot test calendar events - multi-kingdoms failed")
+                    return False
+                
+                kingdoms = await response.json()
+                if not kingdoms:
+                    self.errors.append("No kingdoms found for calendar events testing")
+                    return False
+                
+                kingdom_id = kingdoms[0]['id']
+                
+                # Test calendar events endpoint with authentication
+                async with self.session.get(f"{API_BASE}/calendar-events/{kingdom_id}/upcoming", headers=headers) as calendar_response:
+                    if calendar_response.status == 200:
+                        calendar_data = await calendar_response.json()
+                        
+                        if not isinstance(calendar_data, list):
+                            self.errors.append("Calendar events endpoint should return a list")
+                            return False
+                        
+                        print(f"      ✅ Calendar events endpoint working: Found {len(calendar_data)} upcoming events")
+                        
+                        # Check structure of events if any exist
+                        if calendar_data:
+                            event = calendar_data[0]
+                            required_fields = ['id', 'title', 'description', 'kingdom_id', 'owner_id']
+                            missing_fields = [field for field in required_fields if field not in event]
+                            if missing_fields:
+                                self.errors.append(f"Calendar event missing fields: {missing_fields}")
+                                return False
+                            
+                            print(f"      Sample event: {event['title']} (Kingdom: {event['kingdom_id']})")
+                        
+                        return True
+                        
+                    elif calendar_response.status == 404:
+                        # 404 is acceptable if no calendar events exist yet
+                        print("      ✅ Calendar events endpoint working: No events found (404 expected)")
+                        return True
+                        
+                    else:
+                        error_text = await calendar_response.text()
+                        self.errors.append(f"Authenticated calendar events failed: HTTP {calendar_response.status} - {error_text}")
+                        return False
+                        
+        except Exception as e:
+            self.errors.append(f"Authenticated calendar events test error: {str(e)}")
+            return False
+
+    async def test_unauthenticated_requests(self):
+        """Test that unauthenticated requests return proper 401/403 responses"""
+        print("\n   🚫 Testing unauthenticated requests return proper errors...")
+        try:
+            endpoints_to_test = [
+                "/api/multi-kingdoms",
+                "/api/kingdom",
+                "/api/city/test-city-id",
+                "/api/cities/test-city-id/government"
+            ]
+            
+            success_count = 0
+            
+            for endpoint in endpoints_to_test:
+                async with self.session.get(f"{API_BASE}{endpoint}") as response:
+                    if response.status in [401, 403]:
+                        print(f"      ✅ {endpoint}: Properly denied (HTTP {response.status})")
+                        success_count += 1
+                    else:
+                        print(f"      ❌ {endpoint}: Expected 401/403, got HTTP {response.status}")
+                        self.errors.append(f"Endpoint {endpoint} should require authentication")
+            
+            if success_count == len(endpoints_to_test):
+                print(f"      ✅ All {len(endpoints_to_test)} endpoints properly require authentication")
+                return True
+            else:
+                self.errors.append(f"Only {success_count}/{len(endpoints_to_test)} endpoints properly require authentication")
+                return False
+                
+        except Exception as e:
+            self.errors.append(f"Unauthenticated requests test error: {str(e)}")
+            return False
+
     async def run_authentication_tests(self):
         """Run focused authentication tests as requested in review"""
         print("🔐 Starting Enhanced Authentication System Tests")
@@ -4706,6 +5076,12 @@ class BackendTester:
         await self.setup()
         
         try:
+            # PRIORITY: Test authentication dashboard fixes first
+            print("\n🎯 AUTHENTICATION DASHBOARD FIXES TESTING")
+            print("-" * 50)
+            dashboard_fixes_success = await self.test_authentication_dashboard_fixes()
+            self.test_results['auth_dashboard_fixes'] = dashboard_fixes_success
+            
             # Focus on authentication endpoints as requested
             print("\n🎯 AUTHENTICATION ENDPOINTS TESTING")
             print("-" * 40)
