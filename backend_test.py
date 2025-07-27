@@ -98,7 +98,23 @@ class BackendTester:
             'dr_year_names_api_integration': False,
             'dr_year_names_fallback_handling': False,
             'dr_year_names_event_display': False,
-            'dr_year_names_calendar_display': False
+            'dr_year_names_calendar_display': False,
+            # PRIORITY: City Management Registry Creation Tests
+            'registry_create_citizens': False,
+            'registry_create_slaves': False,
+            'registry_create_livestock': False,
+            'registry_create_soldiers': False,
+            'registry_create_tribute': False,
+            'registry_create_crimes': False,
+            'registry_websocket_broadcast': False,
+            'registry_database_persistence': False,
+            'registry_error_handling': False,
+            # Government Hierarchy Tests
+            'government_get_positions': False,
+            'government_get_city_officials': False,
+            'government_appoint_citizen': False,
+            'government_remove_official': False,
+            'government_multi_kingdom_isolation': False
         }
         self.errors = []
 
