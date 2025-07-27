@@ -368,6 +368,42 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+  - task: "City Management Add Button Functionality"
+    implemented: false
+    working: false
+    file: "/app/backend/server.py, /app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported: Add buttons for Citizens, Slaves, Livestock, Garrison, Tribute, and Crime do NOT currently add new entries. Only Auto Generate works. Need to fix so clicking Add <Item> opens proper modal form, validates inputs, POST to backend API, and updates frontend state immediately."
+
+  - task: "Local Government Remove Button Fix"
+    implemented: false
+    working: false
+    file: "/app/backend/server.py, /app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported: Remove (X) button for hierarchy positions needs fixing - should prompt for confirmation, DELETE via backend API, update UI immediately. Admin Staff category should only appear if positions assigned. When position is in use, remove from available options in Manage Positions modal to prevent duplication."
+
+  - task: "City Actions Button UI Fix"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js, /app/frontend/src/App.css"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported: Actions button floating awkwardly, should be aligned to top-right of city header bar (same line as city name) with clearer dropdown options: Edit City Details, Manage Positions (hierarchy), Delete City. Dropdown should close properly after selection."
+
 agent_communication:
   - agent: "main"
-    message: "KINGDOM/CITY DELETE & GOVERNMENT HIERARCHY SYSTEM IMPLEMENTATION COMPLETED: 1) Enhanced DELETE endpoints for kingdoms and cities with cascade deletion of all related data (boundaries, calendar events, campaign dates, government hierarchy). 2) Fixed and enhanced government hierarchy CRUD operations with proper multi-kingdom database support, position validation, and real-time WebSocket updates. 3) Added comprehensive frontend delete confirmation modals with 'DELETE' text confirmation, dropdown menus for city actions, and magical fantasy-themed styling. 4) Added kingdom delete buttons in top-right corners of kingdom cards and converted city edit buttons to dropdowns. 5) All delete operations include proper cleanup, error handling, and success messaging. Ready for comprehensive testing of delete functionality, cascade deletion, government hierarchy CRUD, and frontend confirmation modals."
+    message: "CITY MANAGEMENT ISSUES IDENTIFIED: User reported multiple critical issues with city management screen: 1) Add buttons for all registry types (Citizens, Slaves, Livestock, Garrison, Tribute, Crime) are not working - only Auto Generate works. Forms exist but backend uses wrong db.kingdoms collection instead of db.multi_kingdoms. 2) Local Government Hierarchy Remove (X) buttons need confirmation prompts and proper backend integration. Admin Staff category showing when empty. Position duplication prevention needed. 3) Actions button UI positioning and dropdown behavior needs improvement. Starting systematic fix of these issues."
