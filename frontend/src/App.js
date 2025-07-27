@@ -1265,7 +1265,7 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
 };
 
 // Enhanced Map Component with Smart Boundary System
-const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMapClick }) => {
+const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMapClick, authenticatedFetch }) => {
   const [showAddCityForm, setShowAddCityForm] = useState(false);
   const [newCityCoords, setNewCityCoords] = useState({ x: 0, y: 0 });
   const [draggedCity, setDraggedCity] = useState(null);
