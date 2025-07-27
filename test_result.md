@@ -482,6 +482,21 @@ test_plan:
         agent: "main"
         comment: "FIXED: Updated handleCreateKingdom function in KingdomSelector component to use authenticatedFetch helper instead of direct fetch call. This ensures JWT token is properly included in Authorization header. Also updated handleDeleteConfirm to use authenticatedFetch. Enhanced error handling with user-friendly error messages and modal display. Passed authenticatedFetch, setErrorMessage, and setShowErrorModal as props to KingdomSelector. Kingdom creation now works correctly with proper authentication and error handling."
 
+  - task: "Backend GET Endpoints Authentication Fix"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported blank kingdom and city dashboards despite successful kingdom creation. Investigation revealed some backend GET endpoints were missing authentication and owner_id filtering, causing data loading failures."
+      - working: "NA"
+        agent: "main"
+        comment: "BACKEND AUTHENTICATION FIXES APPLIED: Fixed 3 critical endpoints missing authentication: 1) /api/kingdom - Now requires authentication and uses multi_kingdoms collection with owner_id filtering 2) /api/voting-sessions/{kingdom_id} - Added authentication and kingdom ownership verification 3) /api/calendar-events/{kingdom_id}/upcoming - Added authentication, kingdom ownership verification, and owner_id event filtering. All endpoints now properly restrict access to user's own data with super admin exceptions."
+
 agent_communication:
   - agent: "main"
-    message: "KINGDOM CREATION AUTHENTICATION FIX COMPLETED: Successfully fixed the critical issue where logged-in users couldn't create new kingdoms. The problem was that the handleCreateKingdom function was making direct fetch calls without including the JWT token in the Authorization header. Fixed by updating the KingdomSelector component to use the authenticatedFetch helper function and passing necessary props. Also enhanced error handling for better user feedback. Manual testing confirmed: 1) Admin user can create kingdoms successfully 2) New users see 0 kingdoms initially (proper data isolation) 3) Users can create their own kingdoms 4) Super admin can see all kingdoms 5) Multi-user ownership test script passes all 4 tests (Data Isolation, Cross-User Prevention, Super Admin Access, Registry Operations). The authentication system and data separation are now working perfectly."
+    message: "BACKEND GET ENDPOINTS AUTHENTICATION FIX COMPLETED: Fixed critical authentication gaps in backend API endpoints that were causing blank dashboard issues. Updated /api/kingdom to use multi_kingdoms collection with owner_id filtering, added authentication to /api/voting-sessions/{kingdom_id} and /api/calendar-events/{kingdom_id}/upcoming endpoints with proper ownership verification. All endpoints now include Depends(get_current_user) for JWT authentication and verify_kingdom_ownership() calls to ensure users only access their own data. Ready for backend testing to verify these fixes resolve the dashboard data loading problems."
