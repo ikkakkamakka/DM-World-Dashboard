@@ -3703,6 +3703,20 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
     governor: city?.governor || ''
   });
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showDropdown && !event.target.closest('.city-actions-dropdown')) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
+
   if (!city) return <div className="loading">Loading city...</div>;
 
   const totalLivestockValue = city.livestock?.reduce((sum, animal) => sum + animal.value, 0) || 0;
