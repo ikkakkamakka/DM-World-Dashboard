@@ -4076,11 +4076,23 @@ function AuthenticatedApp() {
 
   const fetchMultiKingdoms = async () => {
     try {
-      const response = await fetch(`${API}/multi-kingdoms`);
-      const data = await response.json();
-      setMultiKingdoms(data);
+      const response = await fetch(`${API}/multi-kingdoms`, {
+        headers: getAuthHeaders()
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setMultiKingdoms(Array.isArray(data) ? data : []);
+      } else if (response.status === 401 || response.status === 403) {
+        console.error('Authentication failed - redirecting to login');
+        setMultiKingdoms([]);
+      } else {
+        console.error('Error fetching kingdoms:', response.status);
+        setMultiKingdoms([]);
+      }
     } catch (error) {
       console.error('Error fetching multi kingdoms:', error);
+      setMultiKingdoms([]);
     }
   };
 
