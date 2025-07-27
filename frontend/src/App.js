@@ -4039,7 +4039,7 @@ const CityDashboard = ({ city, activeTab, setActiveTab }) => {
 
 // Main App Component with Multi-Kingdom Support and Authentication
 function AuthenticatedApp() {
-  const { token } = useAuth(); // Get authentication token
+  const { token, logout } = useAuth(); // Get authentication token and logout function
   const [kingdom, setKingdom] = useState(null);
   const [multiKingdoms, setMultiKingdoms] = useState([]);
   const [activeKingdom, setActiveKingdom] = useState(null);
@@ -4049,6 +4049,8 @@ function AuthenticatedApp() {
   const [autoEventsEnabled, setAutoEventsEnabled] = useState(true);
   const [wsConnection, setWsConnection] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState('Connecting...');
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Helper function to create authenticated headers
   const getAuthHeaders = () => {
@@ -4059,7 +4061,7 @@ function AuthenticatedApp() {
     return headers;
   };
 
-  // Authenticated fetch helper
+  // Enhanced authenticated fetch helper with better error handling
   const authenticatedFetch = async (url, options = {}) => {
     const config = {
       ...options,
@@ -4072,15 +4074,26 @@ function AuthenticatedApp() {
     try {
       const response = await fetch(url, config);
       
-      if (response.status === 401 || response.status === 403) {
-        console.error('Authentication failed for:', url);
-        // Could redirect to login here if needed
+      if (response.status === 401) {
+        console.error('Authentication failed - invalid or expired token');
+        setErrorMessage('Your session has expired. Please log in again.');
+        setShowErrorModal(true);
+        setTimeout(() => {
+          logout(); // Trigger logout after showing error
+        }, 2000);
+        return null;
+      } else if (response.status === 403) {
+        console.error('Access denied for:', url);
+        setErrorMessage('Access denied. You do not have permission to perform this action.');
+        setShowErrorModal(true);
         return null;
       }
       
       return response;
     } catch (error) {
-      console.error('Fetch error for:', url, error);
+      console.error('Network error for:', url, error);
+      setErrorMessage('Network error. Please check your connection and try again.');
+      setShowErrorModal(true);
       return null;
     }
   };
