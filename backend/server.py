@@ -1624,14 +1624,23 @@ async def delete_multi_kingdom(kingdom_id: str, current_user: dict = Depends(get
         raise HTTPException(status_code=500, detail=f"Error deleting kingdom: {str(e)}")
 
 @api_router.post("/multi-kingdom/{kingdom_id}/set-active")
-async def set_active_kingdom(kingdom_id: str):
-    """Set a kingdom as the active one and deactivate others"""
-    # Deactivate all kingdoms
-    await db.multi_kingdoms.update_many({}, {"$set": {"is_active": False}})
+async def set_active_kingdom(kingdom_id: str, current_user: dict = Depends(get_current_user)):
+    """Set a kingdom as the active one and deactivate others - only if owned by current user"""
+    # Verify user owns this kingdom
+    await verify_kingdom_ownership(kingdom_id, current_user)
+    
+    # Build query filter for user's kingdoms only
+    query_filter = {}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    # Deactivate all user's kingdoms
+    await db.multi_kingdoms.update_many(query_filter, {"$set": {"is_active": False}})
     
     # Activate the selected kingdom
+    query_filter["id"] = kingdom_id
     result = await db.multi_kingdoms.update_one(
-        {"id": kingdom_id},
+        query_filter,
         {"$set": {"is_active": True}}
     )
     
@@ -1640,20 +1649,29 @@ async def set_active_kingdom(kingdom_id: str):
     raise HTTPException(status_code=404, detail="Kingdom not found")
 
 @api_router.get("/active-kingdom")
-async def get_active_kingdom():
-    """Get the currently active kingdom"""
-    kingdom = await db.multi_kingdoms.find_one({"is_active": True})
+async def get_active_kingdom(current_user: dict = Depends(get_current_user)):
+    """Get the currently active kingdom for current user"""
+    query_filter = {"is_active": True}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    kingdom = await db.multi_kingdoms.find_one(query_filter)
     if kingdom:
         kingdom.pop('_id', None)
         return kingdom
-    # Fallback to legacy kingdom for backward compatibility
-    return await get_kingdom()
+    
+    # No active kingdom found
+    raise HTTPException(status_code=404, detail="No active kingdom found")
 
 # Kingdom Boundaries Management
 @api_router.post("/kingdom-boundaries")
-async def create_kingdom_boundary(boundary: KingdomBoundaryCreate):
-    """Create a new kingdom boundary"""
-    new_boundary = KingdomBoundary(**boundary.dict())
+async def create_kingdom_boundary(boundary: KingdomBoundaryCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new kingdom boundary - only if user owns the kingdom"""
+    # Verify user owns this kingdom
+    await verify_kingdom_ownership(boundary.kingdom_id, current_user)
+    
+    # Add owner_id to boundary
+    new_boundary = KingdomBoundary(**boundary.dict(), owner_id=current_user["id"])
     
     result = await db.kingdom_boundaries.insert_one(new_boundary.dict())
     if result.inserted_id:
@@ -1666,9 +1684,17 @@ async def create_kingdom_boundary(boundary: KingdomBoundaryCreate):
     raise HTTPException(status_code=500, detail="Failed to create boundary")
 
 @api_router.get("/kingdom-boundaries/{kingdom_id}")
-async def get_kingdom_boundaries(kingdom_id: str):
-    """Get all boundaries for a specific kingdom"""
-    boundaries = await db.kingdom_boundaries.find({"kingdom_id": kingdom_id}).to_list(100)
+async def get_kingdom_boundaries(kingdom_id: str, current_user: dict = Depends(get_current_user)):
+    """Get all boundaries for a specific kingdom - only if user owns the kingdom"""
+    # Verify user owns this kingdom
+    await verify_kingdom_ownership(kingdom_id, current_user)
+    
+    # Query boundaries with owner filter
+    query_filter = {"kingdom_id": kingdom_id}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    boundaries = await db.kingdom_boundaries.find(query_filter).to_list(100)
     for boundary in boundaries:
         boundary.pop('_id', None)
     return boundaries
