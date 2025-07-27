@@ -2648,18 +2648,22 @@ async def delete_slave(slave_id: str):
 async def create_livestock(livestock: LivestockCreate):
     new_livestock = Livestock(**livestock.dict())
     
-    result = await db.kingdoms.update_one(
+    result = await db.multi_kingdoms.update_one(
         {"cities.id": livestock.city_id},
         {"$push": {"cities.$.livestock": new_livestock.dict()}}
     )
     
     if result.modified_count:
+        await manager.broadcast({
+            "type": "livestock_added",
+            "livestock": new_livestock.dict()
+        })
         return new_livestock
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/livestock/{livestock_id}")
 async def delete_livestock(livestock_id: str):
-    result = await db.kingdoms.update_one(
+    result = await db.multi_kingdoms.update_one(
         {"cities.livestock.id": livestock_id},
         {"$pull": {"cities.$.livestock": {"id": livestock_id}}}
     )
