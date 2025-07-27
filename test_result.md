@@ -360,7 +360,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Enhanced Harptos Calendar System"
+    - "Kingdom and City Delete Functionality"
+    - "Local Government Hierarchy CRUD System"
+    - "Frontend Delete Confirmation Modals"
   stuck_tasks: 
     []
   test_all: false
@@ -368,4 +370,4 @@ test_plan:
 
 agent_communication:
   - agent: "main"
-    message: "FORGOTTEN REALMS YEAR NAMES ENHANCEMENT COMPLETED: Added dynamic loading of DR year names from /frontend/public/dr_year_names.json file containing 180+ official Forgotten Realms year names (1350-1530). Updated formatHarptosDate function to display both numeric DR year and year name (e.g., '25 Flamerule, 1497 DR – Year of the Worm'). Implemented caching mechanism to load year names only once per session. Added formatEventDate and formatCalendarDayTooltip functions for consistent year name display across main calendar header, All Events view, and calendar day tooltips. Falls back to numeric DR only when year name is not available in JSON file. Ready for comprehensive testing of year names functionality across all calendar views and tooltips."
+    message: "KINGDOM/CITY DELETE & GOVERNMENT HIERARCHY SYSTEM IMPLEMENTATION COMPLETED: 1) Enhanced DELETE endpoints for kingdoms and cities with cascade deletion of all related data (boundaries, calendar events, campaign dates, government hierarchy). 2) Fixed and enhanced government hierarchy CRUD operations with proper multi-kingdom database support, position validation, and real-time WebSocket updates. 3) Added comprehensive frontend delete confirmation modals with 'DELETE' text confirmation, dropdown menus for city actions, and magical fantasy-themed styling. 4) Added kingdom delete buttons in top-right corners of kingdom cards and converted city edit buttons to dropdowns. 5) All delete operations include proper cleanup, error handling, and success messaging. Ready for comprehensive testing of delete functionality, cascade deletion, government hierarchy CRUD, and frontend confirmation modals."
