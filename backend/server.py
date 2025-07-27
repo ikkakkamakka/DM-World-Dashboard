@@ -605,6 +605,7 @@ class Kingdom(BaseModel):
 
 class Event(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    owner_id: str  # User ID who owns this event
     description: str
     city_name: str
     kingdom_name: str
