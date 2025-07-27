@@ -422,6 +422,11 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
   };
 
   const formatCalendarDayTooltip = (day, month, year) => {
+    // Handle undefined year parameter
+    if (year === undefined || year === null) {
+      return `${day} ${HARPTOS_MONTHS[month]?.name || 'Unknown'}`;
+    }
+    
     const yearString = year.toString();
     const yearName = drYearNames?.[yearString];
     
