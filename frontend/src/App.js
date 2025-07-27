@@ -2912,7 +2912,7 @@ const SlavesRegistry = ({ city, authenticatedFetch }) => {
 };
 
 // Livestock Registry  
-# Quick bulk update of remaining registry components
+// Livestock Registry  
 const LivestockRegistry = ({ city, authenticatedFetch }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
