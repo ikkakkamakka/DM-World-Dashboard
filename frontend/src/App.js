@@ -4332,9 +4332,9 @@ function AuthenticatedApp() {
         title="Error"
       >
         <div className="error-modal-content">
-          <div className="error-icon">⚠️</div>
-          <p>{errorMessage}</p>
-          <div className="error-actions">
+          <div className="error-icon" style={{textAlign: 'center', fontSize: '48px', marginBottom: '16px'}}>⚠️</div>
+          <p style={{textAlign: 'center', marginBottom: '20px', color: '#c4b5a0'}}>{errorMessage}</p>
+          <div className="error-actions" style={{textAlign: 'center'}}>
             <button 
               className="btn-primary" 
               onClick={() => setShowErrorModal(false)}
