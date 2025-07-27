@@ -1050,7 +1050,6 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
   const handleCreateKingdom = async (e) => {
     e.preventDefault();
     console.log('Creating kingdom with data:', newKingdomData);
-    console.log('Token available:', !!token);
     
     try {
       const response = await authenticatedFetch(`${API}/multi-kingdoms`, {
