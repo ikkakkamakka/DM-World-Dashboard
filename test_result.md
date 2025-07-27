@@ -232,9 +232,9 @@ frontend:
         agent: "testing"
         comment: "✅ FIXED & TESTED: Auto-generate functionality now working perfectly for all 6 registry types (citizens, slaves, livestock, garrison, crimes, tribute). Fixed KeyError issues in generate_registry_event function by using .get() methods with fallback values. Tested across all 4 cities in kingdom - all generate items correctly, store in database, and create proper events. Backend API /api/auto-generate working 100%. Issue was backend-side, not frontend integration."
 
-  - task: "Enhanced Harptos Calendar System"
+  - task: "Kingdom and City Delete Functionality"
     implemented: true
-    working: true
+    working: "NA"
     file: "/app/backend/server.py, /app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
@@ -242,10 +242,31 @@ frontend:
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "HARPTOS CALENDAR ENHANCEMENT COMPLETED: Fixed duplicate city name issue by removing city names from backend event titles, allowing frontend to handle proper display format ('Event Title – City Name'). Implemented comprehensive magical fantasy theme with animated glowing borders, parchment-style background textures, smooth fade transitions, and themed icons for tendays/seasons. Added enhanced calendar system with campaign date management, upcoming events view, auto city event generation, and complete CRUD operations. MongoDB collections for campaign_dates and calendar_events are persistent and auto-update correctly when campaign date advances. Frontend features magical animations including magicalGlow, titleGlow, dateDisplayGlow, todayPulse, eventIndicator, and iconTwinkle animations for immersive medieval fantasy experience."
+        comment: "KINGDOM/CITY DELETE SYSTEM IMPLEMENTED: Enhanced DELETE /multi-kingdom/{id} endpoint with cascade deletion of all related data (boundaries, calendar events, campaign dates). Enhanced DELETE /city/{id} endpoint to clean up government hierarchy and city-specific data. Added comprehensive error handling and success messaging with deletion statistics."
+
+  - task: "Local Government Hierarchy CRUD System"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py, /app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
       - working: "NA"
         agent: "main"
-        comment: "FORGOTTEN REALMS YEAR NAMES ENHANCEMENT: Added dynamic loading of DR year names from /frontend/public/dr_year_names.json file. Updated formatHarptosDate function to display both numeric DR year and year name (e.g., '25 Flamerule, 1497 DR – Year of the Worm'). Created comprehensive year names database covering years 1350-1530 with official Forgotten Realms year names. Implemented caching mechanism to load year names only once per session. Added formatEventDate and formatCalendarDayTooltip functions for consistent year name display across main calendar header, All Events view, and calendar day tooltips. Falls back to numeric DR only when year name is not available in JSON file."
+        comment: "GOVERNMENT HIERARCHY SYSTEM ENHANCED: Added GET /cities/{id}/government endpoint to retrieve all government positions. Enhanced POST /cities/{id}/government/appoint with position validation and duplicate checking. Added PUT /cities/{id}/government/{official_id} for editing positions. Enhanced DELETE /cities/{id}/government/{official_id} with proper citizen cleanup. Fixed database operations to use multi_kingdoms collection instead of legacy kingdoms. Added comprehensive error handling and WebSocket broadcasting for real-time updates."
+
+  - task: "Frontend Delete Confirmation Modals"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js, /app/frontend/src/App.css"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "DELETE CONFIRMATION UI IMPLEMENTED: Added kingdom delete buttons in top-right corner of kingdom cards with confirmation modal requiring 'DELETE' text input. Converted city edit button to dropdown with Edit/Delete options. Created magical fantasy-themed delete confirmation modals with warning messages and parchment styling. Added comprehensive CSS styling for dropdown menus, delete buttons, and confirmation modals with glowing borders and animated transitions."
 
   - task: "Enhanced Boundary Drawing System"
     implemented: true
