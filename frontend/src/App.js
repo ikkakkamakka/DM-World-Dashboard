@@ -2300,7 +2300,7 @@ const EnhancedFaerunMap = ({ kingdoms, activeKingdom, cities, onCitySelect, onMa
     </div>
   );
 };
-const FaerunMap = ({ cities, onCitySelect, onMapClick }) => {
+const FaerunMap = ({ cities, onCitySelect, onMapClick, authenticatedFetch }) => {
   const [showAddCityForm, setShowAddCityForm] = useState(false);
   const [newCityCoords, setNewCityCoords] = useState({ x: 0, y: 0 });
   const [draggedCity, setDraggedCity] = useState(null);
