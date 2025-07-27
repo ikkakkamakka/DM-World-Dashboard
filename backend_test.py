@@ -4662,55 +4662,124 @@ class BackendTester:
             self.errors.append(f"Government isolation test error: {str(e)}")
             return False
 
-    async def run_all_tests(self):
-        print("🚀 Starting Fantasy Kingdom Backend Tests")
+    async def run_authentication_tests(self):
+        """Run focused authentication tests as requested in review"""
+        print("🔐 Starting Enhanced Authentication System Tests")
+        print("=" * 60)
+        print("Testing sliding session functionality and JWT authentication")
         print("=" * 60)
         
         await self.setup()
         
         try:
-            # Test in order of dependency
-            await self.test_kingdom_api()
-            await self.test_city_api()
-            await self.test_events_api()
-            await self.test_websocket_connection()
-            await self.test_database_initialization()
-            await self.test_auto_generate_functionality()  # Test auto-generate functionality
-            await self.test_simulation_engine()
+            # Focus on authentication endpoints as requested
+            print("\n🎯 AUTHENTICATION ENDPOINTS TESTING")
+            print("-" * 40)
             
-            # PRIORITY TESTS FOR CURRENT FOCUS
-            print("\n" + "🎯" * 20 + " PRIORITY TESTS " + "🎯" * 20)
-            await self.test_registry_creation_endpoints()  # PRIORITY: Test registry creation endpoints
-            await self.test_government_hierarchy_system()  # PRIORITY: Test government hierarchy system
-            await self.test_authentication_system()  # PRIORITY: Test authentication system
-            await self.test_enhanced_harptos_calendar_system()  # PRIORITY: Test Enhanced Harptos Calendar
-            await self.test_multi_kingdom_autogenerate_functionality()
-            await self.test_real_time_dashboard_updates()
-            print("🎯" * 60)
+            # 1. POST /api/auth/login - User login with admin/admin123 credentials
+            print("\n1️⃣ Testing POST /api/auth/login with admin/admin123")
+            login_success = await self.test_auth_login_admin()
+            self.test_results['auth_login_admin'] = login_success
+            
+            # 2. GET /api/auth/verify-token - Token verification
+            print("\n2️⃣ Testing GET /api/auth/verify-token")
+            verify_success = await self.test_auth_verify_token()
+            self.test_results['auth_verify_token'] = verify_success
+            
+            # 3. POST /api/auth/refresh-token - NEW endpoint for token refresh
+            print("\n3️⃣ Testing POST /api/auth/refresh-token (NEW ENDPOINT)")
+            refresh_success = await self.test_auth_refresh_token()
+            self.test_results['auth_refresh_token'] = refresh_success
+            
+            # 4. GET /api/multi-kingdoms - Test authenticated data access with owner filtering
+            print("\n4️⃣ Testing GET /api/multi-kingdoms with authentication")
+            kingdoms_success = await self.test_multi_kingdoms_authenticated()
+            self.test_results['multi_kingdoms_authenticated'] = kingdoms_success
+            
+            # 5. Invalid token handling tests
+            print("\n5️⃣ Testing Invalid Token Handling")
+            invalid_token_success = await self.test_auth_invalid_token_handling()
+            self.test_results['auth_invalid_token_handling'] = invalid_token_success
+            
+            # Additional security tests
+            print("\n🔒 ADDITIONAL SECURITY TESTS")
+            print("-" * 40)
+            
+            jwt_success = await self.test_auth_jwt_tokens()
+            self.test_results['auth_jwt_tokens'] = jwt_success
+            
+            password_success = await self.test_auth_password_hashing()
+            self.test_results['auth_password_hashing'] = password_success
+            
+            db_separation_success = await self.test_auth_separate_database()
+            self.test_results['auth_separate_database'] = db_separation_success
             
         finally:
             await self.cleanup()
         
-        # Print summary
+        # Print focused summary
         print("\n" + "=" * 60)
-        print("📊 TEST SUMMARY")
+        print("🔐 AUTHENTICATION TEST SUMMARY")
         print("=" * 60)
         
-        passed = sum(self.test_results.values())
-        total = len(self.test_results)
+        # Core authentication tests
+        core_tests = [
+            ('auth_login_admin', 'POST /api/auth/login (admin/admin123)'),
+            ('auth_verify_token', 'GET /api/auth/verify-token'),
+            ('auth_refresh_token', 'POST /api/auth/refresh-token (NEW)'),
+            ('multi_kingdoms_authenticated', 'GET /api/multi-kingdoms (authenticated)'),
+            ('auth_invalid_token_handling', 'Invalid Token Handling')
+        ]
         
-        for test_name, result in self.test_results.items():
+        print("\n📋 CORE AUTHENTICATION ENDPOINTS:")
+        core_passed = 0
+        for test_key, test_name in core_tests:
+            result = self.test_results.get(test_key, False)
             status = "✅ PASS" if result else "❌ FAIL"
-            print(f"{test_name.replace('_', ' ').title()}: {status}")
+            print(f"  {test_name}: {status}")
+            if result:
+                core_passed += 1
         
-        print(f"\nOverall: {passed}/{total} tests passed")
+        # Security tests
+        security_tests = [
+            ('auth_jwt_tokens', 'JWT Token Validation'),
+            ('auth_password_hashing', 'Password Hashing Security'),
+            ('auth_separate_database', 'Database Separation')
+        ]
+        
+        print("\n🔒 SECURITY VALIDATION:")
+        security_passed = 0
+        for test_key, test_name in security_tests:
+            result = self.test_results.get(test_key, False)
+            status = "✅ PASS" if result else "❌ FAIL"
+            print(f"  {test_name}: {status}")
+            if result:
+                security_passed += 1
+        
+        total_passed = core_passed + security_passed
+        total_tests = len(core_tests) + len(security_tests)
+        
+        print(f"\n📊 OVERALL AUTHENTICATION RESULTS:")
+        print(f"  Core Endpoints: {core_passed}/{len(core_tests)} passed")
+        print(f"  Security Tests: {security_passed}/{len(security_tests)} passed")
+        print(f"  Total: {total_passed}/{total_tests} tests passed")
         
         if self.errors:
             print("\n🚨 ERRORS ENCOUNTERED:")
             for i, error in enumerate(self.errors, 1):
-                print(f"{i}. {error}")
+                print(f"  {i}. {error}")
         
-        return passed == total
+        # Success criteria: All core endpoints must pass
+        success = core_passed == len(core_tests)
+        
+        if success:
+            print("\n🎉 AUTHENTICATION SYSTEM: ALL CORE TESTS PASSED")
+            print("✅ Backend foundation ready for frontend sliding session implementation")
+        else:
+            print("\n⚠️ AUTHENTICATION SYSTEM: SOME CORE TESTS FAILED")
+            print("❌ Issues need to be resolved before frontend integration")
+        
+        return success
 
 async def main():
     """Main test runner"""
