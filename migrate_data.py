@@ -5,14 +5,16 @@ Data migration script to add owner_id to existing data and create default admin 
 
 import asyncio
 import os
+from pathlib import Path
 from motor.motor_asyncio import AsyncIOMotorClient
 from passlib.context import CryptContext
 import uuid
 from datetime import datetime
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from backend directory
+backend_dir = Path(__file__).parent / 'backend'
+load_dotenv(backend_dir / '.env')
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
