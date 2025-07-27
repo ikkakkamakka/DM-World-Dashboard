@@ -3739,7 +3739,7 @@ const GovernmentManagement = ({ city, onClose, authenticatedFetch, setErrorMessa
 };
 
 // City Dashboard Component with editing and government hierarchy
-const CityDashboard = ({ city, activeTab, setActiveTab }) => {
+const CityDashboard = ({ city, activeTab, setActiveTab, authenticatedFetch, setErrorMessage, setShowErrorModal }) => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [showGovtManagement, setShowGovtManagement] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
