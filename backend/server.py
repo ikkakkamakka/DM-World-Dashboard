@@ -1539,17 +1539,22 @@ async def delete_multi_kingdom(kingdom_id: str, current_user: dict = Depends(get
     
     # Delete related data in cascade
     try:
+        # Build owner filter for related data deletion
+        owner_filter = {"kingdom_id": kingdom_id}
+        if not is_super_admin(current_user):
+            owner_filter["owner_id"] = current_user["id"]
+        
         # Delete kingdom boundaries
-        await db.kingdom_boundaries.delete_many({"kingdom_id": kingdom_id})
+        await db.kingdom_boundaries.delete_many(owner_filter)
         
-        # Delete campaign dates
-        await db.campaign_dates.delete_many({"kingdom_id": kingdom_id})
+        # Delete campaign dates (for user's kingdom only)
+        await db.campaign_dates.delete_many(owner_filter)
         
-        # Delete calendar events
-        await db.calendar_events.delete_many({"kingdom_id": kingdom_id})
+        # Delete calendar events (for user's kingdom only)
+        await db.calendar_events.delete_many(owner_filter)
         
         # Delete the kingdom itself
-        result = await db.multi_kingdoms.delete_one({"id": kingdom_id})
+        result = await db.multi_kingdoms.delete_one(query_filter)
         
         if result.deleted_count:
             # Broadcast kingdom deletion
