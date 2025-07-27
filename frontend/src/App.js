@@ -1052,7 +1052,6 @@ const KingdomSelector = ({ kingdoms, activeKingdom, onKingdomChange, onCreateNew
     try {
       const response = await authenticatedFetch(`${API}/multi-kingdoms`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newKingdomData)
       });
       
