@@ -2658,7 +2658,17 @@ async def create_citizen(citizen: CitizenCreate, current_user: dict = Depends(ge
     raise HTTPException(status_code=404, detail="City not found")
 
 @api_router.delete("/citizens/{citizen_id}")
-async def delete_citizen(citizen_id: str):
+async def delete_citizen(citizen_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a citizen - only if user owns the kingdom containing the citizen"""
+    # First find which city contains this citizen to check ownership
+    kingdom = await db.multi_kingdoms.find_one({"cities.citizens.id": citizen_id})
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Citizen not found")
+    
+    # Check ownership
+    if not is_super_admin(current_user) and kingdom.get("owner_id") != current_user["id"]:
+        raise HTTPException(status_code=403, detail="Access denied: Not your citizen")
+    
     result = await db.multi_kingdoms.update_one(
         {"cities.citizens.id": citizen_id},
         {
