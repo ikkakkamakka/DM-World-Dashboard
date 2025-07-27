@@ -2583,15 +2583,19 @@ async def remove_government_official(city_id: str, official_id: str):
 
 # FIXED Auto-generation endpoints
 @api_router.post("/auto-generate")
-async def auto_generate_registry_items(request: AutoGenerateRequest):
-    """Fixed auto-generate functionality for multi-kingdom database structure"""
+async def auto_generate_registry_items(request: AutoGenerateRequest, current_user: dict = Depends(get_current_user)):
+    """Fixed auto-generate functionality for multi-kingdom database structure - only for user's kingdoms"""
     try:
-        # Find the kingdom that contains the specified city
+        # Find the kingdom that contains the specified city - only search user's kingdoms
         kingdom = None
         target_city = None
         
-        # Search through all kingdoms in multi_kingdoms collection
-        kingdoms = await db.multi_kingdoms.find().to_list(None)
+        # Search through user's kingdoms only
+        query_filter = {}
+        if not is_super_admin(current_user):
+            query_filter["owner_id"] = current_user["id"]
+        
+        kingdoms = await db.multi_kingdoms.find(query_filter).to_list(None)
         
         for k in kingdoms:
             for city in k.get('cities', []):
