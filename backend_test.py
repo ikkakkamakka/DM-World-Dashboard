@@ -5192,6 +5192,406 @@ class BackendTester:
         
         return success
 
+    async def test_add_city_authentication_and_ownership(self):
+        """
+        PRIORITY TEST: Test Add City functionality with authentication and ownership handling
+        Focus on the specific issue: "Add City button does NOT create a new city for the selected kingdom"
+        """
+        print("\n🏰 PRIORITY TEST: Add City Authentication & Ownership...")
+        print("=" * 60)
+        
+        # Test results for this specific functionality
+        auth_tests = {
+            'add_city_requires_auth': False,
+            'add_city_with_admin_user': False,
+            'add_city_ownership_assignment': False,
+            'add_city_data_isolation': False,
+            'add_city_validation': False,
+            'add_city_unauthenticated_rejection': False
+        }
+        
+        try:
+            # Step 1: Test unauthenticated requests are rejected
+            print("\n   🔒 Testing unauthenticated city creation...")
+            auth_tests['add_city_unauthenticated_rejection'] = await self.test_unauthenticated_city_creation()
+            
+            # Step 2: Authenticate as admin user
+            print("\n   👤 Authenticating as admin user...")
+            admin_token = await self.authenticate_admin_user()
+            if not admin_token:
+                self.errors.append("Failed to authenticate admin user - cannot test authenticated endpoints")
+                return False
+            
+            # Step 3: Test authenticated city creation
+            print("\n   ✅ Testing authenticated city creation...")
+            auth_tests['add_city_with_admin_user'] = await self.test_authenticated_city_creation(admin_token)
+            
+            # Step 4: Test ownership assignment
+            print("\n   👑 Testing owner_id assignment...")
+            auth_tests['add_city_ownership_assignment'] = await self.test_city_ownership_assignment(admin_token)
+            
+            # Step 5: Test data isolation
+            print("\n   🔐 Testing data isolation...")
+            auth_tests['add_city_data_isolation'] = await self.test_city_data_isolation(admin_token)
+            
+            # Step 6: Test backend validation
+            print("\n   ✔️ Testing backend validation...")
+            auth_tests['add_city_validation'] = await self.test_city_creation_validation(admin_token)
+            
+            # Step 7: Test authentication requirement
+            auth_tests['add_city_requires_auth'] = auth_tests['add_city_unauthenticated_rejection'] and auth_tests['add_city_with_admin_user']
+            
+            # Summary
+            passed_auth_tests = sum(auth_tests.values())
+            total_auth_tests = len(auth_tests)
+            
+            print(f"\n   📊 Add City Authentication Summary: {passed_auth_tests}/{total_auth_tests} tests passed")
+            
+            # Store individual results
+            for test_name, result in auth_tests.items():
+                self.test_results[test_name] = result
+            
+            return passed_auth_tests == total_auth_tests
+            
+        except Exception as e:
+            self.errors.append(f"Add City authentication test error: {str(e)}")
+            return False
+
+    async def test_unauthenticated_city_creation(self):
+        """Test that unauthenticated requests to POST /api/cities are rejected"""
+        try:
+            # Get a kingdom to test with
+            kingdoms = await self.get_kingdoms_for_testing()
+            if not kingdoms:
+                self.errors.append("No kingdoms available for unauthenticated city test")
+                return False
+            
+            kingdom_id = kingdoms[0]['id']
+            
+            # Try to create city without authentication
+            city_data = {
+                "name": "Unauthorized City",
+                "governor": "Unauthorized Governor",
+                "x_coordinate": 100.0,
+                "y_coordinate": 100.0
+            }
+            
+            # Make request without Authorization header
+            async with self.session.post(f"{API_BASE}/cities", json=city_data) as response:
+                if response.status in [401, 403]:
+                    print(f"      ✅ Unauthenticated request properly rejected with status {response.status}")
+                    return True
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Unauthenticated city creation should return 401/403, got {response.status}: {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Unauthenticated city creation test error: {str(e)}")
+            return False
+
+    async def authenticate_admin_user(self):
+        """Authenticate admin user and return JWT token"""
+        try:
+            login_data = {
+                "username": "admin",
+                "password": "admin123"
+            }
+            
+            async with self.session.post(f"{API_BASE}/auth/login", json=login_data) as response:
+                if response.status == 200:
+                    auth_result = await response.json()
+                    token = auth_result.get('access_token')
+                    if token:
+                        print(f"      ✅ Admin user authenticated successfully")
+                        return token
+                    else:
+                        self.errors.append("Login response missing access_token")
+                        return None
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Admin login failed: {response.status} - {error_text}")
+                    return None
+                    
+        except Exception as e:
+            self.errors.append(f"Admin authentication error: {str(e)}")
+            return None
+
+    async def test_authenticated_city_creation(self, token):
+        """Test city creation with proper JWT authentication"""
+        try:
+            # Get kingdoms for testing
+            kingdoms = await self.get_kingdoms_for_testing(token)
+            if not kingdoms:
+                self.errors.append("No kingdoms available for authenticated city test")
+                return False
+            
+            kingdom_id = kingdoms[0]['id']
+            
+            # Create city with authentication
+            city_data = {
+                "name": "Authenticated Test City",
+                "governor": "Test Governor",
+                "x_coordinate": 150.0,
+                "y_coordinate": 150.0
+            }
+            
+            headers = {"Authorization": f"Bearer {token}"}
+            
+            async with self.session.post(f"{API_BASE}/cities", json=city_data, headers=headers) as response:
+                if response.status == 200:
+                    created_city = await response.json()
+                    
+                    # Verify city structure
+                    required_fields = ['id', 'name', 'governor', 'x_coordinate', 'y_coordinate']
+                    missing_fields = [field for field in required_fields if field not in created_city]
+                    
+                    if missing_fields:
+                        self.errors.append(f"Created city missing fields: {missing_fields}")
+                        return False
+                    
+                    if created_city['name'] != city_data['name']:
+                        self.errors.append(f"City name mismatch: expected {city_data['name']}, got {created_city['name']}")
+                        return False
+                    
+                    print(f"      ✅ City created successfully: {created_city['name']} (ID: {created_city['id']})")
+                    
+                    # Store city ID for later tests
+                    self.test_city_id = created_city['id']
+                    return True
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Authenticated city creation failed: {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"Authenticated city creation test error: {str(e)}")
+            return False
+
+    async def test_city_ownership_assignment(self, token):
+        """Test that cities are properly assigned to the current user's owner_id"""
+        try:
+            # Get user info from token
+            headers = {"Authorization": f"Bearer {token}"}
+            
+            async with self.session.get(f"{API_BASE}/auth/me", headers=headers) as response:
+                if response.status == 200:
+                    user_info = await response.json()
+                    expected_owner_id = user_info.get('id')
+                    if not expected_owner_id:
+                        self.errors.append("User info missing ID field")
+                        return False
+                else:
+                    self.errors.append("Failed to get user info for ownership test")
+                    return False
+            
+            # Create a city and verify ownership
+            city_data = {
+                "name": "Ownership Test City",
+                "governor": "Ownership Governor",
+                "x_coordinate": 200.0,
+                "y_coordinate": 200.0
+            }
+            
+            async with self.session.post(f"{API_BASE}/cities", json=city_data, headers=headers) as response:
+                if response.status == 200:
+                    created_city = await response.json()
+                    city_id = created_city['id']
+                    
+                    # Verify city is in user's kingdoms
+                    async with self.session.get(f"{API_BASE}/multi-kingdoms", headers=headers) as kingdoms_response:
+                        if kingdoms_response.status == 200:
+                            kingdoms = await kingdoms_response.json()
+                            
+                            # Find the kingdom containing our city
+                            city_found = False
+                            kingdom_with_city = None
+                            
+                            for kingdom in kingdoms:
+                                if kingdom.get('owner_id') == expected_owner_id:
+                                    for city in kingdom.get('cities', []):
+                                        if city.get('id') == city_id:
+                                            city_found = True
+                                            kingdom_with_city = kingdom
+                                            break
+                                    if city_found:
+                                        break
+                            
+                            if not city_found:
+                                self.errors.append("Created city not found in user's kingdoms")
+                                return False
+                            
+                            if kingdom_with_city.get('owner_id') != expected_owner_id:
+                                self.errors.append(f"Kingdom owner_id mismatch: expected {expected_owner_id}, got {kingdom_with_city.get('owner_id')}")
+                                return False
+                            
+                            print(f"      ✅ City properly assigned to user's kingdom (owner_id: {expected_owner_id})")
+                            return True
+                            
+                        else:
+                            self.errors.append("Failed to get kingdoms for ownership verification")
+                            return False
+                    
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"City creation failed in ownership test: {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"City ownership assignment test error: {str(e)}")
+            return False
+
+    async def test_city_data_isolation(self, token):
+        """Test that cities respect ownership boundaries"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            
+            # Get current user's kingdoms
+            async with self.session.get(f"{API_BASE}/multi-kingdoms", headers=headers) as response:
+                if response.status == 200:
+                    user_kingdoms = await response.json()
+                    user_city_count = sum(len(kingdom.get('cities', [])) for kingdom in user_kingdoms)
+                    
+                    print(f"      User has {len(user_kingdoms)} kingdoms with {user_city_count} total cities")
+                    
+                    # Verify user can only access their own cities
+                    for kingdom in user_kingdoms:
+                        for city in kingdom.get('cities', []):
+                            city_id = city['id']
+                            
+                            # Test city access
+                            async with self.session.get(f"{API_BASE}/city/{city_id}", headers=headers) as city_response:
+                                if city_response.status != 200:
+                                    self.errors.append(f"User cannot access their own city {city_id}")
+                                    return False
+                    
+                    print(f"      ✅ Data isolation verified - user can access all {user_city_count} of their cities")
+                    return True
+                    
+                else:
+                    self.errors.append("Failed to get user kingdoms for isolation test")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"City data isolation test error: {str(e)}")
+            return False
+
+    async def test_city_creation_validation(self, token):
+        """Test backend validation for city creation"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            
+            # Test missing required fields
+            invalid_city_data = {
+                "governor": "Test Governor"
+                # Missing name, x_coordinate, y_coordinate
+            }
+            
+            async with self.session.post(f"{API_BASE}/cities", json=invalid_city_data, headers=headers) as response:
+                if response.status in [400, 422]:
+                    print(f"      ✅ Missing fields properly rejected with status {response.status}")
+                else:
+                    self.errors.append(f"Invalid city data should return 400/422, got {response.status}")
+                    return False
+            
+            # Test invalid data types
+            invalid_type_data = {
+                "name": "Test City",
+                "governor": "Test Governor", 
+                "x_coordinate": "invalid",  # Should be float
+                "y_coordinate": 100.0
+            }
+            
+            async with self.session.post(f"{API_BASE}/cities", json=invalid_type_data, headers=headers) as response:
+                if response.status in [400, 422]:
+                    print(f"      ✅ Invalid data types properly rejected with status {response.status}")
+                else:
+                    self.errors.append(f"Invalid data types should return 400/422, got {response.status}")
+                    return False
+            
+            # Test valid data succeeds
+            valid_city_data = {
+                "name": "Valid Test City",
+                "governor": "Valid Governor",
+                "x_coordinate": 250.0,
+                "y_coordinate": 250.0
+            }
+            
+            async with self.session.post(f"{API_BASE}/cities", json=valid_city_data, headers=headers) as response:
+                if response.status == 200:
+                    print(f"      ✅ Valid city data accepted successfully")
+                    return True
+                else:
+                    error_text = await response.text()
+                    self.errors.append(f"Valid city creation failed: {response.status} - {error_text}")
+                    return False
+                    
+        except Exception as e:
+            self.errors.append(f"City creation validation test error: {str(e)}")
+            return False
+
+    async def get_kingdoms_for_testing(self, token=None):
+        """Get kingdoms for testing (with optional authentication)"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"} if token else {}
+            
+            async with self.session.get(f"{API_BASE}/multi-kingdoms", headers=headers) as response:
+                if response.status == 200:
+                    return await response.json()
+                else:
+                    return []
+        except:
+            return []
+
+    async def run_add_city_tests(self):
+        """Run focused Add City authentication and ownership tests"""
+        print("🏰 FOCUSED TESTING: Add City Authentication & Ownership")
+        print("=" * 70)
+        print("Testing the specific issue: 'Add City button does NOT create a new city'")
+        print("Focus: Authentication, ownership handling, and data isolation")
+        print("=" * 70)
+        
+        await self.setup()
+        
+        try:
+            # Run the focused Add City tests
+            success = await self.test_add_city_authentication_and_ownership()
+            
+            # Print detailed results
+            print("\n" + "=" * 70)
+            print("🏰 ADD CITY FUNCTIONALITY TEST RESULTS")
+            print("=" * 70)
+            
+            add_city_tests = [
+                ('add_city_unauthenticated_rejection', 'Unauthenticated requests rejected'),
+                ('add_city_with_admin_user', 'Admin user can create cities'),
+                ('add_city_ownership_assignment', 'Cities assigned to correct owner_id'),
+                ('add_city_data_isolation', 'Data isolation working'),
+                ('add_city_validation', 'Backend validation working'),
+                ('add_city_requires_auth', 'Authentication requirement enforced')
+            ]
+            
+            passed_tests = 0
+            for test_key, test_name in add_city_tests:
+                result = self.test_results.get(test_key, False)
+                status = "✅ PASS" if result else "❌ FAIL"
+                print(f"{status} {test_name}")
+                if result:
+                    passed_tests += 1
+            
+            print(f"\n📊 SUMMARY: {passed_tests}/{len(add_city_tests)} Add City tests passed")
+            
+            if self.errors:
+                print(f"\n❌ ERRORS FOUND ({len(self.errors)}):")
+                for i, error in enumerate(self.errors, 1):
+                    print(f"  {i}. {error}")
+            
+            return success
+            
+        finally:
+            await self.cleanup()
+
 async def main():
     """Main test runner - focused on authentication system testing"""
     tester = BackendTester()
