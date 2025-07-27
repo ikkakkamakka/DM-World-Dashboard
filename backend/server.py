@@ -46,6 +46,18 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
+# Helper function to get current user ID
+async def get_current_user_id(current_user: dict = Depends(get_current_user)) -> str:
+    """Extract user ID from authenticated user"""
+    return current_user["id"]
+
+# Super admin check (for future admin features)
+SUPER_ADMIN_USERNAME = "admin"  # Can be configured via env later
+
+def is_super_admin(user: dict) -> bool:
+    """Check if user is super admin"""
+    return user.get("username") == SUPER_ADMIN_USERNAME
+
 # Auto-events toggle
 auto_events_enabled = True
 
