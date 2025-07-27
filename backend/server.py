@@ -1492,13 +1492,18 @@ async def create_multi_kingdom(kingdom: MultiKingdomCreate, current_user_id: str
     raise HTTPException(status_code=500, detail="Failed to create kingdom")
 
 @api_router.get("/multi-kingdom/{kingdom_id}")
-async def get_multi_kingdom(kingdom_id: str):
-    """Get specific kingdom data"""
-    kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
+async def get_multi_kingdom(kingdom_id: str, current_user: dict = Depends(get_current_user)):
+    """Get specific kingdom data - only if owned by current user or user is super admin"""
+    # Build query filter
+    query_filter = {"id": kingdom_id}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    kingdom = await db.multi_kingdoms.find_one(query_filter)
     if kingdom:
         kingdom.pop('_id', None)
         return kingdom
-    raise HTTPException(status_code=404, detail="Kingdom not found")
+    raise HTTPException(status_code=404, detail="Kingdom not found or access denied")
 
 @api_router.put("/multi-kingdom/{kingdom_id}")
 async def update_multi_kingdom(kingdom_id: str, updates: MultiKingdomUpdate):
