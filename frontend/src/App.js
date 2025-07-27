@@ -574,7 +574,7 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
           <div className="days-grid">
             {Array.from({ length: 30 }, (_, i) => {
               const day = i + 1;
-              const dayEvents = getEventsForDate(displayDate.drYear, displayDate.month, day);
+              const dayEvents = getEventsForDate(displayDate.dr_year || displayDate.drYear, displayDate.month, day);
               const holidays = getHolidaysForDate(displayDate.month, day);
               const isToday = displayDate.day === day;
               const hasEvents = dayEvents.length > 0 || holidays.length > 0;
@@ -583,11 +583,11 @@ const HarptosCalendar = ({ kingdom, isVisible }) => {
                 <div 
                   key={day} 
                   className={`calendar-day ${isToday ? 'today' : ''} ${hasEvents ? 'has-events' : ''}`}
-                  onClick={() => setSelectedDate({ dr_year: displayDate.drYear, month: displayDate.month, day })}
+                  onClick={() => setSelectedDate({ dr_year: displayDate.dr_year || displayDate.drYear, month: displayDate.month, day })}
                   title={
                     hasEvents 
                       ? `${holidays.map(h => `🎉 ${h.name}`).join(', ')} ${dayEvents.map(e => `${getEventIcon(e.event_type)} ${e.city_name ? `${e.title} – ${e.city_name}` : e.title}`).join(', ')}`
-                      : formatCalendarDayTooltip(day, displayDate.month, displayDate.drYear)
+                      : formatCalendarDayTooltip(day, displayDate.month, displayDate.dr_year || displayDate.drYear)
                   }
                 >
                   <span className="day-number">{day}</span>
