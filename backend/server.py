@@ -2936,16 +2936,28 @@ async def migrate_existing_data():
 
 # Events Management
 @api_router.get("/events")
-async def get_events():
-    """Get all events (backward compatibility)"""
-    events = await db.events.find().sort("timestamp", -1).limit(50).to_list(50)
+async def get_events(current_user: dict = Depends(get_current_user)):
+    """Get all events for current user"""
+    query_filter = {}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    events = await db.events.find(query_filter).sort("timestamp", -1).limit(50).to_list(50)
     for event in events:
         event.pop('_id', None)
     return events
 
 @api_router.get("/events/{kingdom_id}")
-async def get_kingdom_events(kingdom_id: str):
-    """Get events for a specific kingdom"""
+async def get_kingdom_events(kingdom_id: str, current_user: dict = Depends(get_current_user)):
+    """Get events for a specific kingdom - only if user owns the kingdom"""
+    # Verify user owns this kingdom
+    query_filter = {"id": kingdom_id}
+    if not is_super_admin(current_user):
+        query_filter["owner_id"] = current_user["id"]
+    
+    kingdom = await db.multi_kingdoms.find_one(query_filter)
+    if not kingdom:
+        raise HTTPException(status_code=404, detail="Kingdom not found or access denied")
     # Get events that match this kingdom (by kingdom_id or kingdom_name)
     kingdom = await db.multi_kingdoms.find_one({"id": kingdom_id})
     if not kingdom:
