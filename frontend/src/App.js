@@ -4187,6 +4187,8 @@ function AuthenticatedApp() {
   const handleCreateNewKingdom = (newKingdom) => {
     setMultiKingdoms([...multiKingdoms, newKingdom]);
     handleKingdomChange(newKingdom);
+    // Also refresh the kingdoms list to ensure it's up to date
+    fetchMultiKingdoms();
   };
 
   // Fetch events for the active kingdom
