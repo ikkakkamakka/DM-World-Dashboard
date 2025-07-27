@@ -2606,7 +2606,7 @@ async def create_citizen(citizen: CitizenCreate):
 
 @api_router.delete("/citizens/{citizen_id}")
 async def delete_citizen(citizen_id: str):
-    result = await db.kingdoms.update_one(
+    result = await db.multi_kingdoms.update_one(
         {"cities.citizens.id": citizen_id},
         {
             "$pull": {"cities.$.citizens": {"id": citizen_id}},
