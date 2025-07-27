@@ -333,7 +333,7 @@ const HarptosCalendar = ({ kingdom, isVisible, authenticatedFetch }) => {
   const generateCityEvents = async () => {
     if (!kingdom) return;
     try {
-      const response = await fetch(`${API}/calendar-events/generate-city-events?kingdom_id=${kingdom.id}&count=5&date_range_days=30`, {
+      const response = await authenticatedFetch(`${API}/calendar-events/generate-city-events?kingdom_id=${kingdom.id}&count=5&date_range_days=30`, {
         method: 'POST'
       });
       
